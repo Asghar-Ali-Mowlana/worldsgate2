@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:universal_io/io.dart' as u;
 
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: DeoManageHotels(),
     );
   }
 }
