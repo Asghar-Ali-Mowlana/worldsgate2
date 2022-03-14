@@ -129,117 +129,192 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
 
       for (int j = 0; j < entryList[i].value.length; j++) {
 
-        m.add(Container(
-          height: MediaQuery.of(context).size.height /6,
-          width: MediaQuery.of(context).size.width,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Color(0xFFBA780F)),
-          ),
-          child: Column(
-            mainAxisAlignment:
-            MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
+        m.add(Padding(
+          padding: const EdgeInsets.only(
+              top: 16.0, left: 10.0, right: 10.0),
+          child: Stack(
             children: [
-
-              Column(
-                crossAxisAlignment:
-                CrossAxisAlignment.end,
-                children: [
-
-
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        right: 10.0),
-                    child: Text(
-                      "${entryList[i].value[j]["hotel_name"]
-                          .toString()}",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
-                      ),
-                    ),
+              InkWell(
+                onTap: (){},
+                child: Container(
+                  height: MediaQuery.of(context).size.height /6,
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: Color(0xFFBA780F)),
                   ),
-                  Row(
+                  child: Column(
                     mainAxisAlignment:
-                    MainAxisAlignment.end,
+                    MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        color: Color(0xFFBA780F),
-                        size: 15.0,
-                      ),
-                      Icon(
-                        Icons.arrow_upward_outlined,
-                        color: Color(0xFFBA780F),
-                        size: 15.0,
-                      ),
-                      Text(
-                        " 4 Km From Center",
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.white,
-                        ),
-                      ),
 
+                      Column(
+                        crossAxisAlignment:
+                        CrossAxisAlignment.end,
+                        children: [
+
+
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                right: 10.0),
+                            child: Text(
+                              "${entryList[i].value[j]["hotel_name"]
+                                  .toString()}",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.end,
+                            children: [
+                              Icon(
+                                Icons.location_on_outlined,
+                                color: Color(0xFFBA780F),
+                                size: 15.0,
+                              ),
+                              Icon(
+                                Icons.arrow_upward_outlined,
+                                color: Color(0xFFBA780F),
+                                size: 15.0,
+                              ),
+                              Text(
+                                " 4 Km From Center",
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white,
+                                ),
+                              ),
+
+                            ],
+                          ),
+
+
+                          Text(
+                            "Price for 1 night 2 adults",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Color(0xFFBA780F),
+                            ),
+                          ),
+                          //price
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                top: 2.0, bottom: 2.0),
+                            child: Text(
+                              "Price ${entryList[i].value[j]["price"]} AED",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+
+
+
+
+
+                          //taxcharge
+                          Text(
+                            "${entryList[i].value[j]["taxandcharges"]} AED Taxes and Charges",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.white,
+                            ),
+                          ),
+                          //cancellation fee
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 2.0),
+                            child: Text(
+                              "${entryList[i].value[j]["cancellationfee"]}% for Cancellation",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Color(0xFFBA780F),
+                              ),
+                            ),
+                          ),
+
+
+                          //
+                          //
+                          // Text("Hotel name is " +
+                          //     entryList[i].value[j]["hotel_name"] +
+                          //     " & " +
+                          //     "Promotion is " +
+                          //     entryList[i].value[j]["promotion"])
+                        ],
+                      ),
                     ],
                   ),
-
-
-                  Text(
-                    "Price for 1 night 2 adults",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Color(0xFFBA780F),
-                    ),
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height /6,
+                width: MediaQuery.of(context).size.width/9,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: DecorationImage(
+                    image: NetworkImage(entryList[i].value[j]["coverimage"]),
+                    fit: BoxFit.fill,
                   ),
-                  //price
-                  Padding(
-                    padding: const EdgeInsets.only(
-                        top: 2.0, bottom: 2.0),
-                    child: Text(
-                      "Price ${entryList[i].value[j]["price"]} AED",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.white,
+                ),
+                child: Stack(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          top: 60.0, right: 0.0),
+                      height: 80.0,
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                          borderRadius:
+                          BorderRadius.circular(20),
+                          gradient: LinearGradient(
+                              begin: FractionalOffset.topCenter,
+                              end:
+                              FractionalOffset.bottomCenter,
+                              colors: [
+                                Colors.white70.withOpacity(0.0),
+                                Colors.orange.withOpacity(0.8),
+                              ],
+                              stops: [
+                                0.0,
+                                0.7
+                              ])),
+                      child: Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  top:6.0, right: 0.0),
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment:
+                                    Alignment.bottomCenter,
+                                    child: Text(
+                                      "${entryList[i].value[j]["promotion"]}% off",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight:
+                                        FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-
-
-
-
-
-                  //taxcharge
-                  Text(
-                    "${entryList[i].value[j]["taxandcharges"]} AED Taxes and Charges",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.white,
-                    ),
-                  ),
-                  //cancellation fee
-                  Padding(
-                    padding:
-                    const EdgeInsets.only(top: 2.0),
-                    child: Text(
-                      "${entryList[i].value[j]["cancellationfee"]}% for Cancellation",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Color(0xFFBA780F),
-                      ),
-                    ),
-                  ),
-
-
-                  //
-                  //
-                  // Text("Hotel name is " +
-                  //     entryList[i].value[j]["hotel_name"] +
-                  //     " & " +
-                  //     "Promotion is " +
-                  //     entryList[i].value[j]["promotion"])
-                ],
+                  ],
+                ),
               ),
             ],
           ),
