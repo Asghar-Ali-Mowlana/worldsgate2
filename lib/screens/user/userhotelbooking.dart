@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -6,7 +7,14 @@ import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 
 class UserHotelBooking extends StatefulWidget {
-  const UserHotelBooking({Key? key}) : super(key: key);
+  //const UserHotelBooking({Key? key}) : super(key: key);
+
+  String? uid;
+
+  //constructor
+  UserHotelBooking(
+      this.uid,
+      );
 
   @override
   _UserHotelBookingState createState() => _UserHotelBookingState();
@@ -16,6 +24,15 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
   var _controller = TextEditingController();
+
+
+  String? cusname;
+
+  getname() async {
+    FirebaseFirestore.instance.collection('users') .doc(widget.uid)
+        .get().then((myDocuments){
+      cusname = myDocuments.data()!['name'].toString();
+    });}
 
   DateTimeRange dateRange = DateTimeRange(
       start: DateTime.now(),
@@ -2364,7 +2381,7 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
               left: 0.0,
               top: 0.0,
               right: 0.0,
-              child: Container(child: VendomeHeader(drawer: _scaffoldState))),
+              child: Container(child: VendomeHeader(drawer: _scaffoldState, cusname: cusname))),
         ],
       ),
     ));

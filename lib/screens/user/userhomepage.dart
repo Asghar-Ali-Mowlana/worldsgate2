@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/screens/user/userhotelbooking.dart';
@@ -33,6 +34,18 @@ class _UserHomePageState extends State<UserHomePage> {
     'assets/images/promo/promo3.jpeg',
 
   ];
+
+
+  String? cusname;
+
+  getname() async {
+    FirebaseFirestore.instance.collection('users') .doc(widget.uid)
+        .get().then((myDocuments){
+      cusname = myDocuments.data()!['name'].toString();
+    });}
+
+
+
   @override
   Widget build(BuildContext context) {
     //final double height = MediaQuery.of(context).size.height;
@@ -145,6 +158,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                   builder: (context) =>
                                   // TaskCardWidget(id: user.id, name: user.ingredients,)
                                   UserHotelBooking(
+                                    widget.uid
 
 
                                   )));
@@ -811,7 +825,7 @@ class _UserHomePageState extends State<UserHomePage> {
               right: 0.0,
 
               child: Container(
-                  child: VendomeHeader(drawer: _scaffoldState))),
+                  child: VendomeHeader(drawer: _scaffoldState, cusname: cusname))),
         ],
       ),
 

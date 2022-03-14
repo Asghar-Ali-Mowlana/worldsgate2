@@ -1,84 +1,97 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
 
-class VendomeHeader extends StatelessWidget {
 
- GlobalKey<ScaffoldState> drawer;
 
-  VendomeHeader({required this.drawer});
-
+class VendomeHeader extends StatefulWidget {
   //const VendomeHeader({Key? key}) : super(key: key);
+
+  GlobalKey<ScaffoldState> drawer;
+  String? cusname;
+
+  VendomeHeader({required this.drawer, required this.cusname});
+
+  @override
+  _VendomeHeaderState createState() => _VendomeHeaderState();
+}
+
+class _VendomeHeaderState extends State<VendomeHeader> {
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
     return
       (u.Platform.operatingSystem == "android" ||
           u.Platform.operatingSystem == "ios")
-     ? Container(
-      height: 90.0,
-      decoration: BoxDecoration(
-        color: Colors.black,
+          ? Container(
+        height: 90.0,
+        decoration: BoxDecoration(
+          color: Colors.black,
 
 
-        border: Border.all(color: Color(0xFFBA780F)),
+          border: Border.all(color: Color(0xFFBA780F)),
 
-      ),
-      child: Column(
-        children: [
-          Center(
-            child: Image.asset(
-              "assets/images/headerimages/worldgate.png",
-              height: 50,
-              width: 270,
+        ),
+        child: Column(
+          children: [
+            Center(
+              child: Image.asset(
+                "assets/images/headerimages/worldgate.png",
+                height: 50,
+                width: 270,
+              ),
             ),
-          ),
-          Row(
+            Row(
 
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
 
-              Align(
-                alignment: Alignment.topLeft,
-                child: Container(
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        "assets/images/headerimages/location.png",
-                        width: 15,
-                      ),
-                      Text(
-                        "  Al Habbtoor Tower, Marina, Dubai",
-                        style: TextStyle(
-                            color: Colors.white
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          "assets/images/headerimages/location.png",
+                          width: 15,
                         ),
-                      )
-                    ],
+                        Text(
+                          "  Al Habbtoor Tower, Marina, Dubai",
+                          style: TextStyle(
+                              color: Colors.white
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
 
-              Align(
-                alignment: Alignment.topRight,
-                child: InkWell(
-                  onTap: (){
-                    drawer.currentState!.openEndDrawer();
-                  },
-                  child: Image.asset(
-                    "assets/images/headerimages/bar.png",
-                    width: 25,
+                Align(
+                  alignment: Alignment.topRight,
+                  child: InkWell(
+                    onTap: (){
+                      widget.drawer.currentState!.openEndDrawer();
+                    },
+                    child: Image.asset(
+                      "assets/images/headerimages/bar.png",
+                      width: 25,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
 
 
-        ],
-      ),
+          ],
+        ),
 
-    )
+      )
           :
       Container(
         height: 160.0,
@@ -143,8 +156,8 @@ class VendomeHeader extends StatelessWidget {
               padding: const EdgeInsets.only(right: 18.0),
               child: Align(
                   alignment: Alignment.topRight,
-                  child: Text("Mohamed", style: TextStyle(
-                    color: Colors.white
+                  child: Text(widget.cusname.toString(), style: TextStyle(
+                      color: Colors.white
                   ),)),
             ),
 
@@ -156,7 +169,7 @@ class VendomeHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 16.0,top: 5.0),
                 child: InkWell(
                   onTap: (){
-                    drawer.currentState!.openDrawer();
+                    widget.drawer.currentState!.openDrawer();
                   },
                   child: Image.asset(
                     "assets/images/headerimages/bar.png",
@@ -175,3 +188,4 @@ class VendomeHeader extends StatelessWidget {
       );
   }
 }
+

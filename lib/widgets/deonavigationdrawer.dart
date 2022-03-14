@@ -1,8 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
+
+import '../screens/loginpage.dart';
+import 'package:firebase_auth/firebase_auth.dart' as u;
 
 class DeoNavigationDrawer extends StatelessWidget {
-  const DeoNavigationDrawer({Key? key}) : super(key: key);
+  //const DeoNavigationDrawer({Key? key}) : super(key: key);
+
+  String? uid;
+
+  // //constructor
+  DeoNavigationDrawer(
+      this.uid,
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +53,10 @@ class DeoNavigationDrawer extends StatelessWidget {
             color: Colors.white
           ),),
           onTap: (){
+
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DeoManageHotels(uid),
+            ));
 
           },
         ),
@@ -114,7 +129,40 @@ class DeoNavigationDrawer extends StatelessWidget {
 
           },
         ),
+
+        Text("Logout", style: TextStyle(
+            color: Colors.white
+        ),),
+        ListTile(
+          leading: const Icon(Icons.logout),
+          title: const Text('Logout', style: TextStyle(
+              color: Colors.white
+          ),),
+          onTap: (){
+
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => LoginPage(),
+            ));
+            logout(context);
+
+          },
+        ),
       ],
     ),
   );
+
+  //logout function
+  Future<void> logout(BuildContext context) async {
+    CircularProgressIndicator();
+    await u.FirebaseAuth.instance.signOut();
+    print("Signed out Successfully");
+
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => LoginPage(),
+      ),
+    );
+  }
 }
+
+

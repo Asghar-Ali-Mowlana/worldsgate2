@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:worldsgate/models/usermodel.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
 
+import '../screens/dataentryoperator/deomanagehotels.dart';
+
 class RoutePage extends StatefulWidget {
   @override
   _RoutePageState createState() => _RoutePageState();
@@ -60,10 +62,18 @@ class _controState extends State<contro> {
   }
 
   routing() {
-    return UserHomePage(
+    return
+    (role == "customer")
+      ?UserHomePage(
       loggedInUser.uid.toString(),
 
-    );
+    ):
+    (role == "dataentryoperator")
+      ?DeoManageHotels(
+      loggedInUser.uid.toString(),
+
+    ):
+    Scaffold(body: Center(child: CircularProgressIndicator(),));
   }
 
   @override

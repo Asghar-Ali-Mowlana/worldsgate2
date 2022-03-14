@@ -336,4 +336,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       }
     }
   }
+  @override
+  dispose() {
+    _controller!.dispose(); // you need this
+    super.dispose();
+  }
 }
