@@ -13,10 +13,7 @@ class UserHotelBooking extends StatefulWidget {
   String? city;
 
   //constructor
-  UserHotelBooking(
-      this.uid,
-      this.city
-      );
+  UserHotelBooking(this.uid, this.city);
 
   @override
   _UserHotelBookingState createState() => _UserHotelBookingState();
@@ -27,14 +24,17 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
 
   var _controller = TextEditingController();
 
-
   String? cusname;
 
   getname() async {
-    FirebaseFirestore.instance.collection('users') .doc(widget.uid)
-        .get().then((myDocuments){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get()
+        .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
-    });}
+    });
+  }
 
   DateTimeRange dateRange = DateTimeRange(
       start: DateTime.now(),
@@ -58,23 +58,61 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
     setState(() => dateRange = newDateRange);
   }
 
+  String? city;
+
+  final places = [
+    'Deira',
+    'Bur Dubai',
+    'Beach & Coast',
+    'Garhoud',
+    'Palm Jumeirah',
+    'Barsha Heights (Tecom)',
+    'Sheikh Zayed Road',
+    'Al Barsha',
+    'Dubai Creek',
+    'Jumeirah Beach Residence',
+    'Dubai Marina',
+    'Trade Centre',
+    'Old Dubai',
+    'Downtown Dubai',
+    'Business Bay',
+    "Guests' favourite area",
+    'Jadaf',
+    'Al Qusais',
+    'Oud Metha',
+    'Dubai Investment Park',
+    'Dubai Festival City',
+    'Dubai World Central',
+    'Umm Suqeim',
+    'Discovery Gardens',
+    'Dubai Production City',
+    'Jumeirah Lakes Towers',
+  ];
+
+  DropdownMenuItem<String> buildMenuItem(String place) => DropdownMenuItem(
+        value: place,
+        child: Text(
+          place,
+          style: const TextStyle(fontSize: 16.0),
+        ),
+      );
+
+  bool _isLocationSelected = false;
+
   @override
   Widget build(BuildContext context) {
+    final CollectionReference packageCollection =
+        FirebaseFirestore.instance.collection('hotels');
+    final Query unpicked = packageCollection
+        .where('city', isEqualTo: city != null ? city : widget.city)
+        .limit(10);
     //final double height = MediaQuery.of(context).size.height;
     final start = dateRange.start;
     final end = dateRange.end;
     return SafeArea(
         child: Scaffold(
       key: _scaffoldState,
-
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0.0,
-      //   iconTheme: IconThemeData(color: Color(0xFFdb9e1f)),
-      // ),
-
       endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
-
       backgroundColor: Color(0xFF000000),
       body: Stack(
         children: [
@@ -113,13 +151,44 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                           padding:
                               const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
                           child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    color: Color(0xFFBA780F)),
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Color(0xFFBA780F)),
+                                ),
                               ),
-                            ),
-                            child: TextFormField(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 0, horizontal: 12.0),
+                                child: DropdownButtonFormField(
+                                    decoration: InputDecoration(
+                                      hintText: "City",
+                                      hintStyle: TextStyle(color: Colors.white),
+                                      //labelText: 'City',
+                                      labelStyle: TextStyle(
+                                          color: Colors.white70, height: 0.1),
+                                      enabled: true,
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                    ),
+                                    dropdownColor: Color(0xFF000000),
+                                    icon: Icon(
+                                      // Add this
+                                      Icons.arrow_drop_down, // Add this
+                                      color: Color(0xFFBA780F), // Add this
+                                    ),
+                                    //focusColor: Color(0xFFdb9e1f),
+                                    style: TextStyle(color: Colors.white),
+                                    isDense: true,
+                                    //icon: Visibility (visible:false, child: Icon(Icons.arrow_downward)),
+                                    value: city,
+                                    items: places.map(buildMenuItem).toList(),
+                                    onChanged: (value) => setState(() {
+                                          this.city = value as String?;
+                                          setState(() {
+                                            _isLocationSelected = true;
+                                          });
+                                        })),
+                              ) /*TextFormField(
                               style: TextStyle(color: Colors.white),
                               controller: _controller,
                               decoration: InputDecoration(
@@ -162,8 +231,8 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                                 _controller.text = value!;
                               },
                               keyboardType: TextInputType.text,
-                            ),
-                          ),
+                            ),*/
+                              ),
                         ),
                         Padding(
                           padding:
@@ -537,6 +606,245 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                 Container(
                   height: 2400.0,
                   width: MediaQuery.of(context).size.width,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: unpicked.snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: snapshot.data!.docs.map((doc) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 16.0, left: 10.0, right: 10.0),
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 220.0,
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            color: Color(0xFFBA780F)),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 16.0,
+                                            right: 10.0,
+                                            bottom: 16.0),
+                                        child: Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topRight,
+                                                child: Container(
+                                                  height: 100.0,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      2,
+                                                  decoration: BoxDecoration(),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "${doc['name']} - ${doc['city']}",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 2.0),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Icon(
+                                                              Icons
+                                                                  .location_on_outlined,
+                                                              color: Color(
+                                                                  0xFFBA780F),
+                                                              size: 15.0,
+                                                            ),
+                                                            Icon(
+                                                              Icons
+                                                                  .arrow_upward_outlined,
+                                                              color: Color(
+                                                                  0xFFBA780F),
+                                                              size: 15.0,
+                                                            ),
+                                                            Text(
+                                                              " 4 Km From Center",
+                                                              style: TextStyle(
+                                                                fontSize: 11,
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  Text(
+                                                    "Price for 1 night 2 adults",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Color(0xFFBA780F),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 2.0,
+                                                            bottom: 2.0),
+                                                    child: Text(
+                                                      "Price ${doc['price']} AED",
+                                                      style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "-${doc['taxandcharges']} AED Taxes and Charges",
+                                                    style: TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 2.0),
+                                                    child: Text(
+                                                      "${doc['cancellationfee']}% for Cancellation",
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Color(0xFFBA780F),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      height: 220.0,
+                                      width: MediaQuery.of(context).size.width /
+                                          2.5,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: Border.all(
+                                            color: Color(0xFFBA780F)),
+                                        image: DecorationImage(
+                                          image:
+                                              NetworkImage(doc['coverimage']),
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.only(
+                                                top: 113.0, right: 0.0),
+                                            height: 220.0,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                gradient: LinearGradient(
+                                                    begin: FractionalOffset
+                                                        .topCenter,
+                                                    end: FractionalOffset
+                                                        .bottomCenter,
+                                                    colors: [
+                                                      Colors.white70
+                                                          .withOpacity(0.0),
+                                                      Colors.orange
+                                                          .withOpacity(0.8),
+                                                    ],
+                                                    stops: [
+                                                      0.0,
+                                                      0.7
+                                                    ])),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  child: Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            top: 68.0,
+                                                            right: 0.0),
+                                                    child: Column(
+                                                      children: [
+                                                        Align(
+                                                          alignment: Alignment
+                                                              .bottomCenter,
+                                                          child: Text(
+                                                            "${doc['promotion']}% off",
+                                                            style: TextStyle(
+                                                              fontSize: 24,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                /*Container(
+                  height: 2400.0,
+                  width: MediaQuery.of(context).size.width,
                   child: ListView(
                     //scrollDirection: Axis.vertical,
                     //shrinkWrap: true,
@@ -726,1656 +1034,9 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
-                                              margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                     ],
                   ),
-                ),
+                ),*/
               ],
             ),
           ),
@@ -2383,7 +1044,12 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
               left: 0.0,
               top: 0.0,
               right: 0.0,
-              child: Container(child: VendomeHeader.cus(drawer: _scaffoldState, cusname: cusname, cusaddress:widget.city,))),
+              child: Container(
+                  child: VendomeHeader.cus(
+                drawer: _scaffoldState,
+                cusname: cusname,
+                cusaddress: widget.city,
+              ))),
         ],
       ),
     ));
