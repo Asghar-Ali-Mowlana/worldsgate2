@@ -659,7 +659,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         'city': city,
         'address': hotelAddressController.text,
         'price': double.parse(startingPriceController.text),
-        'discount': double.parse(discountController.text),
+        'promotion': double.parse(discountController.text),
         'description': descriptionController.text,
         'mainfacilities': mainFacilities,
         //'subfacilities': subFacilities,
@@ -668,7 +668,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         'coverimage': coverImageLink,
         'otherhotelimages': OtherHotelImagesUrl,
         'cancellationfee': null,
-        'promotion': null,
+     //   'promotion': null,
         'taxandcharges': null
       });
     } catch (e) {
