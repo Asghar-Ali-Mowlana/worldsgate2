@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
+import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 
 class EmailVerification extends StatefulWidget {
   //const OTPVerification({ Key? key }) : super(key: key);
@@ -30,7 +31,9 @@ class _EmailVerificationState extends State<EmailVerification> {
     if (user!.emailVerified) {
       timer!.cancel();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => UserHomePage(user!.uid)));
+          context,
+          MaterialPageRoute(
+              builder: (context) => LocationConfirmation(user!.uid)));
     }
   }
 

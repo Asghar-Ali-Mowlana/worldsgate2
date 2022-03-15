@@ -4,15 +4,12 @@ import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 
-
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (u.Platform.operatingSystem == "android" ||
       u.Platform.operatingSystem == "ios") {
     await Firebase.initializeApp();
-  }else{
-
-
+  } else {
     await Firebase.initializeApp(
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
       options: const FirebaseOptions(
@@ -23,10 +20,8 @@ Future main() async {
         appId: "1:1087644602140:web:4c5600a8e70960eaa6b4d9",
       ),
     );
-
   }
   runApp(const MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -39,10 +34,12 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'worldsgate',
       theme: ThemeData(
+        colorScheme: ColorScheme.dark(
+            primary: const Color(0xFFBA780F),
+            onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
       home: LoginPage(),
     );
   }
 }
-
