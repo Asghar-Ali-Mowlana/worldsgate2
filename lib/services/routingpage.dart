@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/models/usermodel.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
+import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 
 import '../screens/dataentryoperator/deomanagehotels.dart';
 
@@ -62,18 +63,18 @@ class _controState extends State<contro> {
   }
 
   routing() {
-    return
-    (role == "customer")
-      ?UserHomePage(
-      loggedInUser.uid.toString(),
-
-    ):
-    (role == "dataentryoperator")
-      ?DeoManageHotels(
-      loggedInUser.uid.toString(),
-
-    ):
-    Scaffold(body: Center(child: CircularProgressIndicator(),));
+    return (role == "customer")
+        ? LocationConfirmation(
+            loggedInUser.uid.toString(),
+          )
+        : (role == "dataentryoperator")
+            ? DeoManageHotels(
+                loggedInUser.uid.toString(),
+              )
+            : Scaffold(
+                body: Center(
+                child: CircularProgressIndicator(),
+              ));
   }
 
   @override
@@ -82,4 +83,3 @@ class _controState extends State<contro> {
     return routing();
   }
 }
-

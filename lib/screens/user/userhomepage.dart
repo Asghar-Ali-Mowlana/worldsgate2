@@ -9,21 +9,16 @@ import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 class UserHomePage extends StatefulWidget {
   //const UserHomePage({Key? key}) : super(key: key);
 
-
   String? uid;
-
+  String city;
   //constructor
-  UserHomePage(
-      this.uid,
-      );
+  UserHomePage(this.uid, this.city);
 
   @override
   _UserHomePageState createState() => _UserHomePageState();
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-
-
   var _scaffoldState = new GlobalKey<ScaffoldState>();
   CarouselController _carouselController = CarouselController();
   //List<String> imageURLs = ["assets/images/promo/promo1.jpeg", "http://cdn.srilanka-promotions.com/wp-content/uploads/2012/12/Fashion-Bug-21-Dec-2012.jpg", "https://www.swaart.com/wp-content/uploads/2021/01/Swaart-Main.jpg"];
@@ -32,27 +27,26 @@ class _UserHomePageState extends State<UserHomePage> {
     'assets/images/promo/promo1.jpeg',
     'assets/images/promo/promo2.jpeg',
     'assets/images/promo/promo3.jpeg',
-
   ];
-
 
   String? cusname;
 
   getname() async {
-    FirebaseFirestore.instance.collection('users') .doc(widget.uid)
-        .get().then((myDocuments){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get()
+        .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
-    });}
-
-
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     //final double height = MediaQuery.of(context).size.height;
 
-
-
-    return SafeArea(child: Scaffold(
+    return SafeArea(
+        child: Scaffold(
       key: _scaffoldState,
 
       // appBar: AppBar(
@@ -63,27 +57,26 @@ class _UserHomePageState extends State<UserHomePage> {
 
       endDrawer: new UserNavigationDrawer(),
 
-
       backgroundColor: Color(0xFF000000),
       body: Stack(
         children: [
           SingleChildScrollView(
             child: Column(
               children: [
-
-
                 Container(
                   margin: const EdgeInsets.only(top: 90.0, bottom: 0.0),
                   child: CarouselSlider(
-
                     items: imageList
                         .map((imageList) => Container(
-                      width: double.infinity,
-
-                      child: Center(
-                          child:
-                          Image(image: AssetImage(imageList), fit: BoxFit.cover, width: double.infinity, height: 300.0,)),
-                    ))
+                              width: double.infinity,
+                              child: Center(
+                                  child: Image(
+                                image: AssetImage(imageList),
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 300.0,
+                              )),
+                            ))
                         .toList(),
                     carouselController: _carouselController,
                     options: CarouselOptions(
@@ -95,33 +88,20 @@ class _UserHomePageState extends State<UserHomePage> {
                     ),
                   ),
                 ),
-
-
-
-
                 Container(
                   margin: const EdgeInsets.only(top: 40.0, bottom: 0.0),
                   child: Text(
                     "What would you like to order, MOHAMED?",
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-
                 Container(
                   margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
                   child: Text(
                     "Explore",
-                    style: TextStyle(
-                        color: Colors.white,
-                      fontSize: 16.0
-                    ),
+                    style: TextStyle(color: Colors.white, fontSize: 16.0),
                   ),
                 ),
-
-
-
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
@@ -135,42 +115,33 @@ class _UserHomePageState extends State<UserHomePage> {
                     ),
                   ),
                 ),
-
                 Container(
-
                   height: 180.0,
                   child: ListView(
                     shrinkWrap: true,
-
                     scrollDirection: Axis.horizontal,
                     primary: false,
                     children: <Widget>[
                       //Image.network('https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg', height: 30.0, ),
                       //hotel
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                  // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                  UserHotelBooking(
-                                    widget.uid
-
-
-                                  )));
-
+                                      // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                      UserHotelBooking(widget.uid)));
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -184,12 +155,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Hotels", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Hotels",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -199,12 +172,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //apartment
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -212,15 +185,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -234,12 +205,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Apartments", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Apartments",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -249,12 +222,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //cars
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -262,15 +235,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -284,12 +255,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Cars", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Cars",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -299,12 +272,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //yacht
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -312,15 +285,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -334,12 +305,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Yacht", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Yacht",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -349,12 +322,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //restaurant
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -362,15 +335,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -384,12 +355,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 12.0,),
-                                    child: Text("Restaurants", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 12.0,
+                                    ),
+                                    child: Text(
+                                      "Restaurants",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -399,12 +372,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //bar
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -412,15 +385,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -434,12 +405,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Bars", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Bars",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -447,13 +420,9 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
-
-
-
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
@@ -467,24 +436,21 @@ class _UserHomePageState extends State<UserHomePage> {
                     ),
                   ),
                 ),
-
                 Container(
-
                   height: 180.0,
                   child: ListView(
                     shrinkWrap: true,
-
                     scrollDirection: Axis.horizontal,
                     primary: false,
                     children: <Widget>[
                       //Food
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -492,15 +458,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -514,12 +478,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Food", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Food",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -529,12 +495,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //Groceries
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -542,15 +508,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -564,12 +528,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 15.0,),
-                                    child: Text("Groceries", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 15.0,
+                                    ),
+                                    child: Text(
+                                      "Groceries",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -579,12 +545,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //pharmaceuticals
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -592,15 +558,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -614,12 +578,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 19.0,),
-                                    child: Text("Pharmaceuticals", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 19.0,
+                                    ),
+                                    child: Text(
+                                      "Pharmaceuticals",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -627,11 +593,9 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
-
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
@@ -645,24 +609,21 @@ class _UserHomePageState extends State<UserHomePage> {
                     ),
                   ),
                 ),
-
                 Container(
-
                   height: 180.0,
                   child: ListView(
                     shrinkWrap: true,
-
                     scrollDirection: Axis.horizontal,
                     primary: false,
                     children: <Widget>[
                       //electronics
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -670,15 +631,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -692,12 +651,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Electronics", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Electronics",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -707,12 +668,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //clothes
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -720,15 +681,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -742,12 +701,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Clothes", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Clothes",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -757,12 +718,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       ),
                       //cosmetics
                       Padding(
-                        padding: const EdgeInsets.only(top: 16.0,left: 10.0,right: 0.0),
+                        padding: const EdgeInsets.only(
+                            top: 16.0, left: 10.0, right: 0.0),
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: InkWell(
-                            onTap: (){
-
+                            onTap: () {
                               // Navigator.of(context).push(MaterialPageRoute(
                               //     builder: (context) =>
                               //     // TaskCardWidget(id: user.id, name: user.ingredients,)
@@ -770,15 +731,13 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
-
                             },
                             child: Container(
-                              height:120.0,
+                              height: 120.0,
                               width: 120,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
-
                               ),
                               child: Column(
                                 children: [
@@ -792,12 +751,14 @@ class _UserHomePageState extends State<UserHomePage> {
                                       ),
                                     ),
                                   ),
-
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 18.0,),
-                                    child: Text("Cosmetics", style: TextStyle(
-                                        color: Colors.white
-                                    ),),
+                                    padding: const EdgeInsets.only(
+                                      top: 18.0,
+                                    ),
+                                    child: Text(
+                                      "Cosmetics",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
                                   )
                                 ],
                               ),
@@ -805,17 +766,9 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                         ),
                       ),
-
                     ],
                   ),
                 ),
-
-
-
-
-
-
-
               ],
             ),
           ),
@@ -823,12 +776,11 @@ class _UserHomePageState extends State<UserHomePage> {
               left: 0.0,
               top: 0.0,
               right: 0.0,
-
               child: Container(
-                  child: VendomeHeader(drawer: _scaffoldState, cusname: cusname))),
+                  child:
+                      VendomeHeader(drawer: _scaffoldState, cusname: cusname))),
         ],
       ),
-
     ));
   }
 }
