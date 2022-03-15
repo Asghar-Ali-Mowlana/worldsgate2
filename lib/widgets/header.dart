@@ -8,8 +8,11 @@ class VendomeHeader extends StatefulWidget {
 
   GlobalKey<ScaffoldState> drawer;
   String? cusname;
+  String? cusaddress;
 
   VendomeHeader({required this.drawer, required this.cusname});
+
+  VendomeHeader.cus({required this.drawer, required this.cusname, required this.cusaddress});
 
   @override
   _VendomeHeaderState createState() => _VendomeHeaderState();
@@ -48,7 +51,7 @@ class _VendomeHeaderState extends State<VendomeHeader> {
                               width: 15,
                             ),
                             Text(
-                              "  Al Habbtoor Tower, Marina, Dubai",
+                              "  ${widget.cusaddress}",
                               style: TextStyle(color: Colors.white),
                             )
                           ],

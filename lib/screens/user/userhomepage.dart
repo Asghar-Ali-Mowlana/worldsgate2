@@ -55,7 +55,7 @@ class _UserHomePageState extends State<UserHomePage> {
       //   iconTheme: IconThemeData(color: Color(0xFFdb9e1f)),
       // ),
 
-      endDrawer: new UserNavigationDrawer(),
+      endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
 
       backgroundColor: Color(0xFF000000),
       body: Stack(
@@ -134,7 +134,7 @@ class _UserHomePageState extends State<UserHomePage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
                                       // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                      UserHotelBooking(widget.uid)));
+                                      UserHotelBooking(widget.uid, widget.city)));
                             },
                             child: Container(
                               height: 120.0,
@@ -778,7 +778,7 @@ class _UserHomePageState extends State<UserHomePage> {
               right: 0.0,
               child: Container(
                   child:
-                      VendomeHeader(drawer: _scaffoldState, cusname: cusname))),
+                      VendomeHeader.cus(drawer: _scaffoldState, cusname: cusname, cusaddress: widget.city,))),
         ],
       ),
     ));

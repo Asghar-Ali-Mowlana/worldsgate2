@@ -10,10 +10,12 @@ class UserHotelBooking extends StatefulWidget {
   //const UserHotelBooking({Key? key}) : super(key: key);
 
   String? uid;
+  String? city;
 
   //constructor
   UserHotelBooking(
       this.uid,
+      this.city
       );
 
   @override
@@ -71,7 +73,7 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
       //   iconTheme: IconThemeData(color: Color(0xFFdb9e1f)),
       // ),
 
-      endDrawer: new UserNavigationDrawer(),
+      endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
 
       backgroundColor: Color(0xFF000000),
       body: Stack(
@@ -2381,7 +2383,7 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
               left: 0.0,
               top: 0.0,
               right: 0.0,
-              child: Container(child: VendomeHeader(drawer: _scaffoldState, cusname: cusname))),
+              child: Container(child: VendomeHeader.cus(drawer: _scaffoldState, cusname: cusname, cusaddress:widget.city,))),
         ],
       ),
     ));

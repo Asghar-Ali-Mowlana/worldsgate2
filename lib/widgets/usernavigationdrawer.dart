@@ -1,8 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/user/userhomepage.dart';
+import 'package:worldsgate/screens/user/userhotelbooking.dart';
 
 class UserNavigationDrawer extends StatelessWidget {
-  const UserNavigationDrawer({Key? key}) : super(key: key);
+  //const UserNavigationDrawer({Key? key}) : super(key: key);
+
+  String? uid;
+  String? city;
+
+  // //constructor
+  UserNavigationDrawer(
+      this.uid,
+      this.city
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +47,20 @@ class UserNavigationDrawer extends StatelessWidget {
           leading: const Icon(Icons.home_outlined),
           title: const Text('Home'),
           onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => UserHomePage(uid, city!),
+            ));
 
           },
         ),
         ListTile(
           leading: const Icon(Icons.home_outlined),
-          title: const Text('Home'),
+          title: const Text('Hotel Booking'),
           onTap: (){
+
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserHotelBooking(uid, city!),
+            ));
 
           },
         ),
