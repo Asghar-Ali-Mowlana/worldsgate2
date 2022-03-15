@@ -35,14 +35,12 @@ dependencies:
   cloud_firestore: ^3.1.6
   firebase_core: ^1.11.0
   firebase_auth: ^3.3.5
-
+  flutter_launcher_icons: ^0.9.2
   collection: ^1.15.0
   firebase_storage: ^10.2.9
   image_picker: ^0.8.4+11
-
   supercharged: ^2.1.1
   file_picker: ^4.5.1
-
 
 dev_dependencies:
   flutter_test:
@@ -67,3 +65,8 @@ flutter:
     - assets/images/headerimages/
     - assets/images/premiumbrands/
     - assets/images/homepageicons/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.jpeg"
