@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
+import 'package:worldsgate/screens/dataentryoperator/deoviewhotels.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 
 Future main() async {
@@ -39,7 +40,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: DeoViewHotels(),
     );
   }
 }

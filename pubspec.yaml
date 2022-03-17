@@ -42,12 +42,8 @@ dependencies:
   supercharged: ^2.1.1
   file_picker: ^4.5.1
 
-<<<<<<< HEAD
-  flutter_launcher_icons: ^0.9.2
 
 
-=======
->>>>>>> 22496350b6598cd60906cf3d3377b4b14c3ac7ed
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -75,8 +71,6 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-<<<<<<< HEAD
+
   image_path: "assets/images/logo.jpeg"
-=======
-  image_path: "assets/images/logo.jpeg"
->>>>>>> 22496350b6598cd60906cf3d3377b4b14c3ac7ed
+

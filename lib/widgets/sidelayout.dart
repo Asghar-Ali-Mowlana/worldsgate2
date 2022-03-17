@@ -20,9 +20,8 @@ class SideLayout extends StatelessWidget {
         child: Column(
           children: <Widget>[
 
-            Container(
-              margin: const EdgeInsets.only(
-                  top: 180.0, right: 0.0),
+            Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).size.width / 10),
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: Center(

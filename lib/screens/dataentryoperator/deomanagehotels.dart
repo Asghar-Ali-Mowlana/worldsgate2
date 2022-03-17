@@ -94,12 +94,6 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
         entryList = maps.entries.toList();
       });
 
-      //print(maps.values['']);
-
-      //print(entryList);
-      //print(entryList[0].key);
-      //print(entryList[0].value[0]);
-      //print(entryList.length);
 
       setState(() {
         testList = entryList[0].value[0].entries.toList();
