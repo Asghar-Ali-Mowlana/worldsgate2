@@ -10,6 +10,8 @@ class DeoViewHotels extends StatefulWidget {
   //const DeoViewHotels({Key? key}) : super(key: key);
 
   String? uid;
+  String? hotelid;
+
 
   // //constructor
   // DeoViewHotels(
@@ -24,6 +26,9 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
+
+  String as = "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg";
+
 
 
   // getname() async {
@@ -42,12 +47,14 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
   var lisst;
   var x = [];
+  var y;
 
   getyo() async{
 
    await FirebaseFirestore.instance
         .collection('hotels')
         .where('hotelid', isEqualTo: "0ebHtKvN3xT17v3L1fL9")
+      // .where('hotelid', isEqualTo: widget.hotelid)
         .get()
         .then((QuerySnapshot querySnapshot) =>
     {
@@ -59,6 +66,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
           doc['otherhotelimages'],
 
         );
+        y = doc['coverimage'];
   }),
 
 
@@ -112,12 +120,19 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: Image.network(lisst[i][0].toString(), width: MediaQuery.of(context).size.width / 5.85),
+                    child: Image.network(
+                        lisst[i][0].toString().isEmpty
+                            ? lisst[i][1].toString():lisst[i][0].toString(),
+                   width: MediaQuery.of(context).size.width / 5.85),
                   ),
                   //Image.network(dategroupbylist.elementAt(1).toString(),    width: 280.0,),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: Image.network(lisst[i][1].toString(), width: MediaQuery.of(context).size.width / 5.85),
+                    child: Image.network(
+
+
+                        lisst[i][1].toString().isEmpty
+                            ? lisst[i][1].toString():lisst[i][1].toString(),  width: MediaQuery.of(context).size.width / 5.85),
                   )
 
                 ],
@@ -126,7 +141,8 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: Image.network(lisst[i][0].toString(), width: MediaQuery.of(context).size.width /2.85),
+                    child: Image.network(
+                        y.toString(), width: MediaQuery.of(context).size.width /2.85),
                   )
                 ],
               ),
@@ -139,21 +155,27 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
               Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.network(lisst[i][0].toString(), width: MediaQuery.of(context).size.width / 9.95),
+                child: Image.network(lisst[i][2].toString().isEmpty
+                    ? lisst[i][4].toString():lisst[i][1].toString(), width: MediaQuery.of(context).size.width / 9.95),
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.network(lisst[i][2].toString(), width: MediaQuery.of(context).size.width / 9.95),
+                child: Image.network(
+                    lisst[i][3].toString().isEmpty
+   ? lisst[i][1].toString():lisst[i][1].toString(), width: MediaQuery.of(context).size.width / 9.95),
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.network(lisst[i][0].toString(), width: MediaQuery.of(context).size.width / 9.95),
+                child: Image.network( lisst[i][4].toString().isEmpty
+                    ? lisst[i][1].toString():lisst[i][4].toString(), width: MediaQuery.of(context).size.width / 9.95),
               ),  Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.network(lisst[i][2].toString(), width: MediaQuery.of(context).size.width / 9.95),
+                child: Image.network( lisst[i][5].toString().isEmpty
+                    ? lisst[i][1].toString():lisst[i][5].toString(), width: MediaQuery.of(context).size.width / 9.95),
               ),  Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Image.network(lisst[i][0].toString(), width: MediaQuery.of(context).size.width / 9.95),
+                child: Image.network( lisst[i][6].toString().isEmpty
+                    ? lisst[i][1].toString():lisst[i][6].toString(), width: MediaQuery.of(context).size.width / 9.95),
               ),
 
             ],
@@ -192,6 +214,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     //final double height = MediaQuery.of(context).size.height;
 
     return SafeArea(
@@ -246,19 +269,19 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                           Align(
                                             alignment: Alignment.topLeft,
                                             child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 14.0),
+                                              padding: EdgeInsets.only(
+                                                  left: MediaQuery.of(context).size.width / 80),
                                               child: Row(
                                                 children: [
                                                   Icon(
                                                     Icons.location_on,
                                                     color: Color(0xFFdb9e1f),
-                                                    size: 20.0,
+                                                    size: width*0.015,
                                                   ),
                                                   Text(
                                                     "  CheRiz Boutique Villa Hotel - Great location - show map",
                                                     style: TextStyle(
-                                                      fontSize: 16,
+                                                      fontSize: width*0.013,
                                                       color: Colors.white,
                                                     ),
                                                   ),
@@ -267,8 +290,8 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 18.0),
+                                            padding: EdgeInsets.only(
+                                                right: MediaQuery.of(context).size.width / 80),
                                             child: Align(
                                               alignment: Alignment.topRight,
                                               child: MaterialButton(
@@ -281,7 +304,8 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                         color:
                                                             Color(0xFFdb9e1f))),
                                                 elevation: 5.0,
-                                                height: 40,
+                                                height: MediaQuery.of(context).size.height / 18,
+                                                minWidth: MediaQuery.of(context).size.width / 30,
                                                 onPressed: () {
                                                   Navigator.of(context).push(
                                                       MaterialPageRoute(
@@ -293,7 +317,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                 child: Text(
                                                   "Reserve",
                                                   style: TextStyle(
-                                                    fontSize: 20,
+                                                    fontSize: width*0.013,
                                                     color: Color(0xFFdb9e1f),
                                                   ),
                                                 ),
