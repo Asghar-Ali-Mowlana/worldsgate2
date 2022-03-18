@@ -64,7 +64,7 @@ class _UserHomePageState extends State<UserHomePage> {
             child: Column(
               children: [
                 Container(
-                  margin: const EdgeInsets.only(top: 90.0, bottom: 0.0),
+                  margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height / 7.95),
                   child: CarouselSlider(
                     items: imageList
                         .map((imageList) => Container(

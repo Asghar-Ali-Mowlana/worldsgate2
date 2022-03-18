@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/widgets/header.dart';
+
+import '../../widgets/usernavigationdrawer.dart';
 
 class UserViewHotelDetails extends StatefulWidget {
   //const UserViewHotelDetails({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class UserViewHotelDetails extends StatefulWidget {
 }
 
 class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
+  var _scaffoldState = new GlobalKey<ScaffoldState>();
   String? hotelid;
   _UserViewHotelDetailsState(this.hotelid);
 
@@ -25,6 +29,18 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
   var address;
   var description;
   var otherHotelImages;
+
+  String? cusname;
+
+  getname() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get()
+        .then((myDocuments) {
+      cusname = myDocuments.data()!['name'].toString();
+    });
+  }
 
   getyo() async {
     print("The hotel ID is " + hotelid.toString());
@@ -73,7 +89,7 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
               padding: const EdgeInsets.all(5.0),
               child: Container(
                 height: MediaQuery.of(context).size.height / 4.45,
-                width: MediaQuery.of(context).size.width / 2.85,
+                width: MediaQuery.of(context).size.width / 3.05,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(otherHotelImages[i].toString()),
@@ -102,7 +118,7 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
               padding: const EdgeInsets.all(5.0),
               child: Container(
                 height: MediaQuery.of(context).size.height / 7.5,
-                width: MediaQuery.of(context).size.width / 3.52,
+                width: MediaQuery.of(context).size.width / 3.62,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(otherHotelImages[i].toString()),
@@ -162,6 +178,7 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
   @override
   void initState() {
     getyo();
+    getname();
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _isLoading = false;
@@ -176,6 +193,8 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
     return _isLoading
         ? Center(child: CircularProgressIndicator())
         : Scaffold(
+      key: _scaffoldState,
+      endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
             backgroundColor: Color(0xFF000000),
             body: Column(
               children: [
@@ -183,76 +202,88 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
                   height: 50.0,
                 ),
                 Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.vertical,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: Column(
-                          children: [
-                            Container(
-                              child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    name,
-                                    style: TextStyle(
-                                        fontSize: width * 0.06,
-                                        fontWeight: FontWeight.bold),
-                                  )),
-                            ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            //row for button and booking hotel heading
-                            Container(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  SizedBox(
-                                    width: width * 0.032,
-                                    child: Icon(
-                                      Icons.location_on,
-                                      color: Color(0xFFdb9e1f),
-                                      size: width * 0.04,
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "  ${address} - Great location - show map",
-                                      style: TextStyle(
-                                        fontSize: width * 0.032,
-                                        color: Colors.white,
+                  child: Stack(
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Container(
+                          margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height / 5.95),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        name,
+                                        style: TextStyle(
+                                            fontSize: width * 0.06,
+                                            fontWeight: FontWeight.bold),
+                                      )),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                //row for button and booking hotel heading
+                                Container(
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      SizedBox(
+                                        width: width * 0.032,
+                                        child: Icon(
+                                          Icons.location_on,
+                                          color: Color(0xFFdb9e1f),
+                                          size: width * 0.04,
+                                        ),
                                       ),
-                                    ),
+                                      Expanded(
+                                        child: Text(
+                                          "  ${address} - Great location - show map",
+                                          style: TextStyle(
+                                            fontSize: width * 0.032,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                SizedBox(
+                                  height: 10.0,
+                                ),
+                                Container(
+                                  child: Column(
+                                    children: imageBuilderThree(),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                                Container(
+                                  child: Text(
+                                    description,
+                                    style: TextStyle(fontSize: 14.0),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20.0,
+                                ),
+                              ],
                             ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Container(
-                              child: Column(
-                                children: imageBuilderThree(),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                            Container(
-                              child: Text(
-                                description,
-                                style: TextStyle(fontSize: 14.0),
-                              ),
-                            ),
-                            SizedBox(
-                              height: 20.0,
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                      Positioned(
+                          left: 0.0,
+                          top: 0.0,
+                          right: 0.0,
+                          child: Container(
+                              child:
+                              VendomeHeader.cus(drawer: _scaffoldState, cusname: cusname, cusaddress: widget.city,))),
+                    ],
                   ),
                 ),
               ],
