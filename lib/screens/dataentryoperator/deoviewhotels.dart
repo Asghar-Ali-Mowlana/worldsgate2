@@ -23,24 +23,25 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   String? uid;
   String? hotelid;
 
+
   _DeoViewHotelsState(this.uid, this.hotelid);
+
+  String? cusname;
 
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  String as =
-      "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg";
 
-  // getname() async {
-  //   FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(widget.uid)
-  //       .get()
-  //       .then((myDocuments) {
-  //     cusname = myDocuments.data()!['name'].toString();
-  //   });
-  // }
+  getname() async {
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get()
+        .then((myDocuments) {
+      cusname = myDocuments.data()!['name'].toString();
+    });
+  }
 
   List<dynamic> dategroupbylist = <dynamic>[];
 
@@ -348,7 +349,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getname();
+    getname();
     getyo();
     //newbuilder();
     Future.delayed(Duration(seconds: 2), () {
@@ -590,7 +591,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                     child: Container(
                         child: VendomeHeader(
                       drawer: _scaffoldState,
-                      cusname: "cusname",
+                      cusname: cusname,
                     ))),
               ],
             ),

@@ -92,7 +92,10 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
       //print(maps);
       setState(() {
         newMap = maps;
-        entryList = maps.entries.toList();
+        entryList = maps.entries.toList()..sort((e1, e2) => e2.key.compareTo(e1.key));
+        // var sortMapByValue = Map.fromEntries(
+        //     maps.entries.toList()
+        //       ..sort((e1, e2) => e1.key.compareTo(e2.key)));
       });
 
       setState(() {
