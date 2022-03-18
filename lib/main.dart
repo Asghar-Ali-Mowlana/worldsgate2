@@ -4,6 +4,7 @@ import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
 import 'package:worldsgate/screens/dataentryoperator/deoviewhotels.dart';
 import 'package:worldsgate/screens/loginpage.dart';
+import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
