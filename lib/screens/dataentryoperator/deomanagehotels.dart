@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:worldsgate/screens/dataentryoperator/deoviewhotels.dart';
 import 'package:worldsgate/screens/user/userhotelbooking.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
@@ -69,8 +70,8 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
               querySnapshot.docs.forEach((doc) {
                 DateTime dt = (doc['datecreated'] as Timestamp).toDate();
                 String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
-
                 dategroupbylist.add({
+                  "hotel_id": doc.id,
                   "hotel_name": '${doc['name']}',
                   "promotion": '${doc['promotion']}',
                   "cancellationfee": '${doc['cancellationfee']}',
@@ -93,7 +94,6 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
         newMap = maps;
         entryList = maps.entries.toList();
       });
-
 
       setState(() {
         testList = entryList[0].value[0].entries.toList();
@@ -134,7 +134,11 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
               child: Stack(
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => DeoViewHotels(widget.uid,
+                              entryList[i].value[j]["hotel_id"].toString())));
+                    },
                     child: Container(
                       height: MediaQuery.of(context).size.height / 6,
                       width: MediaQuery.of(context).size.width,

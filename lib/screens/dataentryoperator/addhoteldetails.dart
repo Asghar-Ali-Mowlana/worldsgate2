@@ -21,8 +21,8 @@ class AddHotelDetails extends StatefulWidget {
 
   // //constructor
   AddHotelDetails(
-      this.uid,
-      );
+    this.uid,
+  );
 
   @override
   _AddHotelDetailsState createState() => _AddHotelDetailsState();
@@ -31,8 +31,6 @@ class AddHotelDetails extends StatefulWidget {
 class _AddHotelDetailsState extends State<AddHotelDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
-
-
 
   final TextEditingController hotelNameController = TextEditingController();
   final TextEditingController hotelAddressController = TextEditingController();
@@ -275,7 +273,8 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
     return "Unsuccessful";
   }*/
 
-  bool _isUploadingLoading = false;
+  bool _isMainUploadingLoading = false;
+  bool _isOtherUploadingLoading = false;
 
   FilePickerResult? result;
   String? file;
@@ -307,12 +306,12 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
 
           //final fileName = basename(file!.path);
           final destination = '/hotelimages/hotelmain/$filename';
-          print("the destination is $destination");
+          print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
           task = ref.putData(uploadfile);
           setState(() {
-            _isUploadingLoading = true;
+            _isMainUploadingLoading = true;
           });
           setState(() {});
           print("Total bytes $task");
@@ -321,7 +320,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
           if (task == null) return;
           final snapshot = await task!.whenComplete(() {
             setState(() {
-              _isUploadingLoading = false;
+              _isMainUploadingLoading = false;
             });
           });
           final urlDownload = await snapshot.ref.getDownloadURL();
@@ -340,13 +339,6 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
     }
   }
 
-  // String? cusname;
-  //
-  // getname() async {
-  //   FirebaseFirestore.instance.collection('users') .doc(widget.uid)
-  //       .get().then((myDocuments){
-  //     cusname = myDocuments.data()!['name'].toString();
-  //   });}
   FilePickerResult? otherResult;
   String? otherFile;
   UploadTask? otherTask;
@@ -354,14 +346,26 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
   List<Uint8List> otherImage = [];
   List<String> OtherHotelImagesUrl = [];
 
+  List<File>? files;
+
   Future selectOtherFileandUpload() async {
     print('OS: ${u.Platform.operatingSystem}');
     try {
       otherResult = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: false);
+          .pickFiles(type: FileType.any, allowMultiple: true);
       setState(() => otherResult = otherResult);
-      String filename = basename(otherResult!.files.single.name);
-      setState(() => otherFile = filename);
+
+      files = otherResult!.names.map((name) => File(name!)).toList();
+
+      //String filename = basename(otherResult!.files.single.name);
+      //setState(() => otherFile = filename);
+
+      for (int i = 0; i < files!.length; i++) {
+        Uint8List uploadOtherFile = otherResult!.files[i].bytes!;
+        setState(() {
+          otherImage.add(uploadOtherFile);
+        });
+      }
 
       if (otherResult == null) {
         print("Result is null!");
@@ -369,6 +373,44 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
 
       if (otherResult != null) {
         try {
+          for (int i = 0; i < files!.length; i++) {
+            print("Start of upload file method");
+            Uint8List uploadfile = otherResult!.files[i].bytes!;
+            //setState(() {
+            //otherImage.add(uploadfile);
+            //});
+            String filename = basename(otherResult!.files[i].name);
+            final destination = '/hotelimages/hotelsub/$filename';
+            print("The destination is $destination");
+
+            final ref = FirebaseStorage.instance.ref(destination);
+            otherTask = ref.putData(uploadfile);
+            setState(() {
+              _isOtherUploadingLoading = true;
+            });
+            print("Total bytes $otherTask");
+            print("Total bytes ${otherTask!.snapshot.totalBytes}");
+
+            if (otherTask == null) return;
+            final snapshot = await otherTask!.whenComplete(() {
+              //setState(() {
+              //_isUploadingLoading = false;
+              //});
+            });
+            final urlDownload = await snapshot.ref.getDownloadURL();
+
+            print('Download-Link: $urlDownload');
+
+            otherImageLink = urlDownload;
+
+            setState(() => otherImageLink = urlDownload);
+            OtherHotelImagesUrl.add(otherImageLink);
+          }
+
+          setState(() {
+            _isOtherUploadingLoading = false;
+          });
+          /*
           print("Start of upload file method");
           Uint8List uploadfile = otherResult!.files.single.bytes!;
           setState(() {
@@ -401,7 +443,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
           otherImageLink = urlDownload;
 
           setState(() => otherImageLink = urlDownload);
-          OtherHotelImagesUrl.add(otherImageLink);
+          OtherHotelImagesUrl.add(otherImageLink);*/
         } catch (e) {
           print(e);
         }
@@ -653,8 +695,11 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
       spaCategory
     ];
 
+    String newHotelId =
+        FirebaseFirestore.instance.collection('hotels').doc().id;
+
     try {
-      await FirebaseFirestore.instance.collection('hotels').doc().set({
+      await FirebaseFirestore.instance.collection('hotels').doc(newHotelId).set({
         'name': hotelNameController.text,
         'city': city,
         'address': hotelAddressController.text,
@@ -668,23 +713,26 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         'coverimage': coverImageLink,
         'otherhotelimages': OtherHotelImagesUrl,
         'cancellationfee': null,
-     //   'promotion': null,
-        'taxandcharges': null
+        //   'promotion': null,
+        'taxandcharges': null,
+        'hotelid': newHotelId,
       });
     } catch (e) {
       print(e);
     }
   }
 
-
   String? cusname;
 
   getname() async {
-    FirebaseFirestore.instance.collection('users') .doc(widget.uid)
-        .get().then((myDocuments){
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.uid)
+        .get()
+        .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
-    });}
-
+    });
+  }
 
   @override
   void initState() {
@@ -698,7 +746,6 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         _isLoading = false;
       });
     });
-
   }
 
   @override
@@ -708,1069 +755,1202 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         key: _scaffoldState,
         drawer: new DeoNavigationDrawer(widget.uid),
         backgroundColor: Color(0xFF000000),
-        body:
-        (_isLoading==true)
-            ?
-        Center(child: CircularProgressIndicator())
-            :
-        Stack(
-          children: [
-            SingleChildScrollView(
-              child: Column(
+        body: (_isLoading == true)
+            ? Center(child: CircularProgressIndicator())
+            : Stack(
                 children: [
-                  Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width / 1.6,
-                      color: Color(0xFF000000),
-                      child: Center(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: 120,
-                              right: 120,
-                              bottom: 120,
-                              top: MediaQuery.of(context).size.height * 0.25),
-                          child: Form(
-                              key: _formkey,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    controller: hotelNameController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.cancel,
-                                            color: Color(0xFFdb9e1f),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Center(
+                          child: Container(
+                            width: MediaQuery.of(context).size.width / 1.6,
+                            color: Color(0xFF000000),
+                            child: Center(
+                              child: Container(
+                                margin: EdgeInsets.only(
+                                    left: 120,
+                                    right: 120,
+                                    bottom: 120,
+                                    top: MediaQuery.of(context).size.height *
+                                        0.25),
+                                child: Form(
+                                    key: _formkey,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        TextFormField(
+                                          style: TextStyle(color: Colors.white),
+                                          controller: hotelNameController,
+                                          decoration: InputDecoration(
+                                            suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  color: Color(0xFFdb9e1f),
+                                                ),
+                                                onPressed: () {
+                                                  hotelNameController
+                                                    ..text = "";
+                                                }),
+                                            hintText: "Enter hotel name",
+                                            labelText: "Hotel Name",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelStyle: new TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            hotelNameController..text = "";
-                                          }),
-                                      hintText: "Enter hotel name",
-                                      labelText: "Hotel Name",
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      labelStyle: new TextStyle(
-                                          color: Colors.white70, height: 0.1),
-                                      enabled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Colors.white70),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Color(0xFFdb9e1f)),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.length == 0) {
-                                        return "Hotel name cannot be empty";
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      hotelNameController.text = value!;
-                                    },
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Select place in UAE",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Hotel City',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
+                                          validator: (value) {
+                                            if (value!.length == 0) {
+                                              return "Hotel name cannot be empty";
+                                            }
+                                          },
+                                          onSaved: (value) {
+                                            hotelNameController.text = value!;
+                                          },
+                                          keyboardType: TextInputType.text,
                                         ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
+                                        SizedBox(
+                                          height: 20,
                                         ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: city,
-                                      items: places.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.city = value as String?;
-                                          })),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    controller: hotelAddressController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.cancel,
-                                            color: Color(0xFFdb9e1f),
-                                          ),
-                                          onPressed: () {
-                                            hotelAddressController..text = "";
-                                          }),
-                                      hintText: "Enter hotel address",
-                                      labelText: "Hotel Address",
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      labelStyle: new TextStyle(
-                                          color: Colors.white70, height: 0.1),
-                                      enabled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Colors.white70),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Color(0xFFdb9e1f)),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.length == 0) {
-                                        return "Hotel address cannot be empty";
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      hotelAddressController.text = value!;
-                                    },
-                                    keyboardType: TextInputType.text,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    controller: startingPriceController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.cancel,
-                                            color: Color(0xFFdb9e1f),
-                                          ),
-                                          onPressed: () {
-                                            startingPriceController..text = "";
-                                          }),
-                                      hintText: "Enter starting price",
-                                      labelText: "Starting Price",
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      labelStyle: new TextStyle(
-                                          color: Colors.white70, height: 0.1),
-                                      enabled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Colors.white70),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Color(0xFFdb9e1f)),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.length == 0) {
-                                        return "Starting price cannot be empty";
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      startingPriceController.text = value!;
-                                    },
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    controller: discountController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.cancel,
-                                            color: Color(0xFFdb9e1f),
-                                          ),
-                                          onPressed: () {
-                                            discountController..text = "";
-                                          }),
-                                      hintText: "Enter discounts",
-                                      labelText: "Discounts",
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      labelStyle: new TextStyle(
-                                          color: Colors.white70, height: 0.1),
-                                      enabled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Colors.white70),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Color(0xFFdb9e1f)),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.length == 0) {
-                                        return "Discounts cannot be empty";
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      discountController.text = value!;
-                                    },
-                                    keyboardType: TextInputType.number,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  TextFormField(
-                                    style: TextStyle(color: Colors.white),
-                                    maxLines: null,
-                                    controller: descriptionController,
-                                    decoration: InputDecoration(
-                                      suffixIcon: IconButton(
-                                          icon: Icon(
-                                            Icons.cancel,
-                                            color: Color(0xFFdb9e1f),
-                                          ),
-                                          onPressed: () {
-                                            descriptionController..text = "";
-                                          }),
-                                      hintText: "Enter hotel description",
-                                      labelText: "Hotel Description",
-                                      hintStyle:
-                                          TextStyle(color: Colors.white70),
-                                      labelStyle: new TextStyle(
-                                          color: Colors.white70, height: 0.1),
-                                      enabled: true,
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Colors.white70),
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: new BorderSide(
-                                            color: Color(0xFFdb9e1f)),
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value!.length == 0) {
-                                        return "Hotel description cannot be empty";
-                                      }
-                                    },
-                                    onSaved: (value) {
-                                      descriptionController.text = value!;
-                                    },
-                                    keyboardType: TextInputType.multiline,
-                                  ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  const Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Hotel Cover Photos",
-                                      style: TextStyle(
-                                          color: Colors.white70, fontSize: 16),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              //mainSelectedImage();
-                                              //uploadFileToCloud();
-                                              selectFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
+                                        DropdownButtonFormField(
+                                            decoration: InputDecoration(
+                                              hintText: "Select place in UAE",
+                                              hintStyle: TextStyle(
+                                                  color: Colors.white70),
+                                              labelText: 'Hotel City',
+                                              labelStyle: TextStyle(
+                                                  color: Colors.white70,
+                                                  height: 0.1),
+                                              enabled: true,
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: new BorderSide(
+                                                    color: Colors.white70),
+                                              ),
+                                              focusedBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: new BorderSide(
+                                                    color: Color(0xFFdb9e1f)),
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  coverImage.length != 0
-                                      ? Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              1.6,
-                                          height: 160,
-                                          child: GridView.builder(
-                                              itemCount: coverImage.length,
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 7),
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 8.0),
-                                                  child: Container(
-                                                      height: 100,
-                                                      width: 100,
-                                                      decoration: BoxDecoration(
-                                                          image: DecorationImage(
-                                                              image: MemoryImage(
-                                                                  coverImage[
-                                                                      index]),
-                                                              fit: BoxFit
-                                                                  .cover))),
-                                                );
-                                                //Text('Image : ' + index.toString());
-                                              }),
-                                        )
-                                      : SizedBox(
-                                          height: 10,
+                                            dropdownColor: Color(0xFF000000),
+                                            //focusColor: Color(0xFFdb9e1f),
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            isExpanded: true,
+                                            value: city,
+                                            items: places
+                                                .map(buildMenuItem)
+                                                .toList(),
+                                            onChanged: (value) => setState(() {
+                                                  this.city = value as String?;
+                                                })),
+                                        SizedBox(
+                                          height: 20,
                                         ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  const Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Other Hotel Photos",
-                                      style: TextStyle(
-                                          color: Colors.white70, fontSize: 16),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
+                                        TextFormField(
+                                          style: TextStyle(color: Colors.white),
+                                          controller: hotelAddressController,
+                                          decoration: InputDecoration(
+                                            suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  color: Color(0xFFdb9e1f),
+                                                ),
+                                                onPressed: () {
+                                                  hotelAddressController
+                                                    ..text = "";
+                                                }),
+                                            hintText: "Enter hotel address",
+                                            labelText: "Hotel Address",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelStyle: new TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
+                                          validator: (value) {
+                                            if (value!.length == 0) {
+                                              return "Hotel address cannot be empty";
+                                            }
+                                          },
+                                          onSaved: (value) {
+                                            hotelAddressController.text =
+                                                value!;
+                                          },
+                                          keyboardType: TextInputType.text,
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextFormField(
+                                          style: TextStyle(color: Colors.white),
+                                          controller: startingPriceController,
+                                          decoration: InputDecoration(
+                                            suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  color: Color(0xFFdb9e1f),
+                                                ),
+                                                onPressed: () {
+                                                  startingPriceController
+                                                    ..text = "";
+                                                }),
+                                            hintText: "Enter starting price",
+                                            labelText: "Starting Price",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelStyle: new TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
+                                          validator: (value) {
+                                            if (value!.length == 0) {
+                                              return "Starting price cannot be empty";
+                                            }
+                                          },
+                                          onSaved: (value) {
+                                            startingPriceController.text =
+                                                value!;
+                                          },
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextFormField(
+                                          style: TextStyle(color: Colors.white),
+                                          controller: discountController,
+                                          decoration: InputDecoration(
+                                            suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  color: Color(0xFFdb9e1f),
+                                                ),
+                                                onPressed: () {
+                                                  discountController..text = "";
+                                                }),
+                                            hintText: "Enter discounts",
+                                            labelText: "Discounts",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelStyle: new TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
+                                          validator: (value) {
+                                            if (value!.length == 0) {
+                                              return "Discounts cannot be empty";
+                                            }
+                                          },
+                                          onSaved: (value) {
+                                            discountController.text = value!;
+                                          },
+                                          keyboardType: TextInputType.number,
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        TextFormField(
+                                          style: TextStyle(color: Colors.white),
+                                          maxLines: null,
+                                          controller: descriptionController,
+                                          decoration: InputDecoration(
+                                            suffixIcon: IconButton(
+                                                icon: Icon(
+                                                  Icons.cancel,
+                                                  color: Color(0xFFdb9e1f),
+                                                ),
+                                                onPressed: () {
+                                                  descriptionController
+                                                    ..text = "";
+                                                }),
+                                            hintText: "Enter hotel description",
+                                            labelText: "Hotel Description",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelStyle: new TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
                                             ),
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
-                                            ),
+                                          validator: (value) {
+                                            if (value!.length == 0) {
+                                              return "Hotel description cannot be empty";
+                                            }
+                                          },
+                                          onSaved: (value) {
+                                            descriptionController.text = value!;
+                                          },
+                                          keyboardType: TextInputType.multiline,
+                                        ),
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Hotel Cover Photo",
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 16),
                                           ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () {
-                                              //selectImage();
-                                              //selectFile();
-                                              selectOtherFileandUpload();
-                                            },
-                                            child: Container(
-                                              height: 100.0,
-                                              width: 100.0,
-                                              decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              child: Icon(Icons.add),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  otherImage.length != 0
-                                      ? Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              1.6,
-                                          height: 160,
-                                          child: GridView.builder(
-                                              itemCount: otherImage.length,
-                                              gridDelegate:
-                                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                                      crossAxisCount: 8),
-                                              itemBuilder:
-                                                  (BuildContext context,
-                                                      int index) {
-                                                return Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 8.0),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Container(
-                                                        height: 100,
-                                                        width: 100,
-                                                        decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: MemoryImage(
-                                                                    otherImage[
-                                                                        index]),
-                                                                fit: BoxFit
-                                                                    .cover))),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: 270.0,
+                                            height: 50.0,
+                                            child: ElevatedButton.icon(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFF000000),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  20.0)),
+                                                      side: BorderSide(
+                                                          color: Color(
+                                                              0xFFdb9e1f))),
+                                                  side: BorderSide(
+                                                    width: 2.5,
+                                                    color: Color(0xFFdb9e1f),
                                                   ),
-                                                );
-                                                //Text('Image : ' + index.toString());
-                                              }),
-                                        )
-                                      : SizedBox(
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 16)),
+                                              onPressed: () {
+                                                selectFileandUpload();
+                                              },
+                                              icon: Icon(
+                                                Icons.add_a_photo,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ), //icon data for elevated button
+                                              label: Text(
+                                                "Hotel Cover Photo",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              /*child: const Text(
+                                                'Hotel Cover Photo',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),*/
+                                            ),
+                                          ), /*Container(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    //mainSelectedImage();
+                                                    //uploadFileToCloud();
+                                                    selectFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),*/
+                                        ),
+                                        coverImage.length != 0
+                                            ? Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    1.6,
+                                                height: 160,
+                                                child: GridView.builder(
+                                                    itemCount:
+                                                        coverImage.length,
+                                                    gridDelegate:
+                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                            crossAxisCount: 7),
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 8.0),
+                                                        child: Container(
+                                                            height: 100,
+                                                            width: 100,
+                                                            decoration: BoxDecoration(
+                                                                image: DecorationImage(
+                                                                    image: MemoryImage(
+                                                                        coverImage[
+                                                                            index]),
+                                                                    fit: BoxFit
+                                                                        .cover))),
+                                                      );
+                                                      //Text('Image : ' + index.toString());
+                                                    }),
+                                              )
+                                            : SizedBox(
+                                                height: 10,
+                                              ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Other Hotel Photos",
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            width: 270.0,
+                                            height: 50.0,
+                                            child: ElevatedButton.icon(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFF000000),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  20.0)),
+                                                      side: BorderSide(
+                                                          color: Color(
+                                                              0xFFdb9e1f))),
+                                                  side: BorderSide(
+                                                    width: 2.5,
+                                                    color: Color(0xFFdb9e1f),
+                                                  ),
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 16)),
+                                              onPressed: () {
+                                                selectOtherFileandUpload();
+                                              },
+                                              icon: Icon(
+                                                Icons.add_a_photo,
+                                                color: Colors.white,
+                                                size: 20,
+                                              ), //icon data for elevated button
+                                              label: Text(
+                                                "Other Hotel Photos",
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                              /*child: const Text(
+                                                'Hotel Cover Photo',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),*/
+                                            ),
+                                          ), /*Container(
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                                InkWell(
+                                                  onTap: () {
+                                                    //selectImage();
+                                                    //selectFile();
+                                                    selectOtherFileandUpload();
+                                                  },
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width: 100.0,
+                                                    decoration: BoxDecoration(
+                                                        border: Border.all(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    child: Icon(Icons.add),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),*/
+                                        ),
+                                        otherImage.length != 0
+                                            ? Container(
+                                                width: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    1.6,
+                                                height: 160,
+                                                child: GridView.builder(
+                                                    itemCount:
+                                                        otherImage.length,
+                                                    gridDelegate:
+                                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                                            crossAxisCount: 8),
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index) {
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .only(top: 8.0),
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(8.0),
+                                                          child: Container(
+                                                              height: 100,
+                                                              width: 100,
+                                                              decoration: BoxDecoration(
+                                                                  image: DecorationImage(
+                                                                      image: MemoryImage(
+                                                                          otherImage[
+                                                                              index]),
+                                                                      fit: BoxFit
+                                                                          .cover))),
+                                                        ),
+                                                      );
+                                                      //Text('Image : ' + index.toString());
+                                                    }),
+                                              )
+                                            : SizedBox(
+                                                height: 10,
+                                              ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                        Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Main Facilities",
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                        SizedBox(
                                           height: 10,
                                         ),
-                                  SizedBox(
-                                    height: 20,
-                                  ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Main Facilities",
-                                      style: TextStyle(
-                                          color: Colors.white70, fontSize: 16),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  Wrap(
-                                    direction: Axis.vertical,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Swimming Pool",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: swimmingValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.swimmingValue = value!;
-                                                });
-                                                if (swimmingValue) {
-                                                  mainFacilities
-                                                      .add('Swimming Pool');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Swimming Pool'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
+                                        Wrap(
+                                          direction: Axis.vertical,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Swimming Pool",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: swimmingValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.swimmingValue =
+                                                            value!;
+                                                      });
+                                                      if (swimmingValue) {
+                                                        mainFacilities.add(
+                                                            'Swimming Pool');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Swimming Pool'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Fitness Center",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: fitnessCenterValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.fitnessCenterValue =
+                                                            value!;
+                                                      });
+                                                      if (fitnessCenterValue) {
+                                                        mainFacilities.add(
+                                                            'Fitness Center');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Fitness Center'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Airport Shuttle",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: airportShuttleValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.airportShuttleValue =
+                                                            value!;
+                                                      });
+                                                      if (airportShuttleValue) {
+                                                        mainFacilities.add(
+                                                            'Airport Shuttle');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Airport Shuttle'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Non-smoking rooms",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: nonSmokingRoomsValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.nonSmokingRoomsValue =
+                                                            value!;
+                                                      });
+                                                      if (nonSmokingRoomsValue) {
+                                                        mainFacilities.add(
+                                                            'Non-smoking rooms');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Non-smoking rooms'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Fitness Center",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: fitnessCenterValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.fitnessCenterValue =
-                                                      value!;
-                                                });
-                                                if (fitnessCenterValue) {
-                                                  mainFacilities
-                                                      .add('Fitness Center');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Fitness Center'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Spa",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: spaValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.spaValue = value!;
+                                                      });
+                                                      if (spaValue) {
+                                                        mainFacilities
+                                                            .add('Spa');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities
+                                                                .indexOf(
+                                                                    'Spa'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Restaurant",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: restaurentValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.restaurentValue =
+                                                            value!;
+                                                      });
+                                                      if (restaurentValue) {
+                                                        mainFacilities
+                                                            .add('Restaurant');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Restaurant'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Room service",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: roomServiceValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.roomServiceValue =
+                                                            value!;
+                                                      });
+                                                      if (roomServiceValue) {
+                                                        mainFacilities.add(
+                                                            'Room service');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Room service'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Bar",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: barValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.barValue = value!;
+                                                      });
+                                                      if (barValue) {
+                                                        mainFacilities
+                                                            .add('Bar');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities
+                                                                .indexOf(
+                                                                    'Bar'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Airport Shuttle",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: airportShuttleValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.airportShuttleValue =
-                                                      value!;
-                                                });
-                                                if (airportShuttleValue) {
-                                                  mainFacilities
-                                                      .add('Airport Shuttle');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Airport Shuttle'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Non-smoking rooms",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: nonSmokingRoomsValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.nonSmokingRoomsValue =
-                                                      value!;
-                                                });
-                                                if (nonSmokingRoomsValue) {
-                                                  mainFacilities
-                                                      .add('Non-smoking rooms');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Non-smoking rooms'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Spa",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: spaValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.spaValue = value!;
-                                                });
-                                                if (spaValue) {
-                                                  mainFacilities.add('Spa');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities
-                                                          .indexOf('Spa'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Restaurant",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: restaurentValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.restaurentValue = value!;
-                                                });
-                                                if (restaurentValue) {
-                                                  mainFacilities
-                                                      .add('Restaurant');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Restaurant'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Room service",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: roomServiceValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.roomServiceValue =
-                                                      value!;
-                                                });
-                                                if (roomServiceValue) {
-                                                  mainFacilities
-                                                      .add('Room service');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Room service'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Bar",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: barValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.barValue = value!;
-                                                });
-                                                if (barValue) {
-                                                  mainFacilities.add('Bar');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities
-                                                          .indexOf('Bar'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Breakfast",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: breakfastValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.breakfastValue = value!;
-                                                });
-                                                if (breakfastValue) {
-                                                  mainFacilities
-                                                      .add('Breakfast');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Breakfast'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "WiFi in all areas",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: wifiValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.wifiValue = value!;
-                                                });
-                                                if (wifiValue) {
-                                                  mainFacilities
-                                                      .add('WiFi in all areas');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'WiFi in all areas'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Tea/Coffee Maker in All Rooms",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: teaCoffeeMakerValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.teaCoffeeMakerValue =
-                                                      value!;
-                                                });
-                                                if (teaCoffeeMakerValue) {
-                                                  mainFacilities.add(
-                                                      'Tea/Coffee Maker in All Rooms');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Tea/Coffee Maker in All Rooms'));
-                                                }
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                9,
-                                            child: CheckboxListTile(
-                                              title: Text(
-                                                "Facilities for disabled guests",
-                                                style: TextStyle(
-                                                    color: Colors.white70),
-                                              ),
-                                              //secondary: Icon(
-                                              //Icons.person,
-                                              //color: Colors.white70,
-                                              //),
-                                              controlAffinity:
-                                                  ListTileControlAffinity
-                                                      .leading,
-                                              value: disabledGuestsValue,
-                                              onChanged: (value) {
-                                                setState(() {
-                                                  this.disabledGuestsValue =
-                                                      value!;
-                                                });
-                                                if (disabledGuestsValue) {
-                                                  mainFacilities.add(
-                                                      'Facilities for disabled guests');
-                                                } else {
-                                                  mainFacilities.removeAt(
-                                                      mainFacilities.indexOf(
-                                                          'Facilities for disabled guests'));
-                                                }
-                                                print(mainFacilities);
-                                              },
-                                              activeColor: Color(0xFFdb9e1f),
-                                              checkColor: Colors.white,
-                                              side: BorderSide(
-                                                color: Colors.white70,
-                                                width: 1.5,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 40,
-                                  ),
-                                  /*const Align(
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Breakfast",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: breakfastValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.breakfastValue =
+                                                            value!;
+                                                      });
+                                                      if (breakfastValue) {
+                                                        mainFacilities
+                                                            .add('Breakfast');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities
+                                                                .indexOf(
+                                                                    'Breakfast'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "WiFi in all areas",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: wifiValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.wifiValue = value!;
+                                                      });
+                                                      if (wifiValue) {
+                                                        mainFacilities.add(
+                                                            'WiFi in all areas');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'WiFi in all areas'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Tea/Coffee Maker in All Rooms",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: teaCoffeeMakerValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.teaCoffeeMakerValue =
+                                                            value!;
+                                                      });
+                                                      if (teaCoffeeMakerValue) {
+                                                        mainFacilities.add(
+                                                            'Tea/Coffee Maker in All Rooms');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Tea/Coffee Maker in All Rooms'));
+                                                      }
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      9,
+                                                  child: CheckboxListTile(
+                                                    title: Text(
+                                                      "Facilities for disabled guests",
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.white70),
+                                                    ),
+                                                    //secondary: Icon(
+                                                    //Icons.person,
+                                                    //color: Colors.white70,
+                                                    //),
+                                                    controlAffinity:
+                                                        ListTileControlAffinity
+                                                            .leading,
+                                                    value: disabledGuestsValue,
+                                                    onChanged: (value) {
+                                                      setState(() {
+                                                        this.disabledGuestsValue =
+                                                            value!;
+                                                      });
+                                                      if (disabledGuestsValue) {
+                                                        mainFacilities.add(
+                                                            'Facilities for disabled guests');
+                                                      } else {
+                                                        mainFacilities.removeAt(
+                                                            mainFacilities.indexOf(
+                                                                'Facilities for disabled guests'));
+                                                      }
+                                                      print(mainFacilities);
+                                                    },
+                                                    activeColor:
+                                                        Color(0xFFdb9e1f),
+                                                    checkColor: Colors.white,
+                                                    side: BorderSide(
+                                                      color: Colors.white70,
+                                                      width: 1.5,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 40,
+                                        ),
+                                        /*const Align(
                                     alignment: Alignment.centerLeft,
                                     child: Text(
                                       "Sub-Facilities",
@@ -5735,71 +5915,86 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                   SizedBox(
                                     height: 40,
                                   ),*/
-                                  _isUploadingLoading
-                                      ? Padding(
-                                          padding: const EdgeInsets.only(top: 16.0),
-                                          child: SizedBox(
-                                              height: 80.0,
-                                              width: 80.0,
-                                              child: CircularProgressIndicator(
-                                                valueColor:
-                                                    AlwaysStoppedAnimation<
-                                                            Color>(
-                                                        Color(0xFFdb9e1f)),
-                                              )),
-                                        )
-                                      : Container(
-                                          width: 300.0,
-                                          height: 50.0,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                primary: Color(0xFF000000),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    side: BorderSide(
-                                                        color:
-                                                            Color(0xFFdb9e1f))),
-                                                side: BorderSide(
-                                                  width: 2.5,
-                                                  color: Color(0xFFdb9e1f),
+                                        _isMainUploadingLoading ||
+                                                _isOtherUploadingLoading
+                                            ? Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 16.0),
+                                                child: SizedBox(
+                                                    height: 80.0,
+                                                    width: 80.0,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      valueColor:
+                                                          AlwaysStoppedAnimation<
+                                                                  Color>(
+                                                              Color(
+                                                                  0xFFdb9e1f)),
+                                                    )),
+                                              )
+                                            : Container(
+                                                width: 300.0,
+                                                height: 50.0,
+                                                child: ElevatedButton(
+                                                  style:
+                                                      ElevatedButton.styleFrom(
+                                                          primary:
+                                                              Color(0xFF000000),
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          20.0)),
+                                                              side: BorderSide(
+                                                                  color: Color(
+                                                                      0xFFdb9e1f))),
+                                                          side: BorderSide(
+                                                            width: 2.5,
+                                                            color: Color(
+                                                                0xFFdb9e1f),
+                                                          ),
+                                                          textStyle:
+                                                              const TextStyle(
+                                                                  fontSize:
+                                                                      16)),
+                                                  onPressed: () {
+                                                    //uploadMainFunction(_selectedFile);
+                                                    //uploadFile();
+                                                    _uploadHotelData();
+                                                    Navigator.of(context).push(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                DeoManageHotels(
+                                                                    widget
+                                                                        .uid)));
+                                                  },
+                                                  child: const Text(
+                                                    'Save',
+                                                    style: TextStyle(
+                                                        color: Colors.white),
+                                                  ),
                                                 ),
-                                                textStyle: const TextStyle(
-                                                    fontSize: 16)),
-                                            onPressed: () {
-                                              //uploadMainFunction(_selectedFile);
-                                              //uploadFile();
-                                              _uploadHotelData();
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          DeoManageHotels(widget.uid)));
-                                            },
-                                            child: const Text(
-                                              'Save',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                ],
-                              )),
-                        ),
-                      ),
+                                              ),
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
                     ),
-                  )
+                  ),
+                  Positioned(
+                      left: 0.0,
+                      top: 0.0,
+                      right: 0.0,
+                      child: Container(
+                          child: VendomeHeader(
+                        drawer: _scaffoldState,
+                        cusname: cusname,
+                      ))),
                 ],
               ),
-            ),
-            Positioned(
-                left: 0.0,
-                top: 0.0,
-                right: 0.0,
-                child: Container(child: VendomeHeader(drawer: _scaffoldState, cusname: cusname,))),
-          ],
-        ),
       ),
     );
   }
