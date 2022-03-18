@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: DeoViewHotels(),
+      home: LoginPage(),
     );
   }
 }
