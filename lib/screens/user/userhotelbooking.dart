@@ -629,7 +629,7 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
                                           UserViewHotelDetails(
-                                              widget.uid, doc.id)));
+                                              widget.uid, doc.id, widget.city)));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(

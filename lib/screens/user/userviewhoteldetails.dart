@@ -5,8 +5,9 @@ class UserViewHotelDetails extends StatefulWidget {
   //const UserViewHotelDetails({Key? key}) : super(key: key);
   String? uid;
   String? hotelid;
+  String? city;
 
-  UserViewHotelDetails(this.uid, this.hotelid);
+  UserViewHotelDetails(this.uid, this.hotelid, this.city);
 
   @override
   _UserViewHotelDetailsState createState() =>
@@ -62,38 +63,29 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
 
   List<Widget> imageBuilderOne() {
     List<Widget> m = [];
-    m.add(
-      Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Container(
-              height: MediaQuery.of(context).size.height / 4.45,
-              width: MediaQuery.of(context).size.width / 2.85,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(otherHotelImages[0].toString()),
-                  fit: BoxFit.cover,
+    int numberOfImagesDisplayed =
+        otherHotelImages.length >= 2 ? 2 : otherHotelImages.length;
+    for (int i = 0; i < numberOfImagesDisplayed; i++) {
+      m.add(
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height / 4.45,
+                width: MediaQuery.of(context).size.width / 2.85,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(otherHotelImages[i].toString()),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Container(
-              height: MediaQuery.of(context).size.height / 4.45,
-              width: MediaQuery.of(context).size.width / 2.85,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(otherHotelImages[1].toString()),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
     return m;
   }
 
@@ -215,17 +207,17 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
                             Container(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.only(bottom: 18.0),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(
+                                    width: width * 0.032,
                                     child: Icon(
                                       Icons.location_on,
                                       color: Color(0xFFdb9e1f),
-                                      size: width * 0.032,
+                                      size: width * 0.04,
                                     ),
                                   ),
-                                  Flexible(
+                                  Expanded(
                                     child: Text(
                                       "  ${address} - Great location - show map",
                                       style: TextStyle(
@@ -253,6 +245,9 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
                                 description,
                                 style: TextStyle(fontSize: 14.0),
                               ),
+                            ),
+                            SizedBox(
+                              height: 20.0,
                             ),
                           ],
                         ),

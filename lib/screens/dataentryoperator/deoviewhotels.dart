@@ -23,7 +23,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   String? uid;
   String? hotelid;
 
-
   _DeoViewHotelsState(this.uid, this.hotelid);
 
   String? cusname;
@@ -31,7 +30,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
-
 
   getname() async {
     FirebaseFirestore.instance
@@ -108,50 +106,40 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
   List<Widget> imageBuilderOne() {
     List<Widget> m = [];
-    m.add(
-      Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Container(
-              height: MediaQuery.of(context).size.height / 4.45,
-              width: MediaQuery.of(context).size.width / 5.85,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(otherHotelImages[0].toString()),
-                  fit: BoxFit.cover,
+    int numberOfImagesDisplayed =
+        otherHotelImages.length >= 2 ? 2 : otherHotelImages.length;
+    for (int i = 0; i < numberOfImagesDisplayed; i++) {
+      m.add(
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Container(
+                height: MediaQuery.of(context).size.height / 4.45,
+                width: MediaQuery.of(context).size.width / 5.85,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(otherHotelImages[i].toString()),
+                    fit: BoxFit.cover,
+                  ),
                 ),
+                //child: Image.network(otherHotelImages[0].toString(),
+                //  height: MediaQuery.of(context).size.height / 4.45,
+                //width: MediaQuery.of(context).size.width / 5.85),
               ),
-              //child: Image.network(otherHotelImages[0].toString(),
-              //  height: MediaQuery.of(context).size.height / 4.45,
-              //width: MediaQuery.of(context).size.width / 5.85),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Container(
-              height: MediaQuery.of(context).size.height / 4.45,
-              width: MediaQuery.of(context).size.width / 5.85,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(otherHotelImages[1].toString()),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              //child: Image.network(otherHotelImages[0].toString(),
-              //  height: MediaQuery.of(context).size.height / 4.45,
-              //width: MediaQuery.of(context).size.width / 5.85),
-            ),
-          ),
-          //Padding(
-          //padding: const EdgeInsets.all(5.0),
-          //child: Image.network(otherHotelImages[1].toString(),
-          //  height: MediaQuery.of(context).size.height / 4.45,
-          //width: MediaQuery.of(context).size.width / 5.85),
-          //),
-        ],
-      ),
-    );
+
+            //Padding(
+            //padding: const EdgeInsets.all(5.0),
+            //child: Image.network(otherHotelImages[1].toString(),
+            //  height: MediaQuery.of(context).size.height / 4.45,
+            //width: MediaQuery.of(context).size.width / 5.85),
+            //),
+          ],
+        ),
+      );
+    }
+
     return m;
   }
 
