@@ -628,8 +628,8 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                                 onTap: () {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          UserViewHotelDetails(
-                                              widget.uid, doc.id, widget.city)));
+                                          UserViewHotelDetails(widget.uid,
+                                              doc.id, widget.city)));
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.only(
@@ -793,7 +793,9 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                                                 color: Color(0xFFBA780F)),
                                             image: DecorationImage(
                                               image: NetworkImage(
-                                                  doc['coverimage']),
+                                                  doc['coverimage'] == null
+                                                      ? ""
+                                                      : doc['coverimage']),
                                               fit: BoxFit.fill,
                                             ),
                                           ),

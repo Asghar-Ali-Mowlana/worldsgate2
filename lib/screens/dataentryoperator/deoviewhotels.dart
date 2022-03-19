@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import '../../widgets/sidelayout.dart';
-import 'addhoteldetails.dart';
+import 'deoaddhoteldetails.dart';
 
 class DeoViewHotels extends StatefulWidget {
   //const DeoViewHotels({Key? key}) : super(key: key);
