@@ -340,7 +340,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     getname();
     getyo();
     //newbuilder();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
@@ -518,6 +518,274 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                           description,
                                           style: TextStyle(fontSize: 16.0),
                                         ),
+                                      ),
+                                    ),
+                                    //table
+                                    Padding(
+                                      padding: EdgeInsets.only(left: MediaQuery.of(context)
+                                          .size
+                                          .width /
+                                          80, bottom: 24.0, top: 8.0),
+                                      child: Column(
+                                        children: [
+                                          Container(
+
+                                            child: Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                        color: Color(0xFFdb9e1f),
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Room Type",
+                                                          style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight: FontWeight.bold
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                        color: Color(0xFFdb9e1f),
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Sleeps",
+                                                          style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontWeight: FontWeight.bold
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                        color: Color(0xFFdb9e1f),
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Price",
+                                                          style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontWeight: FontWeight.bold
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                        color: Color(0xFFdb9e1f),
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Center(
+                                                        child: Text(
+                                                          "Room Type",
+                                                          style: TextStyle(
+                                                              color: Colors.white,
+                                                              fontWeight: FontWeight.bold
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(color: Color(0xFFb38219))
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Align(
+                                                              alignment: Alignment.topLeft,
+                                                              child: Text(
+                                                                "Room Name",
+                                                                style: TextStyle(
+                                                                    color: Colors.white,
+                                                                    fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                  "1 Queen Bed   ",
+                                                                  style: TextStyle(
+                                                                      color: Colors.white,
+                                                                      fontWeight: FontWeight.bold
+                                                                  ),
+                                                                ),
+                                                                Icon(
+                                                                  Icons.king_bed_outlined,
+                                                                  color: Color(0xFFdb9e1f),
+                                                                  size: 30.0,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(color: Color(0xFFb38219))
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            // Align(
+                                                            //   alignment: Alignment.topLeft,
+                                                            //   child: Text(
+                                                            //     "Room Name",
+                                                            //     style: TextStyle(
+                                                            //         color: Colors.white,
+                                                            //         fontWeight: FontWeight.bold
+                                                            //     ),
+                                                            //   ),
+                                                            // ),
+
+                                                            Icon(
+                                                              Icons.supervisor_account,
+                                                              color: Color(0xFFdb9e1f),
+                                                              size: 30.0,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(color: Color(0xFFb38219))
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.all(8.0),
+                                                        child: Column(
+                                                          children: [
+                                                            Align(
+                                                              alignment: Alignment.topLeft,
+                                                              child: Text(
+                                                                "AED 8 800",
+                                                                style: TextStyle(
+                                                                    color: Colors.white,
+                                                                    fontWeight: FontWeight.bold
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Align(
+                                                              alignment: Alignment.topLeft,
+                                                              child: Text(
+                                                                "Includes Taxes and Fees",
+                                                                style: TextStyle(
+                                                                    color: Colors.white,
+                                                                    fontWeight: FontWeight.w100
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(color: Color(0xFFdb9e1f))
+                                                      ),
+                                                      width: MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                          6.01,
+                                                      height: MediaQuery.of(context)
+                                                          .size
+                                                          .height /
+                                                          10,
+                                                      child: Column(
+                                                        children: [
+
+
+                                                        ],
+                                                      ),
+                                                    ),
+
+                                                  ],
+                                                ),
+
+
+                                              ],
+                                            ),
+
+                                          ),
+
+                                        ],
                                       ),
                                     ),
                                     Container(
