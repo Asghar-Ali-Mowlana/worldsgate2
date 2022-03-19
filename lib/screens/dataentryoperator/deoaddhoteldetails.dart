@@ -77,7 +77,20 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         ),
       );
 
-  List<String> mainFacilities = [];
+  List<String> mainFacilities = [
+    'Swimming Pool',
+    'Fitness Center',
+    'Airport Shuttle',
+    'Non-smoking rooms',
+    'Spa',
+    'Restaurant',
+    'Room service',
+    'Bar',
+    'Breakfast',
+    'WiFi in all areas',
+    'Tea/Coffee Maker in All Rooms',
+    'Facilities for disabled guests'
+  ];
 
   bool _isLoading = true;
 
@@ -699,7 +712,10 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         FirebaseFirestore.instance.collection('hotels').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('hotels').doc(newHotelId).set({
+      await FirebaseFirestore.instance
+          .collection('hotels')
+          .doc(newHotelId)
+          .set({
         'name': hotelNameController.text,
         'city': city,
         'address': hotelAddressController.text,
@@ -1443,6 +1459,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                             mainFacilities.indexOf(
                                                                 'Swimming Pool'));
                                                       }
+                                                      print(mainFacilities);
                                                     },
                                                     activeColor:
                                                         Color(0xFFdb9e1f),

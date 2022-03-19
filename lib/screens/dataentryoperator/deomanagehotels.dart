@@ -9,7 +9,7 @@ import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/sidelayout.dart';
-import 'addhoteldetails.dart';
+import 'deoaddhoteldetails.dart';
 
 class DeoManageHotels extends StatefulWidget {
   //const DeoManageHotels({Key? key}) : super(key: key);
