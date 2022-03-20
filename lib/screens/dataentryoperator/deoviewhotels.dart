@@ -340,7 +340,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     getname();
     getyo();
     //newbuilder();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(seconds: 3), () {
       setState(() {
         _isLoading = false;
       });
@@ -522,141 +522,173 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                     ),
                                     //table
                                     Padding(
-                                      padding: EdgeInsets.only(left: MediaQuery.of(context)
-                                          .size
-                                          .width /
-                                          80, bottom: 24.0, top: 8.0),
+                                      padding: EdgeInsets.only(
+                                          left: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              80,
+                                          bottom: 24.0,
+                                          top: 8.0),
                                       child: Column(
                                         children: [
                                           Container(
-
                                             child: Column(
                                               children: [
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Container(
                                                       decoration: BoxDecoration(
                                                         //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color: Color(0xFFdb9e1f),
+                                                        color:
+                                                            Color(0xFFdb9e1f),
                                                       ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Center(
                                                         child: Text(
                                                           "Room Type",
                                                           style: TextStyle(
-                                                            color: Colors.white,
-                                                            fontWeight: FontWeight.bold
-                                                          ),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
                                                         ),
                                                       ),
                                                     ),
                                                     Container(
                                                       decoration: BoxDecoration(
                                                         //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color: Color(0xFFdb9e1f),
+                                                        color:
+                                                            Color(0xFFdb9e1f),
                                                       ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Center(
                                                         child: Text(
                                                           "Sleeps",
                                                           style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontWeight: FontWeight.bold
-                                                          ),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
                                                         ),
                                                       ),
                                                     ),
                                                     Container(
                                                       decoration: BoxDecoration(
                                                         //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color: Color(0xFFdb9e1f),
+                                                        color:
+                                                            Color(0xFFdb9e1f),
                                                       ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Center(
                                                         child: Text(
                                                           "Price",
                                                           style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontWeight: FontWeight.bold
-                                                          ),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
                                                         ),
                                                       ),
                                                     ),
                                                     Container(
                                                       decoration: BoxDecoration(
                                                         //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color: Color(0xFFdb9e1f),
+                                                        color:
+                                                            Color(0xFFdb9e1f),
                                                       ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Center(
                                                         child: Text(
                                                           "Room Type",
                                                           style: TextStyle(
-                                                              color: Colors.white,
-                                                              fontWeight: FontWeight.bold
-                                                          ),
+                                                              color:
+                                                                  Colors.white,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold),
                                                         ),
                                                       ),
                                                     ),
-
                                                   ],
                                                 ),
                                                 Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
                                                   children: [
                                                     Container(
                                                       decoration: BoxDecoration(
-                                                          border: Border.all(color: Color(0xFFb38219))
-                                                      ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xFFb38219))),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Column(
                                                           children: [
                                                             Align(
-                                                              alignment: Alignment.topLeft,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topLeft,
                                                               child: Text(
                                                                 "Room Name",
                                                                 style: TextStyle(
-                                                                    color: Colors.white,
-                                                                    fontWeight: FontWeight.bold
-                                                                ),
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
                                                               ),
                                                             ),
                                                             Row(
@@ -664,13 +696,17 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                                 Text(
                                                                   "1 Queen Bed   ",
                                                                   style: TextStyle(
-                                                                      color: Colors.white,
-                                                                      fontWeight: FontWeight.bold
-                                                                  ),
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold),
                                                                 ),
                                                                 Icon(
-                                                                  Icons.king_bed_outlined,
-                                                                  color: Color(0xFFdb9e1f),
+                                                                  Icons
+                                                                      .king_bed_outlined,
+                                                                  color: Color(
+                                                                      0xFFdb9e1f),
                                                                   size: 30.0,
                                                                 ),
                                                               ],
@@ -681,18 +717,23 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                     ),
                                                     Container(
                                                       decoration: BoxDecoration(
-                                                          border: Border.all(color: Color(0xFFb38219))
-                                                      ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xFFb38219))),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Column(
                                                           children: [
                                                             // Align(
@@ -707,8 +748,10 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                             // ),
 
                                                             Icon(
-                                                              Icons.supervisor_account,
-                                                              color: Color(0xFFdb9e1f),
+                                                              Icons
+                                                                  .supervisor_account,
+                                                              color: Color(
+                                                                  0xFFdb9e1f),
                                                               size: 30.0,
                                                             ),
                                                           ],
@@ -717,74 +760,81 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                     ),
                                                     Container(
                                                       decoration: BoxDecoration(
-                                                          border: Border.all(color: Color(0xFFb38219))
-                                                      ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xFFb38219))),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Padding(
-                                                        padding: const EdgeInsets.all(8.0),
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
                                                         child: Column(
                                                           children: [
                                                             Align(
-                                                              alignment: Alignment.topLeft,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topLeft,
                                                               child: Text(
                                                                 "AED 8 800",
                                                                 style: TextStyle(
-                                                                    color: Colors.white,
-                                                                    fontWeight: FontWeight.bold
-                                                                ),
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
                                                               ),
                                                             ),
                                                             Align(
-                                                              alignment: Alignment.topLeft,
+                                                              alignment:
+                                                                  Alignment
+                                                                      .topLeft,
                                                               child: Text(
                                                                 "Includes Taxes and Fees",
                                                                 style: TextStyle(
-                                                                    color: Colors.white,
-                                                                    fontWeight: FontWeight.w100
-                                                                ),
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w100),
                                                               ),
                                                             ),
-
                                                           ],
                                                         ),
                                                       ),
                                                     ),
                                                     Container(
                                                       decoration: BoxDecoration(
-                                                          border: Border.all(color: Color(0xFFdb9e1f))
-                                                      ),
-                                                      width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                          6.01,
-                                                      height: MediaQuery.of(context)
-                                                          .size
-                                                          .height /
-                                                          10,
+                                                          border: Border.all(
+                                                              color: Color(
+                                                                  0xFFdb9e1f))),
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .width /
+                                                              6.01,
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height /
+                                                              10,
                                                       child: Column(
-                                                        children: [
-
-
-                                                        ],
+                                                        children: [],
                                                       ),
                                                     ),
-
                                                   ],
                                                 ),
-
-
                                               ],
                                             ),
-
                                           ),
-
                                         ],
                                       ),
                                     ),

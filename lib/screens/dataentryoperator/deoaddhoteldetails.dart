@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
@@ -37,6 +38,8 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
   final TextEditingController startingPriceController = TextEditingController();
   final TextEditingController discountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+
+  double stars = 0;
 
   String? city;
 
@@ -73,6 +76,117 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         value: place,
         child: Text(
           place,
+          style: const TextStyle(fontSize: 16.0),
+        ),
+      );
+
+  bool addRoom = false;
+
+  String? rooms;
+  String? adults;
+  String? children;
+  String? roomType;
+  String? bedType;
+  String? numOfBeds;
+
+  List<String> typesOfBedsAndCount = [];
+  List<String> roomTypeDetails = [];
+
+  Map roomDeatils = {};
+
+  final typeOfBeds = [
+    'Twin bed',
+    'Full bed',
+    'King bed',
+    'Queen bed',
+    'Sofa bed',
+  ];
+
+  final typeOfRoom = [
+    'Superior Twin Room',
+    'Grand Room',
+    'Deluxe Twin Room',
+    'Club Suite',
+    'Executive Deluxe Suite',
+    'Deluxe King Room',
+    'Superior King Room',
+    'Pool View King Room'
+  ];
+
+  final bedCount = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+  ];
+
+  final childrenCount = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+  ];
+
+  final roomsAndAdultCount = [
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    '10',
+    '11',
+    '12',
+    '13',
+    '14',
+    '15',
+    '16',
+    '17',
+    '18',
+    '19',
+    '20',
+    '21',
+    '22',
+    '23',
+    '24',
+    '25',
+    '26',
+    '27',
+    '28',
+    '29',
+    '30'
+  ];
+
+  DropdownMenuItem<String> buildMenuItemRoomDetails(String value) =>
+      DropdownMenuItem(
+        value: value,
+        child: Text(
+          value,
+          style: const TextStyle(fontSize: 16.0),
+        ),
+      );
+
+  DropdownMenuItem<String> buildMenuItemBedDetails(String value) =>
+      DropdownMenuItem(
+        value: value,
+        child: Text(
+          value,
           style: const TextStyle(fontSize: 16.0),
         ),
       );
@@ -719,17 +833,18 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         'name': hotelNameController.text,
         'city': city,
         'address': hotelAddressController.text,
-        'price': double.parse(startingPriceController.text),
+        //'price': double.parse(startingPriceController.text),
         'promotion': double.parse(discountController.text),
         'description': descriptionController.text,
         'mainfacilities': mainFacilities,
         //'subfacilities': subFacilities,
+        'rooms': roomDeatils,
         'datecreated': DateTime.now(),
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'otherhotelimages': OtherHotelImagesUrl,
         'cancellationfee': null,
-        //   'promotion': null,
+        'stars': stars,
         'taxandcharges': null,
         'hotelid': newHotelId,
       });
@@ -841,6 +956,38 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                         SizedBox(
                                           height: 20,
                                         ),
+                                        Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text("Star",
+                                                  style: TextStyle(
+                                                      color: Colors.white70,
+                                                      fontSize: 16)),
+                                              SizedBox(
+                                                height: 20.0,
+                                              ),
+                                              Center(
+                                                child: RatingBar.builder(
+                                                    minRating: 1,
+                                                    itemBuilder: (context, _) =>
+                                                        Icon(Icons.star,
+                                                            color: Color(
+                                                                0xFFdb9e1f)),
+                                                    onRatingUpdate: (stars) =>
+                                                        setState(() {
+                                                          this.stars = stars;
+                                                        })),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
                                         DropdownButtonFormField(
                                             decoration: InputDecoration(
                                               hintText: "Select place in UAE",
@@ -918,7 +1065,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                           },
                                           keyboardType: TextInputType.text,
                                         ),
-                                        SizedBox(
+                                        /*SizedBox(
                                           height: 20,
                                         ),
                                         TextFormField(
@@ -961,7 +1108,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                 value!;
                                           },
                                           keyboardType: TextInputType.number,
-                                        ),
+                                        ),*/
                                         SizedBox(
                                           height: 20,
                                         ),
@@ -1047,6 +1194,690 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                             descriptionController.text = value!;
                                           },
                                           keyboardType: TextInputType.multiline,
+                                        ),
+                                        SizedBox(
+                                          height: 30,
+                                        ),
+                                        Container(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Text("Rooms",
+                                                    style: TextStyle(
+                                                        color: Colors.white70,
+                                                        fontSize: 16)),
+                                              ),
+                                              SizedBox(
+                                                height: 20.0,
+                                              ),
+                                              Center(
+                                                child: Container(
+                                                  width: 170.0,
+                                                  height: 50.0,
+                                                  child: ElevatedButton.icon(
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                            primary: Color(
+                                                                0xFF000000),
+                                                            shape: RoundedRectangleBorder(
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            20.0)),
+                                                                side: BorderSide(
+                                                                    color: Color(
+                                                                        0xFFdb9e1f))),
+                                                            side: BorderSide(
+                                                              width: 2.5,
+                                                              color: Color(
+                                                                  0xFFdb9e1f),
+                                                            ),
+                                                            textStyle:
+                                                                const TextStyle(
+                                                                    fontSize:
+                                                                        16)),
+                                                    onPressed: () {
+                                                      setState(() {
+                                                        this.addRoom = !addRoom;
+                                                      });
+                                                    },
+                                                    icon: Icon(
+                                                      Icons
+                                                          .add_circle_outline_rounded,
+                                                      color: Colors.white,
+                                                      size: 20,
+                                                    ),
+                                                    label: Text(
+                                                      "Room",
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: 30.0,
+                                              ),
+                                              addRoom
+                                                  ? Container(
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            8.0),
+                                                                    child: DropdownButtonFormField(
+                                                                        decoration: InputDecoration(
+                                                                          hintText:
+                                                                              "Number of rooms",
+                                                                          hintStyle:
+                                                                              TextStyle(color: Colors.white70),
+                                                                          labelText:
+                                                                              'Rooms',
+                                                                          labelStyle: TextStyle(
+                                                                              color: Colors.white70,
+                                                                              height: 0.1),
+                                                                          enabled:
+                                                                              true,
+                                                                          enabledBorder:
+                                                                              UnderlineInputBorder(
+                                                                            borderSide:
+                                                                                new BorderSide(color: Colors.white70),
+                                                                          ),
+                                                                          focusedBorder:
+                                                                              UnderlineInputBorder(
+                                                                            borderSide:
+                                                                                new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                          ),
+                                                                        ),
+                                                                        dropdownColor: Color(0xFF000000),
+                                                                        //focusColor: Color(0xFFdb9e1f),
+                                                                        style: TextStyle(color: Colors.white),
+                                                                        isExpanded: true,
+                                                                        value: rooms,
+                                                                        items: roomsAndAdultCount.map(buildMenuItemRoomDetails).toList(),
+                                                                        onChanged: (value) => setState(() {
+                                                                              this.rooms = value as String?;
+                                                                            }))),
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child: DropdownButtonFormField(
+                                                                      decoration: InputDecoration(
+                                                                        hintText:
+                                                                            "Number of adults",
+                                                                        hintStyle:
+                                                                            TextStyle(color: Colors.white70),
+                                                                        labelText:
+                                                                            'Adults',
+                                                                        labelStyle: TextStyle(
+                                                                            color:
+                                                                                Colors.white70,
+                                                                            height: 0.1),
+                                                                        enabled:
+                                                                            true,
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              new BorderSide(color: Colors.white70),
+                                                                        ),
+                                                                        focusedBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                        ),
+                                                                      ),
+                                                                      dropdownColor: Color(0xFF000000),
+                                                                      //focusColor: Color(0xFFdb9e1f),
+                                                                      style: TextStyle(color: Colors.white),
+                                                                      isExpanded: true,
+                                                                      value: adults,
+                                                                      items: roomsAndAdultCount.map(buildMenuItemRoomDetails).toList(),
+                                                                      onChanged: (value) => setState(() {
+                                                                            this.adults =
+                                                                                value as String?;
+                                                                          })),
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child: DropdownButtonFormField(
+                                                                      decoration: InputDecoration(
+                                                                        hintText:
+                                                                            "Number of children",
+                                                                        hintStyle:
+                                                                            TextStyle(color: Colors.white70),
+                                                                        labelText:
+                                                                            'Children',
+                                                                        labelStyle: TextStyle(
+                                                                            color:
+                                                                                Colors.white70,
+                                                                            height: 0.1),
+                                                                        enabled:
+                                                                            true,
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              new BorderSide(color: Colors.white70),
+                                                                        ),
+                                                                        focusedBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                        ),
+                                                                      ),
+                                                                      dropdownColor: Color(0xFF000000),
+                                                                      //focusColor: Color(0xFFdb9e1f),
+                                                                      style: TextStyle(color: Colors.white),
+                                                                      isExpanded: true,
+                                                                      value: children,
+                                                                      items: roomsAndAdultCount.map(buildMenuItemRoomDetails).toList(),
+                                                                      onChanged: (value) => setState(() {
+                                                                            this.children =
+                                                                                value as String?;
+                                                                          })),
+                                                                ),
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child:
+                                                                      TextFormField(
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white),
+                                                                    controller:
+                                                                        startingPriceController,
+                                                                    decoration:
+                                                                        InputDecoration(
+                                                                      suffixIcon: IconButton(
+                                                                          icon: Icon(
+                                                                            Icons.cancel,
+                                                                            color:
+                                                                                Color(0xFFdb9e1f),
+                                                                          ),
+                                                                          onPressed: () {
+                                                                            startingPriceController
+                                                                              ..text = "";
+                                                                          }),
+                                                                      hintText:
+                                                                          "Enter Price",
+                                                                      labelText:
+                                                                          "Price",
+                                                                      hintStyle: TextStyle(
+                                                                          color: Colors
+                                                                              .white70,
+                                                                          height:
+                                                                              1.5),
+                                                                      labelStyle: new TextStyle(
+                                                                          color: Colors
+                                                                              .white70,
+                                                                          height:
+                                                                              0.1),
+                                                                      enabled:
+                                                                          true,
+                                                                      enabledBorder:
+                                                                          UnderlineInputBorder(
+                                                                        borderSide:
+                                                                            new BorderSide(color: Colors.white70),
+                                                                      ),
+                                                                      focusedBorder:
+                                                                          UnderlineInputBorder(
+                                                                        borderSide:
+                                                                            new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                      ),
+                                                                    ),
+                                                                    validator:
+                                                                        (value) {
+                                                                      if (value!
+                                                                              .length ==
+                                                                          0) {
+                                                                        return "Starting price cannot be empty";
+                                                                      }
+                                                                    },
+                                                                    onSaved:
+                                                                        (value) {
+                                                                      startingPriceController
+                                                                              .text =
+                                                                          value!;
+                                                                    },
+                                                                    keyboardType:
+                                                                        TextInputType
+                                                                            .number,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 15.0,
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            8.0),
+                                                                    child: DropdownButtonFormField(
+                                                                        decoration: InputDecoration(
+                                                                          hintText:
+                                                                              "Type of room",
+                                                                          hintStyle:
+                                                                              TextStyle(color: Colors.white70),
+                                                                          labelText:
+                                                                              'Room Type',
+                                                                          labelStyle: TextStyle(
+                                                                              color: Colors.white70,
+                                                                              height: 0.1),
+                                                                          enabled:
+                                                                              true,
+                                                                          enabledBorder:
+                                                                              UnderlineInputBorder(
+                                                                            borderSide:
+                                                                                new BorderSide(color: Colors.white70),
+                                                                          ),
+                                                                          focusedBorder:
+                                                                              UnderlineInputBorder(
+                                                                            borderSide:
+                                                                                new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                          ),
+                                                                        ),
+                                                                        dropdownColor: Color(0xFF000000),
+                                                                        //focusColor: Color(0xFFdb9e1f),
+                                                                        style: TextStyle(color: Colors.white),
+                                                                        isExpanded: true,
+                                                                        value: roomType,
+                                                                        items: typeOfRoom.map(buildMenuItemRoomDetails).toList(),
+                                                                        onChanged: (value) => setState(() {
+                                                                              this.roomType = value as String?;
+                                                                            }))),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                              height: 15.0),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceAround,
+                                                            children: [
+                                                              Expanded(
+                                                                child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        horizontal:
+                                                                            8.0),
+                                                                    child: DropdownButtonFormField(
+                                                                        decoration: InputDecoration(
+                                                                          hintText:
+                                                                              "Type of beds",
+                                                                          hintStyle:
+                                                                              TextStyle(color: Colors.white70),
+                                                                          labelText:
+                                                                              'Bed Type',
+                                                                          labelStyle: TextStyle(
+                                                                              color: Colors.white70,
+                                                                              height: 0.1),
+                                                                          enabled:
+                                                                              true,
+                                                                          enabledBorder:
+                                                                              UnderlineInputBorder(
+                                                                            borderSide:
+                                                                                new BorderSide(color: Colors.white70),
+                                                                          ),
+                                                                          focusedBorder:
+                                                                              UnderlineInputBorder(
+                                                                            borderSide:
+                                                                                new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                          ),
+                                                                        ),
+                                                                        dropdownColor: Color(0xFF000000),
+                                                                        //focusColor: Color(0xFFdb9e1f),
+                                                                        style: TextStyle(color: Colors.white),
+                                                                        isExpanded: true,
+                                                                        value: bedType,
+                                                                        items: typeOfBeds.map(buildMenuItemBedDetails).toList(),
+                                                                        onChanged: (value) => setState(() {
+                                                                              this.bedType = value as String?;
+                                                                            }))),
+                                                              ),
+                                                              Expanded(
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child: DropdownButtonFormField(
+                                                                      decoration: InputDecoration(
+                                                                        hintText:
+                                                                            "Number of beds",
+                                                                        hintStyle:
+                                                                            TextStyle(color: Colors.white70),
+                                                                        labelText:
+                                                                            'Number of Beds',
+                                                                        labelStyle: TextStyle(
+                                                                            color:
+                                                                                Colors.white70,
+                                                                            height: 0.1),
+                                                                        enabled:
+                                                                            true,
+                                                                        enabledBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              new BorderSide(color: Colors.white70),
+                                                                        ),
+                                                                        focusedBorder:
+                                                                            UnderlineInputBorder(
+                                                                          borderSide:
+                                                                              new BorderSide(color: Color(0xFFdb9e1f)),
+                                                                        ),
+                                                                      ),
+                                                                      dropdownColor: Color(0xFF000000),
+                                                                      //focusColor: Color(0xFFdb9e1f),
+                                                                      style: TextStyle(color: Colors.white),
+                                                                      isExpanded: true,
+                                                                      value: numOfBeds,
+                                                                      items: bedCount.map(buildMenuItemBedDetails).toList(),
+                                                                      onChanged: (value) => setState(() {
+                                                                            this.numOfBeds =
+                                                                                value as String?;
+                                                                          })),
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                width: 170.0,
+                                                                height: 50.0,
+                                                                child: Padding(
+                                                                  padding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          8.0),
+                                                                  child:
+                                                                      ElevatedButton
+                                                                          .icon(
+                                                                    style: ElevatedButton.styleFrom(
+                                                                        primary: Color(0xFF000000),
+                                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(00.0)), side: BorderSide(color: Color(0xFFdb9e1f))),
+                                                                        side: BorderSide(
+                                                                          width:
+                                                                              2.5,
+                                                                          color:
+                                                                              Color(0xFFdb9e1f),
+                                                                        ),
+                                                                        textStyle: const TextStyle(fontSize: 16)),
+                                                                    onPressed:
+                                                                        () {
+                                                                      setState(
+                                                                          () {
+                                                                        typesOfBedsAndCount
+                                                                            .add("${numOfBeds} - ${bedType}");
+                                                                      });
+                                                                    },
+                                                                    icon: Icon(
+                                                                      Icons.add,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      size: 20,
+                                                                    ),
+                                                                    label: Text(
+                                                                      "Bed Type",
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            height: 40.0,
+                                                          ),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topLeft,
+                                                            child: Text(
+                                                                "Type of Beds",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white70,
+                                                                    fontSize:
+                                                                        16)),
+                                                          ),
+                                                          SizedBox(
+                                                              height: 20.0),
+                                                          Container(
+                                                            height: 150.0,
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                1.6,
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Color(
+                                                                        0xFFdb9e1f))),
+                                                            child: ListView
+                                                                .builder(
+                                                                    itemCount:
+                                                                        typesOfBedsAndCount
+                                                                            .length,
+                                                                    itemBuilder:
+                                                                        (BuildContext
+                                                                                context,
+                                                                            int index) {
+                                                                      return new ListTile(
+                                                                        title:
+                                                                            Text(
+                                                                          typesOfBedsAndCount[
+                                                                              index],
+                                                                          style:
+                                                                              TextStyle(color: Colors.white70),
+                                                                        ),
+                                                                        trailing: IconButton(
+                                                                            icon: Icon(
+                                                                              Icons.delete,
+                                                                              color: Color(0xFFdb9e1f),
+                                                                            ),
+                                                                            onPressed: () {
+                                                                              setState(() {
+                                                                                typesOfBedsAndCount.remove(typesOfBedsAndCount[index]);
+                                                                              });
+                                                                            }),
+                                                                      );
+                                                                    }),
+                                                          ),
+                                                          SizedBox(
+                                                              height: 20.0),
+                                                          Container(
+                                                            width: 170.0,
+                                                            height: 50.0,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      8.0),
+                                                              child:
+                                                                  ElevatedButton
+                                                                      .icon(
+                                                                style: ElevatedButton
+                                                                    .styleFrom(
+                                                                        primary:
+                                                                            Color(
+                                                                                0xFF000000),
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius: BorderRadius.all(Radius.circular(
+                                                                                00.0)),
+                                                                            side: BorderSide(
+                                                                                color: Color(
+                                                                                    0xFFdb9e1f))),
+                                                                        side:
+                                                                            BorderSide(
+                                                                          width:
+                                                                              2.5,
+                                                                          color:
+                                                                              Color(0xFFdb9e1f),
+                                                                        ),
+                                                                        textStyle:
+                                                                            const TextStyle(fontSize: 16)),
+                                                                onPressed: () {
+                                                                  setState(() {
+                                                                    roomTypeDetails
+                                                                        .add(
+                                                                            adults!);
+                                                                    roomTypeDetails
+                                                                        .add(
+                                                                            children!);
+                                                                    for (int i =
+                                                                            0;
+                                                                        i < typesOfBedsAndCount.length;
+                                                                        i++) {
+                                                                      roomTypeDetails.add(
+                                                                          typesOfBedsAndCount[
+                                                                              i]);
+                                                                    }
+
+                                                                    roomTypeDetails.add(
+                                                                        startingPriceController
+                                                                            .text);
+                                                                    roomDeatils.putIfAbsent(
+                                                                        roomType!,
+                                                                        () =>
+                                                                            roomTypeDetails);
+                                                                    typesOfBedsAndCount =
+                                                                        [];
+                                                                    roomTypeDetails =
+                                                                        [];
+                                                                  });
+                                                                  print(
+                                                                      roomDeatils);
+                                                                },
+                                                                icon: Icon(
+                                                                  Icons.add,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  size: 20,
+                                                                ),
+                                                                label: Text(
+                                                                  "Add Room",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                              height: 20.0),
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .topLeft,
+                                                            child: Text(
+                                                                "Type of Rooms",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white70,
+                                                                    fontSize:
+                                                                        16)),
+                                                          ),
+                                                          SizedBox(
+                                                              height: 20.0),
+                                                          Container(
+                                                              height: 150.0,
+                                                              width: MediaQuery.of(
+                                                                          context)
+                                                                      .size
+                                                                      .width /
+                                                                  1.6,
+                                                              decoration: BoxDecoration(
+                                                                  border: Border.all(
+                                                                      color: Color(
+                                                                          0xFFdb9e1f))),
+                                                              child: ListView(
+                                                                children: roomDeatils
+                                                                    .entries
+                                                                    .map((entry) =>
+                                                                        new ListTile(
+                                                                          leading: Text(entry.value[0] +
+                                                                              " - Adult" +
+                                                                              " & " +
+                                                                              entry.value[1] +
+                                                                              " - Children"),
+                                                                          title:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 200.0, top: 00.0),
+                                                                            child:
+                                                                                Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                                                              children: [
+                                                                                Text(entry.key),
+                                                                                Padding(
+                                                                                  padding: const EdgeInsets.only(right: 70.0, top: 10.0),
+                                                                                  child: Text(entry.value[entry.value.length - 1] + " AED"),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          ),
+                                                                          subtitle:
+                                                                              Padding(
+                                                                            padding:
+                                                                                const EdgeInsets.only(left: 200.0, top: 10.0),
+                                                                            child:
+                                                                                Text(entry.value.getRange(2, entry.value.length - 1).toString()),
+                                                                          ),
+                                                                          isThreeLine:
+                                                                              true,
+                                                                          trailing: IconButton(
+                                                                              icon: Icon(
+                                                                                Icons.delete,
+                                                                                color: Color(0xFFdb9e1f),
+                                                                              ),
+                                                                              onPressed: () {
+                                                                                setState(() {
+                                                                                  roomDeatils.remove(entry.key);
+                                                                                });
+                                                                              }),
+                                                                        ))
+                                                                    .toList(),
+                                                              ))
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : SizedBox(
+                                                      height: 0,
+                                                    )
+                                            ],
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 30,
@@ -1228,118 +2059,6 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    //selectImage();
-                                                    //selectFile();
-                                                    selectOtherFileandUpload();
-                                                  },
-                                                  child: Container(
-                                                    height: 100.0,
-                                                    width: 100.0,
-                                                    decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            color: Color(
-                                                                0xFFdb9e1f))),
-                                                    child: Icon(Icons.add),
-                                                  ),
-                                                ),
                                                 InkWell(
                                                   onTap: () {
                                                     //selectImage();
@@ -1965,20 +2684,33 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                           ],
                                         ),
                                         SizedBox(
+                                          height: 20,
+                                        ),
+                                        const Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Sub-Facilities",
+                                            style: TextStyle(
+                                                color: Colors.white70,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                        /*SizedBox(
+                                          height: 10,
+                                        ),
+                                        Container(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            children: [
+                                              subFacilitiesCheckBox("Facilities for disabled guests", disabledGuestsValue),
+                                            ],
+                                          ),
+                                        ),*/
+                                        SizedBox(
                                           height: 40,
                                         ),
-                                        /*const Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      "Sub-Facilities",
-                                      style: TextStyle(
-                                          color: Colors.white70, fontSize: 16),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 10,
-                                  ),
-                                  InkWell(
+                                        /*InkWell(
                                     onTap: () {
                                       setState(() {
                                         this.bathroomValue =
@@ -6012,6 +6744,41 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                       ))),
                 ],
               ),
+      ),
+    );
+  }
+
+  Expanded subFacilitiesCheckBox(subFacility, checkBoxValue) {
+    return Expanded(
+      child: CheckboxListTile(
+        title: Text(
+          subFacility,
+          style: TextStyle(color: Colors.white70),
+        ),
+        //secondary: Icon(
+        //Icons.person,
+        //color: Colors.white70,
+        //),
+        controlAffinity: ListTileControlAffinity.leading,
+        value: checkBoxValue,
+        onChanged: (value) {
+          setState(() {
+            //this.checkBoxValue = value!;
+          });
+          if (checkBoxValue) {
+            mainFacilities.add(subFacility);
+          } else {
+            mainFacilities.removeAt(
+                mainFacilities.indexOf(subFacility));
+          }
+          print(mainFacilities);
+        },
+        activeColor: Color(0xFFdb9e1f),
+        checkColor: Colors.white,
+        side: BorderSide(
+          color: Colors.white70,
+          width: 1.5,
+        ),
       ),
     );
   }
