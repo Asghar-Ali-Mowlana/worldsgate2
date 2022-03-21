@@ -70,16 +70,32 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
               querySnapshot.docs.forEach((doc) {
                 DateTime dt = (doc['datecreated'] as Timestamp).toDate();
                 String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
-                dategroupbylist.add({
-                  "hotel_id": doc.id,
-                  "hotel_name": '${doc['name']}',
-                  "promotion": '${doc['promotion']}',
-                  "cancellationfee": '${doc['cancellationfee']}',
-                  "taxandcharges": '${doc['taxandcharges']}',
-                  "coverimage": '${doc['coverimage']}',
-                  "price": '${doc['price']}',
-                  "added_date": '${formattedDate}',
-                });
+
+                if(querySnapshot.docs.contains("price")) {
+                  dategroupbylist.add({
+                    "hotel_id": doc.id,
+                    "hotel_name": '${doc['name']}',
+                    "promotion": '${doc['promotion']}',
+                    "cancellationfee": '${doc['cancellationfee']}',
+                    "taxandcharges": '${doc['taxandcharges']}',
+                    "coverimage": '${doc['coverimage']}',
+                    "price": '${doc['price']}',
+                    "added_date": '${formattedDate}',
+                  });
+                }else{
+
+                  dategroupbylist.add({
+                    "hotel_id": doc.id,
+                    "hotel_name": '${doc['name']}',
+                    "promotion": '${doc['promotion']}',
+                    "cancellationfee": '${doc['cancellationfee']}',
+                    "taxandcharges": '${doc['taxandcharges']}',
+                    "coverimage": '${doc['coverimage']}',
+
+                    "added_date": '${formattedDate}',
+                  });
+
+                }
               })
             });
 
@@ -201,7 +217,7 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
                                 padding: const EdgeInsets.only(
                                     top: 2.0, bottom: 2.0),
                                 child: Text(
-                                  "Price ${entryList[i].value[j]["price"]} AED",
+                                  entryList[i].value[j]["price"]!=null ?"Price ${entryList[i].value[j]["price"]} AED": "Loading",
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.white,
