@@ -746,7 +746,9 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                                                                 top: 2.0,
                                                                 bottom: 2.0),
                                                         child: Text(
-                                                          "Price ${doc['price']} AED",
+                                                          /*
+                                                          "Price ${doc['price']} AED"*/
+                                                          "Price  AED",
                                                           style: TextStyle(
                                                             fontSize: 14,
                                                             color: Colors.white,

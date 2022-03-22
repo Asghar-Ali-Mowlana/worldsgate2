@@ -206,8 +206,129 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
     'Facilities for disabled guests'
   ];
 
+  bool subFacilitiesBoolValue = true;
+
+  Map subFacilities = {
+    "Bathroom": [
+      'Towels',
+      'Bathtub or shower',
+      'Slippers',
+      'Private Bathroom',
+      'Toilet',
+      'Free toiletries',
+      'Bathrobe',
+      'Hairdryer',
+      'Bathtub',
+      'Shower',
+    ],
+    "Bedroom": [
+      'Linens',
+      'Wardrobe or closet',
+      'Alarm clock',
+    ],
+    "View": ['View'],
+    "Outdoors": [
+      'Sun deck',
+      'Terrace',
+    ],
+    "Kitchen": ['Electric kettle'],
+    "Rooms Amenities": ['Clothes rack'],
+    "Activities": [
+      'Live sports events',
+      'Happy hour',
+      'Themed dinners',
+      'Evening entertainment',
+      'Darts',
+      'Pool table',
+      'Playground',
+    ],
+    "Living Area": ['Desk'],
+    "Media & Technology": [
+      'Flat-screen TV',
+      'Telephone',
+      'TV',
+    ],
+    "Food & Drink": [
+      'Coffee house on site',
+      'Restaurant',
+      'Tea/Coffee maker',
+    ],
+    "Internet": ['WiFi is available in the hotel rooms and is free of charge'],
+    "Parking": [
+      'Accessible parking',
+      'Parking garage',
+    ],
+    "Transportation": [
+      'Airport drop-off',
+      'Airport pickup',
+    ],
+    "Front Desk Services": [
+      'Concierge',
+      'Baggage storage',
+      'Tour desk',
+      'Currency exchange',
+      '24-hour front desk',
+    ],
+    "Entertainment & Family Services": [
+      'Outdoor play equipment for kids',
+      'Babysitting/Child services'
+    ],
+    "Cleaning Services": [
+      'Suit press',
+      'Dry cleaning',
+      'Laundry',
+    ],
+    "Business Facilities": [
+      'Fax/Photocopying',
+      'Business center',
+      'Meeting/Banquet facilities',
+    ],
+    "Safety & Security Facilities": ['Safe'],
+    "General Facilities": [
+      'Airport shuttle (additional charge)',
+      'Designated smoking area',
+      'Air conditioning',
+      'Smoke-free property',
+      'Wake-up service',
+      'Tile/Marble floor',
+      'Carpeted',
+      'Elevator',
+      'Family rooms',
+      'Hair/Beauty salon',
+      'Facilities for disabled guests',
+      'Ironing facilities',
+      'Non-smoking rooms',
+      'Room service',
+    ],
+    "Accessibility Facilities": [
+      'Visual aids (tactile signs)',
+      'Visual aids (Braille)',
+      'Bathroom emergency cord',
+      'Lowered sink',
+      'Raised toilet',
+      'Toilet with grab rails',
+      'Wheelchair accessible',
+    ],
+    "Swimming Pool Facilities": [
+      'Open all year',
+      'All ages welcome',
+    ],
+    "Spa Facilities": [
+      'Fitness',
+      'Fitness center',
+    ],
+    "Language Spoken": [
+      'Arabic',
+      'English',
+      'Hindi',
+      'Filipino',
+      'Urdu',
+    ]
+  };
+
   bool _isLoading = true;
 
+  // Main Facilities
   bool swimmingValue = true;
   bool fitnessCenterValue = true;
   bool airportShuttleValue = true;
@@ -221,7 +342,8 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
   bool teaCoffeeMakerValue = true;
   bool disabledGuestsValue = true;
 
-  bool bathroomValue = false;
+  //Sub-Facilities
+  /*bool bathroomValue = false;
   final List<String> bathroomFacilities = <String>[];
   final TextEditingController bathroomFacilitiesController =
       TextEditingController();
@@ -329,7 +451,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
   bool subSpaValue = false;
   final List<String> subSpaFacilities = <String>[];
   final TextEditingController subSpaFacilitiesController =
-      TextEditingController();
+      TextEditingController();*/
 
   /*final ImagePicker _mainPicker = ImagePicker();
   List<XFile> _mainSelectedFile = [];
@@ -657,7 +779,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
   }*/
 
   _uploadHotelData() async {
-    String bathroomCategory = "Bathroom - ",
+    /*String bathroomCategory = "Bathroom - ",
         bedroomCategory = "Bedroom - ",
         viewCategory = "View - ",
         outdoorsCategory = "Outdoors - ",
@@ -820,7 +942,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
       accessibilityCategory,
       swimmingPoolCategory,
       spaCategory
-    ];
+    ];*/
 
     String newHotelId =
         FirebaseFirestore.instance.collection('hotels').doc().id;
@@ -833,11 +955,12 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         'name': hotelNameController.text,
         'city': city,
         'address': hotelAddressController.text,
+        'price': null,
         //'price': double.parse(startingPriceController.text),
         'promotion': double.parse(discountController.text),
         'description': descriptionController.text,
         'mainfacilities': mainFacilities,
-        //'subfacilities': subFacilities,
+        'subfacilities': subFacilities,
         'rooms': roomDeatils,
         'datecreated': DateTime.now(),
         'dataentryuid': widget.uid,
@@ -1245,6 +1368,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                       setState(() {
                                                         this.addRoom = !addRoom;
                                                       });
+                                                      print(subFacilities);
                                                     },
                                                     icon: Icon(
                                                       Icons
@@ -1391,7 +1515,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                                       style: TextStyle(color: Colors.white),
                                                                       isExpanded: true,
                                                                       value: children,
-                                                                      items: roomsAndAdultCount.map(buildMenuItemRoomDetails).toList(),
+                                                                      items: childrenCount.map(buildMenuItemRoomDetails).toList(),
                                                                       onChanged: (value) => setState(() {
                                                                             this.children =
                                                                                 value as String?;
@@ -2136,552 +2260,520 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                         SizedBox(
                                           height: 10,
                                         ),
-                                        Wrap(
-                                          direction: Axis.vertical,
-                                          children: [
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Swimming Pool",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: swimmingValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.swimmingValue =
-                                                            value!;
-                                                      });
-                                                      if (swimmingValue) {
-                                                        mainFacilities.add(
-                                                            'Swimming Pool');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Swimming Pool'));
-                                                      }
-                                                      print(mainFacilities);
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Fitness Center",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: fitnessCenterValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.fitnessCenterValue =
-                                                            value!;
-                                                      });
-                                                      if (fitnessCenterValue) {
-                                                        mainFacilities.add(
-                                                            'Fitness Center');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Fitness Center'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                        Container(
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                //crossAxisAlignment:
+                                                //CrossAxisAlignment.center,
+                                                children: [
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Swimming Pool",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: swimmingValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.swimmingValue =
+                                                              value!;
+                                                        });
+                                                        if (swimmingValue) {
+                                                          mainFacilities.add(
+                                                              'Swimming Pool');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Swimming Pool'));
+                                                        }
+                                                        print(mainFacilities);
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Airport Shuttle",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: airportShuttleValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.airportShuttleValue =
-                                                            value!;
-                                                      });
-                                                      if (airportShuttleValue) {
-                                                        mainFacilities.add(
-                                                            'Airport Shuttle');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Airport Shuttle'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Fitness Center",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: fitnessCenterValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.fitnessCenterValue =
+                                                              value!;
+                                                        });
+                                                        if (fitnessCenterValue) {
+                                                          mainFacilities.add(
+                                                              'Fitness Center');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Fitness Center'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Non-smoking rooms",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: nonSmokingRoomsValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.nonSmokingRoomsValue =
-                                                            value!;
-                                                      });
-                                                      if (nonSmokingRoomsValue) {
-                                                        mainFacilities.add(
-                                                            'Non-smoking rooms');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Non-smoking rooms'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Airport Shuttle",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value:
+                                                          airportShuttleValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.airportShuttleValue =
+                                                              value!;
+                                                        });
+                                                        if (airportShuttleValue) {
+                                                          mainFacilities.add(
+                                                              'Airport Shuttle');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Airport Shuttle'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Spa",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: spaValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.spaValue = value!;
-                                                      });
-                                                      if (spaValue) {
-                                                        mainFacilities
-                                                            .add('Spa');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities
-                                                                .indexOf(
-                                                                    'Spa'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Non-smoking rooms",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value:
+                                                          nonSmokingRoomsValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.nonSmokingRoomsValue =
+                                                              value!;
+                                                        });
+                                                        if (nonSmokingRoomsValue) {
+                                                          mainFacilities.add(
+                                                              'Non-smoking rooms');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Non-smoking rooms'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Restaurant",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: restaurentValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.restaurentValue =
-                                                            value!;
-                                                      });
-                                                      if (restaurentValue) {
-                                                        mainFacilities
-                                                            .add('Restaurant');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Restaurant'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Room service",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: roomServiceValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.roomServiceValue =
-                                                            value!;
-                                                      });
-                                                      if (roomServiceValue) {
-                                                        mainFacilities.add(
-                                                            'Room service');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Room service'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Spa",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: spaValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.spaValue =
+                                                              value!;
+                                                        });
+                                                        if (spaValue) {
+                                                          mainFacilities
+                                                              .add('Spa');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Spa'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Bar",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: barValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.barValue = value!;
-                                                      });
-                                                      if (barValue) {
-                                                        mainFacilities
-                                                            .add('Bar');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities
-                                                                .indexOf(
-                                                                    'Bar'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Restaurant",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: restaurentValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.restaurentValue =
+                                                              value!;
+                                                        });
+                                                        if (restaurentValue) {
+                                                          mainFacilities.add(
+                                                              'Restaurant');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Restaurant'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                            Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Breakfast",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: breakfastValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.breakfastValue =
-                                                            value!;
-                                                      });
-                                                      if (breakfastValue) {
-                                                        mainFacilities
-                                                            .add('Breakfast');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities
-                                                                .indexOf(
-                                                                    'Breakfast'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Room service",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: roomServiceValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.roomServiceValue =
+                                                              value!;
+                                                        });
+                                                        if (roomServiceValue) {
+                                                          mainFacilities.add(
+                                                              'Room service');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Room service'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "WiFi in all areas",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: wifiValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.wifiValue = value!;
-                                                      });
-                                                      if (wifiValue) {
-                                                        mainFacilities.add(
-                                                            'WiFi in all areas');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'WiFi in all areas'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Bar",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: barValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.barValue =
+                                                              value!;
+                                                        });
+                                                        if (barValue) {
+                                                          mainFacilities
+                                                              .add('Bar');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Bar'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Tea/Coffee Maker in All Rooms",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: teaCoffeeMakerValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.teaCoffeeMakerValue =
-                                                            value!;
-                                                      });
-                                                      if (teaCoffeeMakerValue) {
-                                                        mainFacilities.add(
-                                                            'Tea/Coffee Maker in All Rooms');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Tea/Coffee Maker in All Rooms'));
-                                                      }
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  width: MediaQuery.of(context)
-                                                          .size
-                                                          .width /
-                                                      9,
-                                                  child: CheckboxListTile(
-                                                    title: Text(
-                                                      "Facilities for disabled guests",
-                                                      style: TextStyle(
-                                                          color:
-                                                              Colors.white70),
-                                                    ),
-                                                    //secondary: Icon(
-                                                    //Icons.person,
-                                                    //color: Colors.white70,
-                                                    //),
-                                                    controlAffinity:
-                                                        ListTileControlAffinity
-                                                            .leading,
-                                                    value: disabledGuestsValue,
-                                                    onChanged: (value) {
-                                                      setState(() {
-                                                        this.disabledGuestsValue =
-                                                            value!;
-                                                      });
-                                                      if (disabledGuestsValue) {
-                                                        mainFacilities.add(
-                                                            'Facilities for disabled guests');
-                                                      } else {
-                                                        mainFacilities.removeAt(
-                                                            mainFacilities.indexOf(
-                                                                'Facilities for disabled guests'));
-                                                      }
-                                                      print(mainFacilities);
-                                                    },
-                                                    activeColor:
-                                                        Color(0xFFdb9e1f),
-                                                    checkColor: Colors.white,
-                                                    side: BorderSide(
-                                                      color: Colors.white70,
-                                                      width: 1.5,
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Breakfast",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: breakfastValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.breakfastValue =
+                                                              value!;
+                                                        });
+                                                        if (breakfastValue) {
+                                                          mainFacilities
+                                                              .add('Breakfast');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Breakfast'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            )
-                                          ],
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "WiFi in all areas",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value: wifiValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.wifiValue =
+                                                              value!;
+                                                        });
+                                                        if (wifiValue) {
+                                                          mainFacilities.add(
+                                                              'WiFi in all areas');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'WiFi in all areas'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Tea/Coffee Maker in All Rooms",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value:
+                                                          teaCoffeeMakerValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.teaCoffeeMakerValue =
+                                                              value!;
+                                                        });
+                                                        if (teaCoffeeMakerValue) {
+                                                          mainFacilities.add(
+                                                              'Tea/Coffee Maker in All Rooms');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Tea/Coffee Maker in All Rooms'));
+                                                        }
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: CheckboxListTile(
+                                                      title: Text(
+                                                        "Facilities for disabled guests",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white70),
+                                                      ),
+                                                      //secondary: Icon(
+                                                      //Icons.person,
+                                                      //color: Colors.white70,
+                                                      //),
+                                                      controlAffinity:
+                                                          ListTileControlAffinity
+                                                              .leading,
+                                                      value:
+                                                          disabledGuestsValue,
+                                                      onChanged: (value) {
+                                                        setState(() {
+                                                          this.disabledGuestsValue =
+                                                              value!;
+                                                        });
+                                                        if (disabledGuestsValue) {
+                                                          mainFacilities.add(
+                                                              'Facilities for disabled guests');
+                                                        } else {
+                                                          mainFacilities.removeAt(
+                                                              mainFacilities
+                                                                  .indexOf(
+                                                                      'Facilities for disabled guests'));
+                                                        }
+                                                        print(mainFacilities);
+                                                      },
+                                                      activeColor:
+                                                          Color(0xFFdb9e1f),
+                                                      checkColor: Colors.white,
+                                                      side: BorderSide(
+                                                        color: Colors.white70,
+                                                        width: 1.5,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         SizedBox(
                                           height: 20,
@@ -2695,18 +2787,1392 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                 fontSize: 16),
                                           ),
                                         ),
-                                        /*SizedBox(
+                                        SizedBox(
                                           height: 10,
                                         ),
                                         Container(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
+                                          child: Column(
                                             children: [
-                                              subFacilitiesCheckBox("Facilities for disabled guests", disabledGuestsValue),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Bathroom",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText: 'Towels',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText:
+                                                            'Bathtub or shower',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText:
+                                                            'Slippers',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText:
+                                                            'Private Bathroom',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText: 'Toilet',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText:
+                                                            'Free toiletries',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText:
+                                                            'Bathrobe',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText:
+                                                            'Hairdryer',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText: 'Bathtub',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bathroom",
+                                                        checkBoxText: 'Shower',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Bedroom",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bedroom",
+                                                        checkBoxText: 'Linens',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bedroom",
+                                                        checkBoxText:
+                                                            'Wardrobe or closet',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Bedroom",
+                                                        checkBoxText:
+                                                            'Alarm clock',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "View",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "View",
+                                                        checkBoxText: 'View',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Outdoors",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Outdoors",
+                                                        checkBoxText:
+                                                            'Sun deck',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Outdoors",
+                                                        checkBoxText: 'Terrace',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Kitchen",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Kitchen",
+                                                        checkBoxText:
+                                                            'Electric kettle',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Rooms Amenities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Rooms Amenities",
+                                                        checkBoxText:
+                                                            'Clothes rack',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Activities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText:
+                                                            'Live sports events',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText:
+                                                            'Happy hour',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText:
+                                                            'Themed dinners',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText:
+                                                            'Evening entertainment',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText: 'Darts',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText:
+                                                            'Pool table',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Activities",
+                                                        checkBoxText:
+                                                            'Playground',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Living Area",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Living Area",
+                                                        checkBoxText: 'Desk',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Media & Technology",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Media & Technology",
+                                                        checkBoxText:
+                                                            'Flat-screen TV',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Media & Technology",
+                                                        checkBoxText:
+                                                            'Telephone',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Media & Technology",
+                                                        checkBoxText: 'TV',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Food & Drink",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Food & Drink",
+                                                        checkBoxText:
+                                                            'Coffee house on site',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Food & Drink",
+                                                        checkBoxText:
+                                                            'Restaurant',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Food & Drink",
+                                                        checkBoxText:
+                                                            'Tea/Coffee maker',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Internet",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Internet",
+                                                        checkBoxText:
+                                                            'WiFi is available in the hotel rooms and is free of charge',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Parking",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Parking",
+                                                        checkBoxText:
+                                                            'Accessible parking',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Parking",
+                                                        checkBoxText:
+                                                            'Parking garage',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Transportation",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Transportation",
+                                                        checkBoxText:
+                                                            'Airport drop-off',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Transportation",
+                                                        checkBoxText:
+                                                            'Airport pickup',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Front Desk Services",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Front Desk Services",
+                                                        checkBoxText:
+                                                            'Concierge',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Front Desk Services",
+                                                        checkBoxText:
+                                                            'Baggage storage',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Front Desk Services",
+                                                        checkBoxText:
+                                                            'Tour desk',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Front Desk Services",
+                                                        checkBoxText:
+                                                            'Currency exchange',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Front Desk Services",
+                                                        checkBoxText:
+                                                            '24-hour front desk',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Entertainment & Family Services",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Entertainment & Family Services",
+                                                        checkBoxText:
+                                                            'Outdoor play equipment for kids',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Entertainment & Family Services",
+                                                        checkBoxText:
+                                                            'Babysitting/Child services',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Cleaning Services",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Cleaning Services",
+                                                        checkBoxText:
+                                                            'Suit press',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Cleaning Services",
+                                                        checkBoxText:
+                                                            'Dry cleaning',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Cleaning Services",
+                                                        checkBoxText: 'Laundry',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Business Facilities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceAround,
+                                                    children: [
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Business Facilities",
+                                                        checkBoxText:
+                                                            'Fax/Photocopying',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Business Facilities",
+                                                        checkBoxText:
+                                                            'Business center',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      SubFacilitiesCheckBoxWidget(
+                                                        checkBoxCategory:
+                                                            "Business Facilities",
+                                                        checkBoxText:
+                                                            'Meeting/Banquet facilities',
+                                                        checkBoxValue:
+                                                            subFacilitiesBoolValue,
+                                                        subFacilities:
+                                                            subFacilities,
+                                                      ),
+                                                      Expanded(
+                                                          child: SizedBox()),
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Safety & Security Facilities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Safety & Security Facilities",
+                                                          checkBoxText: 'Safe',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ])
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "General Facilities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Airport shuttle (additional charge)',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Designated smoking area',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Air conditioning',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Smoke-free property',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ]),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Wake-up service',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Tile/Marble floor',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Carpeted',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Elevator',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ]),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Family rooms',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Hair/Beauty salon',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Facilities for disabled guests',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Ironing facilities',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ]),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Non-smoking rooms',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "General Facilities",
+                                                          checkBoxText:
+                                                              'Room service',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        Expanded(
+                                                            child: SizedBox()),
+                                                        Expanded(
+                                                            child: SizedBox()),
+                                                      ])
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Accessibility Facilities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Visual aids (tactile signs)',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Visual aids (Braille)',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Bathroom emergency cord',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Lowered sink',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ]),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Raised toilet',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Toilet with grab rails',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Accessibility Facilities",
+                                                          checkBoxText:
+                                                              'Wheelchair accessible',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        Expanded(
+                                                            child: SizedBox()),
+                                                      ])
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Swimming Pool Facilities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Swimming Pool Facilities",
+                                                          checkBoxText:
+                                                              'Open all year',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Swimming Pool Facilities",
+                                                          checkBoxText:
+                                                              'All ages welcome',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        Expanded(
+                                                            child: SizedBox()),
+                                                        Expanded(
+                                                            child: SizedBox()),
+                                                      ])
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Spa Facilities",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Spa Facilities",
+                                                          checkBoxText:
+                                                              'Fitness',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Spa Facilities",
+                                                          checkBoxText:
+                                                              'Fitness center',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        Expanded(
+                                                            child: SizedBox()),
+                                                        Expanded(
+                                                            child: SizedBox())
+                                                      ])
+                                                ],
+                                              ),
+                                              Column(
+                                                children: [
+                                                  const Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      "Language Spoken",
+                                                      style: TextStyle(
+                                                          color: Colors.white70,
+                                                          fontSize: 16),
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Language Spoken",
+                                                          checkBoxText:
+                                                              'Arabic',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Language Spoken",
+                                                          checkBoxText:
+                                                              'English',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Language Spoken",
+                                                          checkBoxText: 'Hindi',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Language Spoken",
+                                                          checkBoxText:
+                                                              'Filipino',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ]),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceAround,
+                                                      children: [
+                                                        SubFacilitiesCheckBoxWidget(
+                                                          checkBoxCategory:
+                                                              "Language Spoken",
+                                                          checkBoxText: 'Urdu',
+                                                          checkBoxValue:
+                                                              subFacilitiesBoolValue,
+                                                          subFacilities:
+                                                              subFacilities,
+                                                        ),
+                                                      ])
+                                                ],
+                                              )
                                             ],
                                           ),
-                                        ),*/
+                                        ),
                                         SizedBox(
                                           height: 40,
                                         ),
@@ -6747,12 +8213,43 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
       ),
     );
   }
+}
 
-  Expanded subFacilitiesCheckBox(subFacility, checkBoxValue) {
+class SubFacilitiesCheckBoxWidget extends StatefulWidget {
+  SubFacilitiesCheckBoxWidget({
+    Key? key,
+    required this.checkBoxCategory,
+    required this.checkBoxText,
+    required this.checkBoxValue,
+    required this.subFacilities,
+  }) : super(key: key);
+
+  String checkBoxCategory;
+  String checkBoxText;
+  bool checkBoxValue;
+  var subFacilities;
+
+  @override
+  State<SubFacilitiesCheckBoxWidget> createState() =>
+      _SubFacilitiesCheckBoxWidgetState(
+          checkBoxCategory, checkBoxText, checkBoxValue, subFacilities);
+}
+
+class _SubFacilitiesCheckBoxWidgetState
+    extends State<SubFacilitiesCheckBoxWidget> {
+  String checkBoxCategory;
+  String checkBoxText;
+  bool checkBoxValue;
+  var subFacilities;
+
+  _SubFacilitiesCheckBoxWidgetState(this.checkBoxCategory, this.checkBoxText,
+      this.checkBoxValue, this.subFacilities);
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: CheckboxListTile(
         title: Text(
-          subFacility,
+          checkBoxText,
           style: TextStyle(color: Colors.white70),
         ),
         //secondary: Icon(
@@ -6763,15 +8260,15 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         value: checkBoxValue,
         onChanged: (value) {
           setState(() {
-            //this.checkBoxValue = value!;
+            this.checkBoxValue = value!;
           });
           if (checkBoxValue) {
-            mainFacilities.add(subFacility);
+            subFacilities[checkBoxCategory].add(checkBoxText);
           } else {
-            mainFacilities.removeAt(
-                mainFacilities.indexOf(subFacility));
+            subFacilities[checkBoxCategory].removeAt(
+                subFacilities[checkBoxCategory].indexOf(checkBoxText));
           }
-          print(mainFacilities);
+          print(subFacilities);
         },
         activeColor: Color(0xFFdb9e1f),
         checkColor: Colors.white,
