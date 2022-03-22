@@ -134,6 +134,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
       for (int j = 0; j < entryList.length; j++) {
         //each list -  room name
         print(entryList[j].key);
+        print(entryList[j].value);
 
         m.add(Column(
           children: [
@@ -151,34 +152,36 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                         .bold),
               ),
             ),
+            Row(
+              children: [
+                Text(
+                  "${entryList[j].value[2]}     ",
+                  style: TextStyle(
+                      color: Colors
+                          .white,
+                      fontWeight:
+                      FontWeight
+                          .bold),
+                ),
+                Icon(
+                  Icons
+                      .king_bed_outlined,
+                  color: Color(
+                      0xFFdb9e1f),
+                  size: 30.0,
+                ),
+              ],
+            ),
 
           ],
         ),);
 
         for (int q = 0; q < entryList[j].value.length; q++) {
 
-          print(entryList[j].value[q]);
+         // print(entryList[j].value[q]);
 
-          m.add(Row(
-            children: [
-              Text(
-                "${entryList[j].value[q]}     ",
-                style: TextStyle(
-                    color: Colors
-                        .white,
-                    fontWeight:
-                    FontWeight
-                        .bold),
-              ),
-              Icon(
-                Icons
-                    .king_bed_outlined,
-                color: Color(
-                    0xFFdb9e1f),
-                size: 30.0,
-              ),
-            ],
-          ),);
+
+
 
         }
 
@@ -791,42 +794,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                                 const EdgeInsets
                                                                     .all(8.0),
                                                             child: Column(
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topLeft,
-                                                                  child: Text(
-                                                                    "Room Name",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold),
-                                                                  ),
-                                                                ),
-                                                                Row(
-                                                                  children: [
-                                                                    Text(
-                                                                      "1 Queen Bed   ",
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .white,
-                                                                          fontWeight:
-                                                                              FontWeight
-                                                                                  .bold),
-                                                                    ),
-                                                                    Icon(
-                                                                      Icons
-                                                                          .king_bed_outlined,
-                                                                      color: Color(
-                                                                          0xFFdb9e1f),
-                                                                      size: 30.0,
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
+                                                              children: newbuilderz(),
                                                             ),
                                                           ),
                                                         ),
