@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: AddHotelDetails("Oqsxr0M6r5XfEDMOqqoXZAc3mgz1"),
     );
   }
 }
