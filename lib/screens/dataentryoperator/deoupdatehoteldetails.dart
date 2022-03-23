@@ -31,7 +31,6 @@ class _UpdateHotelDetailsState extends State<UpdateHotelDetails> {
 
   double starInitialNumber = 0;
   List<String> hotelCoverImageList = [];
-  //List<String> otherHotelImagesList = [];
 
   _getHotelData() async {
     await FirebaseFirestore.instance
