@@ -6,6 +6,7 @@ import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import '../../widgets/sidelayout.dart';
 import 'deoaddhoteldetails.dart';
+import 'deoupdatehoteldetails.dart';
 
 class DeoViewHotels extends StatefulWidget {
   //const DeoViewHotels({Key? key}) : super(key: key);
@@ -973,7 +974,14 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                 ),
                                                 textStyle: const TextStyle(
                                                     fontSize: 16)),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          UpdateHotelDetails(
+                                                              widget
+                                                                  .uid, widget.hotelid)));
+                                            },
                                             child: const Text(
                                               'Update',
                                               style: TextStyle(
