@@ -113,9 +113,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
 
 
-    newbuilderz();
-
-
 
 
 
@@ -123,7 +120,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
 
   }
-  List<Widget> newbuilderz() {
+  List<Widget> roominfo() {
     List<Widget> m = [];
 
     for (int i = 0; i < rooms.length; i++) {
@@ -794,7 +791,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                                 const EdgeInsets
                                                                     .all(8.0),
                                                             child: Column(
-                                                              children: newbuilderz(),
+                                                              children: roominfo(),
                                                             ),
                                                           ),
                                                         ),
