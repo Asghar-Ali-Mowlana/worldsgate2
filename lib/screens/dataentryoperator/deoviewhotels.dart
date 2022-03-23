@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:worldsgate/screens/dataentryoperator/deoupdatehoteldetails.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import '../../widgets/sidelayout.dart';
@@ -63,40 +64,32 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   getyo() async {
     print("The hotel ID is " + hotelid.toString());
 
-
-
     await FirebaseFirestore.instance
         .collection('hotels')
         .where('hotelid', isEqualTo: hotelid.toString())
         .get()
         .then((QuerySnapshot querySnapshot) => {
-      querySnapshot.docs.forEach((doc) {
+              querySnapshot.docs.forEach((doc) {
+                name = doc['name'];
+                address = doc['address'];
+                description = doc['description'];
+                stars = doc['stars'];
+                x = doc['otherhotelimages'].toList();
+                mainfacilities = doc['mainfacilities'].toList();
+                // rooms = doc['rooms'].toList();
+                hotelrooms.add(
+                  doc['rooms'],
+                );
+                rooms.add(
+                  doc['rooms'],
+                );
 
-        name = doc['name'];
-        address = doc['address'];
-        description = doc['description'];
-        stars = doc['stars'];
-        x = doc['otherhotelimages'].toList();
-        mainfacilities = doc['mainfacilities'].toList();
-       // rooms = doc['rooms'].toList();
-        hotelrooms.add(
-          doc['rooms'],
-        );
-        rooms.add(
-          doc['rooms'],
-        );
-
-
-
-
-        // hotelrooms.add(
-        //   documentSnapshot['otherhotelimages'],
-        // );
-        y = doc['coverimage'];
-
-
-      })
-    });
+                // hotelrooms.add(
+                //   documentSnapshot['otherhotelimages'],
+                // );
+                y = doc['coverimage'];
+              })
+            });
 
     //print(x);
     try {
@@ -111,80 +104,56 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
       print(e);
     }
 
-
-
     newbuilderz();
-
-
-
-
-
-
-
-
   }
+
   List<Widget> newbuilderz() {
     List<Widget> m = [];
 
     for (int i = 0; i < rooms.length; i++) {
-     // print(rooms[i].entries);
+      // print(rooms[i].entries);
 
-      var entryList = rooms[i].entries.toList()..sort((e1, e2) => e2.key.compareTo(e1.key));
+      var entryList = rooms[i].entries.toList()
+        ..sort((e1, e2) => e2.key.compareTo(e1.key));
 
       for (int j = 0; j < entryList.length; j++) {
         //each list -  room name
         print(entryList[j].key);
         print(entryList[j].value);
 
-        m.add(Column(
-          children: [
-            Align(
-              alignment:
-              Alignment
-                  .topLeft,
-              child: Text(
-                "${entryList[j].key.toString()}",
-                style: TextStyle(
-                    color: Colors
-                        .white,
-                    fontWeight:
-                    FontWeight
-                        .bold),
-              ),
-            ),
-            Row(
-              children: [
-                Text(
-                  "${entryList[j].value[2]}     ",
+        m.add(
+          Column(
+            children: [
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "${entryList[j].key.toString()}",
                   style: TextStyle(
-                      color: Colors
-                          .white,
-                      fontWeight:
-                      FontWeight
-                          .bold),
+                      color: Colors.white, fontWeight: FontWeight.bold),
                 ),
-                Icon(
-                  Icons
-                      .king_bed_outlined,
-                  color: Color(
-                      0xFFdb9e1f),
-                  size: 30.0,
-                ),
-              ],
-            ),
-
-          ],
-        ),);
+              ),
+              Row(
+                children: [
+                  Text(
+                    "${entryList[j].value[2]}     ",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
+                  Icon(
+                    Icons.king_bed_outlined,
+                    color: Color(0xFFdb9e1f),
+                    size: 30.0,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
 
         for (int q = 0; q < entryList[j].value.length; q++) {
-
-         // print(entryList[j].value[q]);
-
-
-
+          // print(entryList[j].value[q]);
 
         }
-
       }
     }
     return m;
@@ -200,11 +169,11 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
           Icon(
             Icons.check,
             color: Colors.greenAccent,
-
           ),
-          Text(mainfacilities[i].toString(), style: TextStyle(
-            color: Colors.white
-          ),),
+          Text(
+            mainfacilities[i].toString(),
+            style: TextStyle(color: Colors.white),
+          ),
         ],
       ));
     }
@@ -511,10 +480,9 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                             child: SingleChildScrollView(
                               scrollDirection: Axis.vertical,
                               child: Container(
-                                margin: EdgeInsets.only(left: MediaQuery.of(context)
-                                    .size
-                                    .width /
-                                    80,),
+                                margin: EdgeInsets.only(
+                                  left: MediaQuery.of(context).size.width / 80,
+                                ),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -527,16 +495,30 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                 name,
                                                 style: TextStyle(
                                                     fontSize: 30,
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               RatingBar.builder(
-                                                initialRating: stars == 1 ?1 : stars == 2 ?2 : stars == 3 ?3 : stars == 4 ?4 : stars == 5 ?5 : 0,
+                                                initialRating: stars == 1
+                                                    ? 1
+                                                    : stars == 2
+                                                        ? 2
+                                                        : stars == 3
+                                                            ? 3
+                                                            : stars == 4
+                                                                ? 4
+                                                                : stars == 5
+                                                                    ? 5
+                                                                    : 0,
                                                 direction: Axis.horizontal,
                                                 ignoreGestures: true,
                                                 itemCount: 5,
                                                 itemSize: width * 0.016,
-                                                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                                                itemBuilder: (context, _) => Icon(
+                                                itemPadding:
+                                                    EdgeInsets.symmetric(
+                                                        horizontal: 4.0),
+                                                itemBuilder: (context, _) =>
+                                                    Icon(
                                                   Icons.star,
                                                   color: Colors.amber,
                                                 ),
@@ -625,7 +607,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                     Container(
                                       child: Padding(
                                         padding: EdgeInsets.only(
-
                                             right: MediaQuery.of(context)
                                                     .size
                                                     .width /
@@ -640,9 +621,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                     //table
                                     Padding(
                                       padding: EdgeInsets.only(
-
-                                          bottom: 24.0,
-                                          top: 8.0),
+                                          bottom: 24.0, top: 8.0),
                                       child: Column(
                                         children: [
                                           Container(
@@ -768,156 +747,156 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                   ],
                                                 ),
                                                 StreamBuilder(
-                                                  stream: null,
-                                                  builder: (context, snapshot) {
-                                                    return Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.start,
-                                                      children: [
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: Color(
-                                                                      0xFFb38219))),
-                                                          width:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  6.01,
-                                                          height:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .height /
-                                                                  10,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              children: newbuilderz(),
+                                                    stream: null,
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      return Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Color(
+                                                                        0xFFb38219))),
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                6.01,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height /
+                                                                10,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Column(
+                                                                children:
+                                                                    newbuilderz(),
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: Color(
-                                                                      0xFFb38219))),
-                                                          width:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  6.01,
-                                                          height:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .height /
-                                                                  10,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              children: [
-                                                                // Align(
-                                                                //   alignment: Alignment.topLeft,
-                                                                //   child: Text(
-                                                                //     "Room Name",
-                                                                //     style: TextStyle(
-                                                                //         color: Colors.white,
-                                                                //         fontWeight: FontWeight.bold
-                                                                //     ),
-                                                                //   ),
-                                                                // ),
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Color(
+                                                                        0xFFb38219))),
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                6.01,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height /
+                                                                10,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  // Align(
+                                                                  //   alignment: Alignment.topLeft,
+                                                                  //   child: Text(
+                                                                  //     "Room Name",
+                                                                  //     style: TextStyle(
+                                                                  //         color: Colors.white,
+                                                                  //         fontWeight: FontWeight.bold
+                                                                  //     ),
+                                                                  //   ),
+                                                                  // ),
 
-                                                                Icon(
-                                                                  Icons
-                                                                      .supervisor_account,
-                                                                  color: Color(
-                                                                      0xFFdb9e1f),
-                                                                  size: 30.0,
-                                                                ),
-                                                              ],
+                                                                  Icon(
+                                                                    Icons
+                                                                        .supervisor_account,
+                                                                    color: Color(
+                                                                        0xFFdb9e1f),
+                                                                    size: 30.0,
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        Container(
-                                                          decoration: BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: Color(
-                                                                      0xFFb38219))),
-                                                          width:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .width /
-                                                                  6.01,
-                                                          height:
-                                                              MediaQuery.of(context)
-                                                                      .size
-                                                                      .height /
-                                                                  10,
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .all(8.0),
-                                                            child: Column(
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topLeft,
-                                                                  child: Text(
-                                                                    "AED 8 800",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .bold),
+                                                          Container(
+                                                            decoration: BoxDecoration(
+                                                                border: Border.all(
+                                                                    color: Color(
+                                                                        0xFFb38219))),
+                                                            width: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .width /
+                                                                6.01,
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height /
+                                                                10,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Column(
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topLeft,
+                                                                    child: Text(
+                                                                      "AED 8 800",
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .topLeft,
-                                                                  child: Text(
-                                                                    "Includes Taxes and Fees",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w100),
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .topLeft,
+                                                                    child: Text(
+                                                                      "Includes Taxes and Fees",
+                                                                      style: TextStyle(
+                                                                          color: Colors
+                                                                              .white,
+                                                                          fontWeight:
+                                                                              FontWeight.w100),
+                                                                    ),
                                                                   ),
-                                                                ),
-                                                              ],
+                                                                ],
+                                                              ),
                                                             ),
                                                           ),
-                                                        ),
-                                                        //4th column
-                                                        // Container(
-                                                        //   decoration: BoxDecoration(
-                                                        //       border: Border.all(
-                                                        //           color: Color(
-                                                        //               0xFFdb9e1f))),
-                                                        //   width:
-                                                        //       MediaQuery.of(context)
-                                                        //               .size
-                                                        //               .width /
-                                                        //           6.01,
-                                                        //   height:
-                                                        //       MediaQuery.of(context)
-                                                        //               .size
-                                                        //               .height /
-                                                        //           10,
-                                                        //   child: Column(
-                                                        //     children: [],
-                                                        //   ),
-                                                        // ),
-                                                      ],
-                                                    );
-                                                  }
-                                                ),
+                                                          //4th column
+                                                          // Container(
+                                                          //   decoration: BoxDecoration(
+                                                          //       border: Border.all(
+                                                          //           color: Color(
+                                                          //               0xFFdb9e1f))),
+                                                          //   width:
+                                                          //       MediaQuery.of(context)
+                                                          //               .size
+                                                          //               .width /
+                                                          //           6.01,
+                                                          //   height:
+                                                          //       MediaQuery.of(context)
+                                                          //               .size
+                                                          //               .height /
+                                                          //           10,
+                                                          //   child: Column(
+                                                          //     children: [],
+                                                          //   ),
+                                                          // ),
+                                                        ],
+                                                      );
+                                                    }),
                                               ],
                                             ),
                                           ),
@@ -927,7 +906,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                     Text(
                                       "Facilities of $name",
                                       style: TextStyle(
-                                          color: Colors.white,
+                                        color: Colors.white,
                                         fontSize: 20.0,
                                       ),
                                     ),
@@ -935,9 +914,8 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                     Text(
                                       "Most popular facilities",
                                       style: TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 16.0
-                                      ),
+                                          color: Colors.white70,
+                                          fontSize: 16.0),
                                     ),
                                     SizedBox(height: 10.0),
                                     Wrap(
@@ -949,8 +927,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                       "Other facilities",
                                       style: TextStyle(
                                           color: Colors.white70,
-                                          fontSize: 16.0
-                                      ),
+                                          fontSize: 16.0),
                                     ),
 
                                     SizedBox(height: 20.0),
@@ -976,7 +953,14 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                 ),
                                                 textStyle: const TextStyle(
                                                     fontSize: 16)),
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                                          UpdateHotelDetails(
+                                                              widget.uid, widget.hotelid)));
+                                            },
                                             child: const Text(
                                               'Update',
                                               style: TextStyle(
