@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import '../../widgets/sidelayout.dart';
@@ -50,19 +52,19 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   var lisst;
   var x = [];
   var mainfacilities = [];
-  var y;
+  var hotelCoverPhoto;
   var name;
   var address;
   var description;
   var stars;
   var otherHotelImages;
-
+  var subFacilities;
   var again = [];
 
   // /var rooms = [];
 
   getyo() async {
-   // print("The hotel ID is " + hotelid.toString());
+    // print("The hotel ID is " + hotelid.toString());
 
     await FirebaseFirestore.instance
         .collection('hotels')
@@ -77,6 +79,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                 x = doc['otherhotelimages'].toList();
                 mainfacilities = doc['mainfacilities'].toList();
                 // rooms = doc['rooms'].toList();
+                subFacilities = doc['subfacilities'];
                 subfacilities.add(
                   doc['subfacilities'],
                 );
@@ -84,10 +87,10 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                   doc['rooms'],
                 );
 
-                y = doc['coverimage'];
+                hotelCoverPhoto = doc['coverimage'];
               })
             });
-
+    print(subFacilities);
     //print(x);
     try {
       setState(() {
@@ -100,8 +103,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     } catch (e) {
       print(e);
     }
-
-
   }
 
   List<Widget> roomall() {
@@ -230,6 +231,68 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     return m;
   }
 
+  // Sub-Facilities Start
+  List<Widget> allSubFacilitiesKeys() {
+    List<Widget> m = [];
+    subFacilities.forEach((k, v) {
+      print('{ key: $k, value: $v }');
+      m.add(Container(
+        child: Column(
+          children: [
+            Container(
+                width: MediaQuery.of(context).size.width / 5.00,
+                height: MediaQuery.of(context).size.height / 19,
+                //decoration: BoxDecoration(
+                //border: Border.all(color: Color(0xFFdb9e1f)),
+                //color: Color(0xFFdb9e1f),
+                //),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "$k",
+                      style: TextStyle(color: Colors.white70, fontSize: 16.0),
+                    ))),
+            Container(
+              width: MediaQuery.of(context).size.width / 5.00,
+              //decoration:
+              //BoxDecoration(border: Border.all(color: Color(0xFFb38219))),
+              child: Column(
+                children: allSubFacilitiesValues(v),
+              ),
+            )
+          ],
+        ),
+      ));
+    });
+    return m;
+  }
+
+  List<Widget> allSubFacilitiesValues(v) {
+    List<Widget> m = [];
+    for (int i = 0; i < v.length; i++) {
+      m.add(Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            children: [
+              Icon(
+                Icons.check,
+                color: Color(0xFFdb9e1f),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                  child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text("${v[i]}"),
+              )),
+            ],
+          )));
+    }
+    return m;
+  }
+  // Sub-Facilities End
+
   List<Widget> subfacilitiezheading() {
     List<Widget> m = [];
 
@@ -241,50 +304,33 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
         //each list -  room name
         //print(entryList[j].key);
         //print(entryList[j].value);
-        m.add( Row(
-          mainAxisAlignment:
-          MainAxisAlignment.start,
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                //border: Border.all(color: Color(0xFFdb9e1f)),
-                color:
-                Color(0xFFdb9e1f),
-              ),
-              width:
-              MediaQuery.of(context)
-                  .size
-                  .width /
-                  6.01,
-              height:
-              MediaQuery.of(context)
-                  .size
-                  .height /
-                  10,
-              child: Center(
-                child: Text(
-                  entryList[j].key.toString(),
-                  style: TextStyle(
-                      color:
-                      Colors.white,
-                      fontWeight:
-                      FontWeight
-                          .bold),
+        m.add(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  //border: Border.all(color: Color(0xFFdb9e1f)),
+                  color: Color(0xFFdb9e1f),
+                ),
+                width: MediaQuery.of(context).size.width / 6.01,
+                height: MediaQuery.of(context).size.height / 10,
+                child: Center(
+                  child: Text(
+                    entryList[j].key.toString(),
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
+                  ),
                 ),
               ),
-            ),
-
-          ],
-        ),);
+            ],
+          ),
+        );
         print(entryList[j].key.toString());
-
       }
-
     }
     return m;
   }
-
-
 
   List<Widget> subfacilitiezcontent() {
     List<Widget> m = [];
@@ -334,20 +380,16 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
         //   ],
         // ),);
 
-
-
-
         for (int q = 0; q < entryList[j].value.length; q++) {
           //print(entryList[j].value[q]);
 
-          m.add( IntrinsicHeight(
+          m.add(IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-
               children: [
                 Container(
-                  decoration:
-                  BoxDecoration(border: Border.all(color: Color(0xFFb38219))),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFFb38219))),
                   width: MediaQuery.of(context).size.width / 6.01,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -361,28 +403,20 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
                             ),
-
                           ],
                         ),
-
                       ],
                     ),
                   ),
                 ),
-
               ],
             ),
           ));
-
-
-
         }
       }
-
     }
     return m;
   }
-
 
   List<Widget> mainfacilitiez() {
     List<Widget> m = [];
@@ -393,7 +427,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
         children: [
           Icon(
             Icons.check,
-            color: Colors.greenAccent,
+            color: Color(0xFFb38219),
           ),
           Text(
             mainfacilities[i].toString(),
@@ -404,7 +438,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     }
     return m;
   }
-
 
   List<Widget> imageBuilderOne() {
     List<Widget> m = [];
@@ -465,9 +498,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                     fit: BoxFit.cover,
                   ),
                 ),
-
               ),
-
             ),
           ],
         ),
@@ -496,13 +527,11 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                     width: MediaQuery.of(context).size.width / 2.85,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(y.toString()),
+                        image: NetworkImage(hotelCoverPhoto.toString()),
                         fit: BoxFit.cover,
                       ),
                     ),
-
                   ),
-
                 )
               ],
             ),
@@ -515,6 +544,91 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     ));
 
     return m;
+  }
+
+  TextEditingController _textFieldController = TextEditingController();
+  //String? codeDialog = "12345";
+  String? valueText;
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: Color(0xFFdb9e1f),
+            title: Text(
+              'DELETE HOTEL DOCUMENT',
+              style: TextStyle(color: Color(0xFF000000)),
+            ),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                });
+              },
+              controller: _textFieldController,
+              decoration: InputDecoration(hintText: "Enter Password"),
+            ),
+            actions: <Widget>[
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  primary: Color(0xFF000000),
+                  backgroundColor: Colors.white,
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+                child: const Text('CANCEL'),
+              ),
+              SizedBox(
+                width: 90.0,
+              ),
+              TextButton(
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.all(16.0),
+                  primary: Colors.white,
+                  backgroundColor: Color(0xFF000000),
+                  textStyle: const TextStyle(fontSize: 16),
+                ),
+                onPressed: () {
+                  valueText == "12345"
+                      ? _deleteHotelDocument() /*setState(() {
+                          codeDialog = valueText;
+                          Navigator.pop(context);
+                        })*/
+                      : print("Wrong password entered");
+                },
+                child: const Text('DELETE'),
+              ),
+            ],
+          );
+        });
+  }
+
+  _deleteHotelDocument() async {
+    try {
+      await FirebaseStorage.instance.refFromURL(hotelCoverPhoto).delete();
+
+      for (int i = 0; i < otherHotelImages.length; i++) {
+        await FirebaseStorage.instance.refFromURL(otherHotelImages[i]).delete();
+      }
+
+      await FirebaseFirestore.instance
+          .collection("hotels")
+          .doc(hotelid.toString())
+          .delete()
+          .then((value) => print("Hotel Document Deleted"))
+          .catchError((error) => print("Failed to delete user: $error"));
+
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => DeoManageHotels(widget.uid)));
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -836,15 +950,14 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                     // ),
                                                   ],
                                                 ),
-
-                                                      IntrinsicHeight(
-                                                        child: Column(
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .stretch,
-                                                          children: roomall(),
-                                                        ),
-                                                      ),
+                                                IntrinsicHeight(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .stretch,
+                                                    children: roomall(),
+                                                  ),
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -871,42 +984,43 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                       children: mainfacilitiez(),
                                     ),
                                     SizedBox(height: 20.0),
-                                    Text(
+                                    /*Text(
                                       "Other facilities",
                                       style: TextStyle(
                                           color: Colors.white70,
                                           fontSize: 16.0),
                                     ),
-
-                                    Column(
+                                    SizedBox(height: 10.0),*/
+                                    Wrap(children: allSubFacilitiesKeys()),
+                                    /*Column(
                                       children: [
                                         Container(
-
                                           child: Column(
                                             children: [
-
                                               Row(
-
-                                                children: subfacilitiezheading(),
+                                                children:
+                                                    subfacilitiezheading(),
                                               ),
                                               IntrinsicHeight(
                                                 child: Column(
                                                   crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .stretch,
-                                                  children: subfacilitiezcontent(),
+                                                      CrossAxisAlignment
+                                                          .stretch,
+                                                  children:
+                                                      subfacilitiezcontent(),
                                                 ),
                                               ),
                                             ],
                                           ),
                                         ),
                                       ],
-                                    ),
-
-                                    SizedBox(height: 20.0),
-                                    Center(
-                                      child: Container(
-                                        child: Container(
+                                    ),*/
+                                    SizedBox(height: 50.0),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
                                           width: 200.0,
                                           height: 50.0,
                                           child: ElevatedButton(
@@ -941,6 +1055,44 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                             ),
                                           ),
                                         ),
+                                        SizedBox(
+                                          width: 50.0,
+                                        ),
+                                        Container(
+                                          width: 200.0,
+                                          height: 50.0,
+                                          child: ElevatedButton(
+                                            style: ElevatedButton.styleFrom(
+                                                primary: Color(0xFF000000),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                20.0)),
+                                                    side: BorderSide(
+                                                        color:
+                                                            Color(0xFFdb9e1f))),
+                                                side: BorderSide(
+                                                  width: 2.5,
+                                                  color: Color(0xFFdb9e1f),
+                                                ),
+                                                textStyle: const TextStyle(
+                                                    fontSize: 16)),
+                                            onPressed: () {
+                                              _displayTextInputDialog(context);
+                                            },
+                                            child: const Text(
+                                              'Delete',
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Container(
+                                      child: Column(
+                                        children: [],
                                       ),
                                     )
                                   ],
