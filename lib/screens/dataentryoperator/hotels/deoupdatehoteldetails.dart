@@ -10,9 +10,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 
-import '../../widgets/deonavigationdrawer.dart';
-import '../../widgets/header.dart';
-import '../../widgets/usernavigationdrawer.dart';
+import '../../../widgets/deonavigationdrawer.dart';
+import '../../../widgets/header.dart';
+import '../../../widgets/usernavigationdrawer.dart';
 import 'deomanagehotels.dart';
 
 class UpdateHotelDetails extends StatefulWidget {

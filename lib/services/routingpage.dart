@@ -5,7 +5,7 @@ import 'package:worldsgate/models/usermodel.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
 import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 
-import '../screens/dataentryoperator/deomanagehotels.dart';
+import '../screens/dataentryoperator/hotels/deomanagehotels.dart';
 
 class RoutePage extends StatefulWidget {
   @override

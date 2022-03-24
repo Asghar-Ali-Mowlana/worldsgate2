@@ -3,31 +3,31 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
+import 'package:worldsgate/screens/dataentryoperator/apartments/deoupdateapartmentdetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
-import '../../widgets/sidelayout.dart';
-import 'deoaddhoteldetails.dart';
-import 'deoupdatehoteldetails.dart';
+import '../../../widgets/sidelayout.dart';
+import 'deoaddapartmentdetails.dart';
 
-class DeoViewHotels extends StatefulWidget {
-  //const DeoViewHotels({Key? key}) : super(key: key);
+class DeoViewApartments extends StatefulWidget {
+  //const DeoViewApartments({Key? key}) : super(key: key);
 
   String? uid;
   String? hotelid;
 
   // constructor
-  DeoViewHotels(this.uid, this.hotelid);
+  DeoViewApartments(this.uid, this.hotelid);
 
   @override
-  _DeoViewHotelsState createState() => _DeoViewHotelsState(uid, hotelid);
+  _DeoViewApartmentsState createState() => _DeoViewApartmentsState(uid, hotelid);
 }
 
-class _DeoViewHotelsState extends State<DeoViewHotels> {
+class _DeoViewApartmentsState extends State<DeoViewApartments> {
   String? uid;
   String? hotelid;
 
-  _DeoViewHotelsState(this.uid, this.hotelid);
+  _DeoViewApartmentsState(this.uid, this.hotelid);
 
   String? cusname;
 
@@ -639,7 +639,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                                            AddHotelDetails(
+                                                            AddApartmentDetails(
                                                                 widget.uid)));
                                               },
                                               child: Text(
@@ -879,7 +879,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                               Navigator.of(context).push(
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          UpdateHotelDetails(
+                                                          UpdateAparmentDetails(
                                                               widget.uid,
                                                               widget.hotelid)));
                                             },

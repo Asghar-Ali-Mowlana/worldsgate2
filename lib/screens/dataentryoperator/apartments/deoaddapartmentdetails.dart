@@ -9,27 +9,26 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
+import 'package:worldsgate/screens/dataentryoperator/apartments/deomanageapartments.dart';
 
-import '../../widgets/deonavigationdrawer.dart';
-import '../../widgets/header.dart';
-import '../../widgets/usernavigationdrawer.dart';
-import 'deomanagehotels.dart';
+import '../../../widgets/deonavigationdrawer.dart';
+import '../../../widgets/header.dart';
 
-class AddHotelDetails extends StatefulWidget {
-  //const AddHotelDetails({Key? key}) : super(key: key);
+class AddApartmentDetails extends StatefulWidget {
+  //const AddApartmentDetails({Key? key}) : super(key: key);
 
   String? uid;
 
   // //constructor
-  AddHotelDetails(
+  AddApartmentDetails(
     this.uid,
   );
 
   @override
-  _AddHotelDetailsState createState() => _AddHotelDetailsState();
+  _AddApartmentDetailsState createState() => _AddApartmentDetailsState();
 }
 
-class _AddHotelDetailsState extends State<AddHotelDetails> {
+class _AddApartmentDetailsState extends State<AddApartmentDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
@@ -1049,8 +1048,8 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                   hotelNameController
                                                     ..text = "";
                                                 }),
-                                            hintText: "Enter hotel name",
-                                            labelText: "Hotel Name",
+                                            hintText: "Enter apartment name",
+                                            labelText: "Apartment Name",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
                                             labelStyle: new TextStyle(
@@ -8179,7 +8178,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                                                     Navigator.of(context).push(
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                DeoManageHotels(
+                                                                DeoManageApartments(
                                                                     widget
                                                                         .uid)));
                                                   },

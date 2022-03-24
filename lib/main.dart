@@ -1,9 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
-import 'package:worldsgate/screens/dataentryoperator/deoaddhoteldetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/deomanagehotels.dart';
-import 'package:worldsgate/screens/dataentryoperator/deoviewhotels.dart';
+import 'package:worldsgate/screens/dataentryoperator/hotels/deoaddhoteldetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
+import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
 
