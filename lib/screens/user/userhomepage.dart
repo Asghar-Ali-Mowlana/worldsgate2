@@ -6,6 +6,8 @@ import 'package:worldsgate/screens/user/userhotelbooking.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 
+import '../../helper/responsive_helper.dart';
+
 class UserHomePage extends StatefulWidget {
   //const UserHomePage({Key? key}) : super(key: key);
 
@@ -61,7 +63,26 @@ class _UserHomePageState extends State<UserHomePage> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            child: Column(
+            child: ResponsiveWidget(
+              mobile: buildColumnContent(context, "mobile"),
+              tab: buildColumnContent(context, "tab"),
+              desktop: buildColumnContent(context, "desktop"),
+            ),
+          ),
+          Positioned(
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
+              child: Container(
+                  child:
+                      VendomeHeader.cus(drawer: _scaffoldState, cusname: cusname, cusaddress: widget.city,))),
+        ],
+      ),
+    ));
+  }
+
+  Column buildColumnContent(BuildContext context, String tex) {
+    return Column(
               children: [
                 Container(
                   margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height / 7.95),
@@ -107,7 +128,7 @@ class _UserHomePageState extends State<UserHomePage> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 14.0),
                     child: Text(
-                      "Booking",
+                      "Booking $tex",
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white,
@@ -251,7 +272,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Car.png",
-                                        width: 50,
+                                        width: 40,
                                       ),
                                     ),
                                   ),
@@ -301,7 +322,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Yacht.png",
-                                        width: 50,
+                                        width: 40,
                                       ),
                                     ),
                                   ),
@@ -346,7 +367,7 @@ class _UserHomePageState extends State<UserHomePage> {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 25.0),
+                                    padding: const EdgeInsets.only(top: 30.0),
                                     child: Align(
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
@@ -396,7 +417,7 @@ class _UserHomePageState extends State<UserHomePage> {
                               child: Column(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(top: 25.0),
+                                    padding: const EdgeInsets.only(top: 30.0),
                                     child: Align(
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
@@ -770,17 +791,6 @@ class _UserHomePageState extends State<UserHomePage> {
                   ),
                 ),
               ],
-            ),
-          ),
-          Positioned(
-              left: 0.0,
-              top: 0.0,
-              right: 0.0,
-              child: Container(
-                  child:
-                      VendomeHeader.cus(drawer: _scaffoldState, cusname: cusname, cusaddress: widget.city,))),
-        ],
-      ),
-    ));
+            );
   }
 }
