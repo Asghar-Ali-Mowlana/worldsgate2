@@ -49,59 +49,58 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
   List<Map> subfacilities = <Map>[];
   List<Map> rooms = <Map>[];
 
-  var lisst;
-  var x = [];
-  var mainfacilities = [];
-  var hotelCoverPhoto;
   var name;
   var address;
   var description;
   var stars;
+  var hotelCoverPhoto;
+  var allOtherHotelImages = [];
   var otherHotelImages;
+  var mainfacilities = [];
   var subFacilities;
-  var again = [];
-
-  // /var rooms = [];
 
   getyo() async {
     // print("The hotel ID is " + hotelid.toString());
-
     await FirebaseFirestore.instance
         .collection('hotels')
         .doc(hotelid.toString())
-        //.where('hotelid', isEqualTo: hotelid.toString())
         .get()
         .then(((DocumentSnapshot doc) {
-      name = doc['name'];
-      address = doc['address'];
-      description = doc['description'];
-      stars = doc['stars'];
-      x = doc['otherhotelimages'].toList();
-      mainfacilities = doc['mainfacilities'].toList();
-      // rooms = doc['rooms'].toList();
+      if ((doc.data() as Map<String, dynamic>).containsKey('name')) {
+        name = doc['name'];
+      }
+      if ((doc.data() as Map<String, dynamic>).containsKey('address')) {
+        address = doc['address'];
+      }
+      if ((doc.data() as Map<String, dynamic>).containsKey('description')) {
+        description = doc['description'];
+      }
+      if ((doc.data() as Map<String, dynamic>).containsKey('stars')) {
+        stars = doc['stars'];
+      }
+      if ((doc.data() as Map<String, dynamic>)
+          .containsKey('otherhotelimages')) {
+        allOtherHotelImages = doc['otherhotelimages'].toList();
+      }
+      if ((doc.data() as Map<String, dynamic>).containsKey('mainfacilities')) {
+        mainfacilities = doc['mainfacilities'].toList();
+      }
       if ((doc.data() as Map<String, dynamic>).containsKey('subfacilities')) {
         subFacilities = doc['subfacilities'];
       }
-      //subFacilities = doc['subfacilities'];
-      //subfacilities.add(
-      //doc['subfacilities'],
-      //);
-      rooms.add(
-        doc['rooms'],
-      );
-
-      hotelCoverPhoto = doc['coverimage'];
+      if ((doc.data() as Map<String, dynamic>).containsKey('rooms')) {
+        rooms.add(
+          doc['rooms'],
+        );
+      }
+      if ((doc.data() as Map<String, dynamic>).containsKey('coverimage')) {
+        hotelCoverPhoto = doc['coverimage'];
+      }
     }));
-    print(subFacilities);
-    //print(x);
     try {
       setState(() {
-        otherHotelImages = x;
-
-        //lisst = dategroupbylist.toList();
+        otherHotelImages = allOtherHotelImages;
       });
-
-      //print(testList[0].key);
     } catch (e) {
       print(e);
     }
@@ -223,220 +222,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
             ],
           ),
         ));
-
-        for (int q = 0; q < entryList[j].value.length; q++) {
-          // print(entryList[j].value[q]);
-
-        }
       }
-    }
-    return m;
-  }
-
-  // Sub-Facilities Start
-  List<Widget> allSubFacilitiesKeys() {
-    List<Widget> m = [];
-    subFacilities.forEach((k, v) {
-      print('{ key: $k, value: $v }');
-      m.add(Container(
-        child: Column(
-          children: [
-            Container(
-                width: MediaQuery.of(context).size.width / 5.00,
-                height: MediaQuery.of(context).size.height / 19,
-                //decoration: BoxDecoration(
-                //border: Border.all(color: Color(0xFFdb9e1f)),
-                //color: Color(0xFFdb9e1f),
-                //),
-                child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "$k",
-                      style: TextStyle(color: Colors.white70, fontSize: 16.0),
-                    ))),
-            Container(
-              width: MediaQuery.of(context).size.width / 5.00,
-              //decoration:
-              //BoxDecoration(border: Border.all(color: Color(0xFFb38219))),
-              child: Column(
-                children: allSubFacilitiesValues(v),
-              ),
-            )
-          ],
-        ),
-      ));
-    });
-    return m;
-  }
-
-  List<Widget> allSubFacilitiesValues(v) {
-    List<Widget> m = [];
-    for (int i = 0; i < v.length; i++) {
-      m.add(Align(
-          alignment: Alignment.topLeft,
-          child: Row(
-            children: [
-              Icon(
-                Icons.check,
-                color: Color(0xFFdb9e1f),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Flexible(
-                  child: Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: Text("${v[i]}"),
-              )),
-            ],
-          )));
-    }
-    return m;
-  }
-  // Sub-Facilities End
-
-  List<Widget> subfacilitiezheading() {
-    List<Widget> m = [];
-
-    for (int i = 0; i < subfacilities.length; i++) {
-      var entryList = subfacilities[i].entries.toList()
-        ..sort((e1, e2) => e2.key.compareTo(e1.key));
-
-      for (int j = 0; j < entryList.length; j++) {
-        //each list -  room name
-        //print(entryList[j].key);
-        //print(entryList[j].value);
-        m.add(
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  //border: Border.all(color: Color(0xFFdb9e1f)),
-                  color: Color(0xFFdb9e1f),
-                ),
-                width: MediaQuery.of(context).size.width / 6.01,
-                height: MediaQuery.of(context).size.height / 10,
-                child: Center(
-                  child: Text(
-                    entryList[j].key.toString(),
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-        print(entryList[j].key.toString());
-      }
-    }
-    return m;
-  }
-
-  List<Widget> subfacilitiezcontent() {
-    List<Widget> m = [];
-
-    for (int i = 0; i < subfacilities.length; i++) {
-      var entryList = subfacilities[i].entries.toList()
-        ..sort((e1, e2) => e2.key.compareTo(e1.key));
-
-      for (int j = 0; j < entryList.length; j++) {
-        //each list -  room name
-        //print(entryList[j].key);
-        //print(entryList[j].value);
-
-        // m.add( Row(
-        //   mainAxisAlignment:
-        //   MainAxisAlignment.start,
-        //   children: [
-        //     Container(
-        //       decoration: BoxDecoration(
-        //         //border: Border.all(color: Color(0xFFdb9e1f)),
-        //         color:
-        //         Color(0xFFdb9e1f),
-        //       ),
-        //       width:
-        //       MediaQuery.of(context)
-        //           .size
-        //           .width /
-        //           6.01,
-        //       height:
-        //       MediaQuery.of(context)
-        //           .size
-        //           .height /
-        //           10,
-        //       child: Center(
-        //         child: Text(
-        //           entryList[j].key.toString(),
-        //           style: TextStyle(
-        //               color:
-        //               Colors.white,
-        //               fontWeight:
-        //               FontWeight
-        //                   .bold),
-        //         ),
-        //       ),
-        //     ),
-        //
-        //   ],
-        // ),);
-
-        for (int q = 0; q < entryList[j].value.length; q++) {
-          //print(entryList[j].value[q]);
-
-          m.add(IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFb38219))),
-                  width: MediaQuery.of(context).size.width / 6.01,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "${entryList[j].value[q].toString()}     ",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ));
-        }
-      }
-    }
-    return m;
-  }
-
-  List<Widget> mainfacilitiez() {
-    List<Widget> m = [];
-
-    for (int i = 0; i < mainfacilities.length; i++) {
-      //print(mainfacilities[i]);
-      m.add(Wrap(
-        children: [
-          Icon(
-            Icons.check,
-            color: Color(0xFFb38219),
-          ),
-          Text(
-            mainfacilities[i].toString(),
-            style: TextStyle(color: Colors.white),
-          ),
-        ],
-      ));
     }
     return m;
   }
@@ -460,18 +246,8 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                     fit: BoxFit.cover,
                   ),
                 ),
-                //child: Image.network(otherHotelImages[0].toString(),
-                //  height: MediaQuery.of(context).size.height / 4.45,
-                //width: MediaQuery.of(context).size.width / 5.85),
               ),
             ),
-
-            //Padding(
-            //padding: const EdgeInsets.all(5.0),
-            //child: Image.network(otherHotelImages[1].toString(),
-            //  height: MediaQuery.of(context).size.height / 4.45,
-            //width: MediaQuery.of(context).size.width / 5.85),
-            //),
           ],
         ),
       );
@@ -548,8 +324,90 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
     return m;
   }
 
+  List<Widget> mainfacilitiez() {
+    List<Widget> m = [];
+
+    for (int i = 0; i < mainfacilities.length; i++) {
+      //print(mainfacilities[i]);
+      m.add(Wrap(
+        children: [
+          Icon(
+            Icons.check,
+            color: Color(0xFFb38219),
+          ),
+          Text(
+            mainfacilities[i].toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+        ],
+      ));
+    }
+    return m;
+  }
+
+  // Sub-Facilities Start
+  List<Widget> allSubFacilitiesKeys() {
+    List<Widget> m = [];
+    subFacilities.forEach((k, v) {
+      print('{ key: $k, value: $v }');
+      m.add(Container(
+        child: Column(
+          children: [
+            Container(
+                width: MediaQuery.of(context).size.width / 5.00,
+                height: MediaQuery.of(context).size.height / 19,
+                //decoration: BoxDecoration(
+                //border: Border.all(color: Color(0xFFdb9e1f)),
+                //color: Color(0xFFdb9e1f),
+                //),
+                child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "$k",
+                      style: TextStyle(color: Colors.white70, fontSize: 16.0),
+                    ))),
+            Container(
+              width: MediaQuery.of(context).size.width / 5.00,
+              //decoration:
+              //BoxDecoration(border: Border.all(color: Color(0xFFb38219))),
+              child: Column(
+                children: allSubFacilitiesValues(v),
+              ),
+            )
+          ],
+        ),
+      ));
+    });
+    return m;
+  }
+
+  List<Widget> allSubFacilitiesValues(v) {
+    List<Widget> m = [];
+    for (int i = 0; i < v.length; i++) {
+      m.add(Align(
+          alignment: Alignment.topLeft,
+          child: Row(
+            children: [
+              Icon(
+                Icons.check,
+                color: Color(0xFFdb9e1f),
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              Flexible(
+                  child: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Text("${v[i]}"),
+              )),
+            ],
+          )));
+    }
+    return m;
+  }
+  // Sub-Facilities End
+
   TextEditingController _textFieldController = TextEditingController();
-  //String? codeDialog = "12345";
   String? valueText;
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
@@ -598,10 +456,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                 ),
                 onPressed: () {
                   valueText == "12345"
-                      ? _deleteHotelDocument() /*setState(() {
-                          codeDialog = valueText;
-                          Navigator.pop(context);
-                        })*/
+                      ? _deleteHotelDocument()
                       : print("Wrong password entered");
                 },
                 child: const Text('DELETE'),
@@ -635,11 +490,9 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getname();
     getyo();
-    //newbuilderz();
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
@@ -997,29 +850,6 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                         children: subFacilities != null
                                             ? allSubFacilitiesKeys()
                                             : []),
-                                    /*Column(
-                                      children: [
-                                        Container(
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                children:
-                                                    subfacilitiezheading(),
-                                              ),
-                                              IntrinsicHeight(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .stretch,
-                                                  children:
-                                                      subfacilitiezcontent(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),*/
                                     SizedBox(height: 50.0),
                                     Row(
                                       mainAxisAlignment:
