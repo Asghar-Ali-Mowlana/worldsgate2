@@ -68,28 +68,30 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
     await FirebaseFirestore.instance
         .collection('hotels')
-        .where('hotelid', isEqualTo: hotelid.toString())
+        .doc(hotelid.toString())
+        //.where('hotelid', isEqualTo: hotelid.toString())
         .get()
-        .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                name = doc['name'];
-                address = doc['address'];
-                description = doc['description'];
-                stars = doc['stars'];
-                x = doc['otherhotelimages'].toList();
-                mainfacilities = doc['mainfacilities'].toList();
-                // rooms = doc['rooms'].toList();
-                subFacilities = doc['subfacilities'];
-                subfacilities.add(
-                  doc['subfacilities'],
-                );
-                rooms.add(
-                  doc['rooms'],
-                );
+        .then(((DocumentSnapshot doc) {
+      name = doc['name'];
+      address = doc['address'];
+      description = doc['description'];
+      stars = doc['stars'];
+      x = doc['otherhotelimages'].toList();
+      mainfacilities = doc['mainfacilities'].toList();
+      // rooms = doc['rooms'].toList();
+      if ((doc.data() as Map<String, dynamic>).containsKey('subfacilities')) {
+        subFacilities = doc['subfacilities'];
+      }
+      //subFacilities = doc['subfacilities'];
+      //subfacilities.add(
+      //doc['subfacilities'],
+      //);
+      rooms.add(
+        doc['rooms'],
+      );
 
-                hotelCoverPhoto = doc['coverimage'];
-              })
-            });
+      hotelCoverPhoto = doc['coverimage'];
+    }));
     print(subFacilities);
     //print(x);
     try {
@@ -991,7 +993,10 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                                           fontSize: 16.0),
                                     ),
                                     SizedBox(height: 10.0),*/
-                                    Wrap(children: allSubFacilitiesKeys()),
+                                    Wrap(
+                                        children: subFacilities != null
+                                            ? allSubFacilitiesKeys()
+                                            : []),
                                     /*Column(
                                       children: [
                                         Container(
