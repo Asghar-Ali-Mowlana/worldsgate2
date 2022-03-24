@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/screens/dataentryoperator/apartments/deoaddapartmentdetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/apartments/deoviewapartments.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
-import 'package:worldsgate/screens/user/userhotelbooking.dart';
+import 'package:worldsgate/screens/dataentryoperator/apartments/deoviewapartments.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
@@ -31,7 +30,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
   String? datecreated;
-  String? hotelname;
+  String? apartmentname;
 
   List<Map> dategroupbylist = <Map>[];
 
@@ -56,7 +55,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
 
   getyo() async {
     FirebaseFirestore.instance
-        .collection('hotels')
+        .collection('apartments')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((myDocuments) {
@@ -64,7 +63,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
       totaladded = myDocuments.docs.length;
     });
     await FirebaseFirestore.instance
-        .collection('hotels')
+        .collection('apartments')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((QuerySnapshot querySnapshot) => {
@@ -74,8 +73,8 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
 
                 if(querySnapshot.docs.contains("price")) {
                   dategroupbylist.add({
-                    "hotel_id": doc.id,
-                    "hotel_name": '${doc['name']}',
+                    "apartment_id": doc.id,
+                    "apartment_name": '${doc['name']}',
                     "promotion": '${doc['promotion']}',
                     "cancellationfee": '${doc['cancellationfee']}',
                     "taxandcharges": '${doc['taxandcharges']}',
@@ -86,8 +85,8 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
                 }else{
 
                   dategroupbylist.add({
-                    "hotel_id": doc.id,
-                    "hotel_name": '${doc['name']}',
+                    "apartment_id": doc.id,
+                    "apartment_name": '${doc['name']}',
                     "promotion": '${doc['promotion']}',
                     "cancellationfee": '${doc['cancellationfee']}',
                     "taxandcharges": '${doc['taxandcharges']}',
@@ -142,7 +141,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
           ],
         ),
       ));
-      print("Number of hotels added on a specific date : " +
+      print("Number of apartments added on a specific date : " +
           entryList[i].value.length.toString());
 
       for (int j = 0; j < entryList[i].value.length; j++) {
@@ -157,7 +156,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => DeoViewApartments(widget.uid,
-                              entryList[i].value[j]["hotel_id"].toString())));
+                              entryList[i].value[j]["apartment_id"].toString())));
                     },
                     child: Container(
                       height: MediaQuery.of(context).size.height / 6,
@@ -176,7 +175,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
                               Padding(
                                 padding: const EdgeInsets.only(right: 10.0),
                                 child: Text(
-                                  "${entryList[i].value[j]["hotel_name"].toString()}",
+                                  "${entryList[i].value[j]["apartment_name"].toString()}",
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: Colors.white,
@@ -248,8 +247,8 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
 
                               //
                               //
-                              // Text("Hotel name is " +
-                              //     entryList[i].value[j]["hotel_name"] +
+                              // Text("apartment name is " +
+                              //     entryList[i].value[j]["apartment_name"] +
                               //     " & " +
                               //     "Promotion is " +
                               //     entryList[i].value[j]["promotion"])
@@ -384,7 +383,7 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
                             child: Container(
                               child: Column(
                                 children: [
-                                  //row for button and booking hotel heading
+                                  //row for button and booking apartment heading
                                   Container(
                                     margin: EdgeInsets.only(top: 10.0),
                                     child: Row(

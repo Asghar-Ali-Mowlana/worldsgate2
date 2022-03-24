@@ -17,9 +17,9 @@ import '../../../widgets/usernavigationdrawer.dart';
 
 class UpdateAparmentDetails extends StatefulWidget {
   String? uid;
-  String? hotelid;
+  String? apartmentid;
 
-  UpdateAparmentDetails(this.uid, this.hotelid);
+  UpdateAparmentDetails(this.uid, this.apartmentid);
 
   @override
   _UpdateAparmentDetailsState createState() => _UpdateAparmentDetailsState();
@@ -30,19 +30,19 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
   double starInitialNumber = 0;
-  List<String> hotelCoverImageList = [];
+  List<String> apartmentCoverImageList = [];
 
-  _getHotelData() async {
+  _getapartmentData() async {
     await FirebaseFirestore.instance
-        .collection('hotels')
-        .doc(widget.hotelid)
+        .collection('apartments')
+        .doc(widget.apartmentid)
         .get()
         .then((documentSnapshot) {
       if (documentSnapshot.exists) {
         setState(() {
           if ((documentSnapshot.data() as Map<String, dynamic>)
               .containsKey('name')) {
-            hotelNameController.text = documentSnapshot['name'];
+            apartmentNameController.text = documentSnapshot['name'];
           }
           if ((documentSnapshot.data() as Map<String, dynamic>)
               .containsKey('stars')) {
@@ -57,7 +57,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
           }
           if ((documentSnapshot.data() as Map<String, dynamic>)
               .containsKey('address')) {
-            hotelAddressController.text = documentSnapshot['address'];
+            apartmentAddressController.text = documentSnapshot['address'];
           }
           if ((documentSnapshot.data() as Map<String, dynamic>)
               .containsKey('promotion')) {
@@ -90,16 +90,16 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
           if ((documentSnapshot.data() as Map<String, dynamic>)
               .containsKey('coverimage')) {
             coverImageLink = documentSnapshot['coverimage'];
-            hotelCoverImageList.add(coverImageLink);
+            apartmentCoverImageList.add(coverImageLink);
           }
           if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('otherhotelimages')) {
+              .containsKey('otherapartmentimages')) {
             for (int i = 0;
-                i < documentSnapshot['otherhotelimages'].length;
+                i < documentSnapshot['otherapartmentimages'].length;
                 i++) {
-              OtherHotelImagesUrl.add(documentSnapshot['otherhotelimages'][i]);
+              OtherapartmentImagesUrl.add(documentSnapshot['otherapartmentimages'][i]);
             }
-            print(OtherHotelImagesUrl);
+            print(OtherapartmentImagesUrl);
           }
         });
       } else {
@@ -108,22 +108,22 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
     });
   }
 
-  _removeHotelCoverPhoto(url) async {
+  _removeapartmentCoverPhoto(url) async {
     await FirebaseStorage.instance.refFromURL(url).delete();
     setState(() {
-      hotelCoverImageList.removeAt(hotelCoverImageList.indexOf(url));
+      apartmentCoverImageList.removeAt(apartmentCoverImageList.indexOf(url));
     });
   }
 
-  _removeOtherHotelPhotos(url) async {
+  _removeOtherapartmentPhotos(url) async {
     await FirebaseStorage.instance.refFromURL(url).delete();
     setState(() {
-      OtherHotelImagesUrl.removeAt(OtherHotelImagesUrl.indexOf(url));
+      OtherapartmentImagesUrl.removeAt(OtherapartmentImagesUrl.indexOf(url));
     });
   }
 
-  final TextEditingController hotelNameController = TextEditingController();
-  final TextEditingController hotelAddressController = TextEditingController();
+  final TextEditingController apartmentNameController = TextEditingController();
+  final TextEditingController apartmentAddressController = TextEditingController();
   final TextEditingController startingPriceController = TextEditingController();
   final TextEditingController discountController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -348,7 +348,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
       'Restaurant',
       'Tea/Coffee maker',
     ],
-    "Internet": ['WiFi is available in the hotel rooms and is free of charge'],
+    "Internet": ['WiFi is available in the apartment rooms and is free of charge'],
     "Parking": [
       'Accessible parking',
       'Parking garage',
@@ -469,7 +469,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/hotelimages/hotelmain/$filename';
+          final destination = '/apartmentimages/apartmentmain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -508,7 +508,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
   UploadTask? otherTask;
   var otherImageLink;
   List<Uint8List> otherImage = [];
-  List<String> OtherHotelImagesUrl = [];
+  List<String> OtherapartmentImagesUrl = [];
 
   List<File>? files;
 
@@ -544,7 +544,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
             //otherImage.add(uploadfile);
             //});
             String filename = basename(otherResult!.files[i].name);
-            final destination = '/hotelimages/hotelsub/$filename';
+            final destination = '/apartmentimages/apartmentsub/$filename';
             print("The destination is $destination");
 
             final ref = FirebaseStorage.instance.ref(destination);
@@ -568,7 +568,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
             otherImageLink = urlDownload;
 
             setState(() => otherImageLink = urlDownload);
-            OtherHotelImagesUrl.add(otherImageLink);
+            OtherapartmentImagesUrl.add(otherImageLink);
           }
 
           setState(() {
@@ -583,18 +583,18 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
     }
   }
 
-  _uploadHotelData() async {
-    //String newHotelId =
-    //  FirebaseFirestore.instance.collection('hotels').doc().id;
+  _uploadapartmentData() async {
+    //String newapartmentId =
+    //  FirebaseFirestore.instance.collection('apartments').doc().id;
 
     try {
       await FirebaseFirestore.instance
-          .collection('hotels')
-          .doc(widget.hotelid)
+          .collection('apartments')
+          .doc(widget.apartmentid)
           .update({
-        'name': hotelNameController.text,
+        'name': apartmentNameController.text,
         'city': city,
-        'address': hotelAddressController.text,
+        'address': apartmentAddressController.text,
         //'price': null,
         //'price': double.parse(startingPriceController.text),
         'promotion': double.parse(discountController.text),
@@ -605,11 +605,11 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
         //'datecreated': DateTime.now(),
         //'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
-        'otherhotelimages': OtherHotelImagesUrl,
+        'otherapartmentimages': OtherapartmentImagesUrl,
         //'cancellationfee': null,
         'stars': stars,
         //'taxandcharges': null,
-        'hotelid': widget.hotelid,
+        'apartmentid': widget.apartmentid,
       });
     } catch (e) {
       print(e);
@@ -633,7 +633,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
     // TODO: implement initState
     super.initState();
     getname();
-    _getHotelData();
+    _getapartmentData();
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _isLoading = false;
@@ -677,7 +677,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                       children: [
                                         TextFormField(
                                           style: TextStyle(color: Colors.white),
-                                          controller: hotelNameController,
+                                          controller: apartmentNameController,
                                           decoration: InputDecoration(
                                             suffixIcon: IconButton(
                                                 icon: Icon(
@@ -685,11 +685,11 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                   color: Color(0xFFdb9e1f),
                                                 ),
                                                 onPressed: () {
-                                                  hotelNameController
+                                                  apartmentNameController
                                                     ..text = "";
                                                 }),
-                                            hintText: "Enter hotel name",
-                                            labelText: "Hotel Name",
+                                            hintText: "Enter apartment name",
+                                            labelText: "apartment Name",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
                                             labelStyle: new TextStyle(
@@ -707,11 +707,11 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                           ),
                                           validator: (value) {
                                             if (value!.length == 0) {
-                                              return "Hotel name cannot be empty";
+                                              return "apartment name cannot be empty";
                                             }
                                           },
                                           onSaved: (value) {
-                                            hotelNameController.text = value!;
+                                            apartmentNameController.text = value!;
                                           },
                                           keyboardType: TextInputType.text,
                                         ),
@@ -757,7 +757,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                               hintText: "Select place in UAE",
                                               hintStyle: TextStyle(
                                                   color: Colors.white70),
-                                              labelText: 'Hotel City',
+                                              labelText: 'apartment City',
                                               labelStyle: TextStyle(
                                                   color: Colors.white70,
                                                   height: 0.1),
@@ -790,7 +790,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                         ),
                                         TextFormField(
                                           style: TextStyle(color: Colors.white),
-                                          controller: hotelAddressController,
+                                          controller: apartmentAddressController,
                                           decoration: InputDecoration(
                                             suffixIcon: IconButton(
                                                 icon: Icon(
@@ -798,11 +798,11 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                   color: Color(0xFFdb9e1f),
                                                 ),
                                                 onPressed: () {
-                                                  hotelAddressController
+                                                  apartmentAddressController
                                                     ..text = "";
                                                 }),
-                                            hintText: "Enter hotel address",
-                                            labelText: "Hotel Address",
+                                            hintText: "Enter apartment address",
+                                            labelText: "apartment Address",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
                                             labelStyle: new TextStyle(
@@ -820,11 +820,11 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                           ),
                                           validator: (value) {
                                             if (value!.length == 0) {
-                                              return "Hotel address cannot be empty";
+                                              return "apartment address cannot be empty";
                                             }
                                           },
                                           onSaved: (value) {
-                                            hotelAddressController.text =
+                                            apartmentAddressController.text =
                                                 value!;
                                           },
                                           keyboardType: TextInputType.text,
@@ -888,8 +888,8 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                   descriptionController
                                                     ..text = "";
                                                 }),
-                                            hintText: "Enter hotel description",
-                                            labelText: "Hotel Description",
+                                            hintText: "Enter apartment description",
+                                            labelText: "apartment Description",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
                                             labelStyle: new TextStyle(
@@ -907,7 +907,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                           ),
                                           validator: (value) {
                                             if (value!.length == 0) {
-                                              return "Hotel description cannot be empty";
+                                              return "apartment description cannot be empty";
                                             }
                                           },
                                           onSaved: (value) {
@@ -1607,7 +1607,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                         const Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "Hotel Cover Photo",
+                                            "apartment Cover Photo",
                                             style: TextStyle(
                                                 color: Colors.white70,
                                                 fontSize: 16),
@@ -1647,19 +1647,19 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                 size: 20,
                                               ), //icon data for elevated button
                                               label: Text(
-                                                "Hotel Cover Photo",
+                                                "apartment Cover Photo",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
                                               /*child: const Text(
-                                                'Hotel Cover Photo',
+                                                'apartment Cover Photo',
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),*/
                                             ),
                                           ),
                                         ),
-                                        hotelCoverImageList.length != 0
+                                        apartmentCoverImageList.length != 0
                                             ? Container(
                                                 width: MediaQuery.of(context)
                                                         .size
@@ -1668,7 +1668,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                 height: 160,
                                                 child: GridView.builder(
                                                     itemCount:
-                                                        hotelCoverImageList
+                                                        apartmentCoverImageList
                                                             .length,
                                                     gridDelegate:
                                                         SliverGridDelegateWithFixedCrossAxisCount(
@@ -1686,7 +1686,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                             decoration: BoxDecoration(
                                                                 image: DecorationImage(
                                                                     image: NetworkImage(
-                                                                        hotelCoverImageList[
+                                                                        apartmentCoverImageList[
                                                                             index]),
                                                                     fit: BoxFit
                                                                         .cover)),
@@ -1698,8 +1698,8 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                                 size: 40.0,
                                                               ),
                                                               onPressed: () {
-                                                                _removeHotelCoverPhoto(
-                                                                    hotelCoverImageList[
+                                                                _removeapartmentCoverPhoto(
+                                                                    apartmentCoverImageList[
                                                                         index]);
                                                               },
                                                             )),
@@ -1746,7 +1746,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                         const Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
-                                            "Other Hotel Photos",
+                                            "Other apartment Photos",
                                             style: TextStyle(
                                                 color: Colors.white70,
                                                 fontSize: 16),
@@ -1786,12 +1786,12 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                 size: 20,
                                               ), //icon data for elevated button
                                               label: Text(
-                                                "Other Hotel Photos",
+                                                "Other apartment Photos",
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),
                                               /*child: const Text(
-                                                'Hotel Cover Photo',
+                                                'apartment Cover Photo',
                                                 style: TextStyle(
                                                     color: Colors.white),
                                               ),*/
@@ -1822,7 +1822,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                             ),
                                           ),*/
                                         ),
-                                        OtherHotelImagesUrl.length != 0
+                                        OtherapartmentImagesUrl.length != 0
                                             ? Container(
                                                 width: MediaQuery.of(context)
                                                         .size
@@ -1831,7 +1831,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                 height: 160,
                                                 child: GridView.builder(
                                                     itemCount:
-                                                        OtherHotelImagesUrl
+                                                        OtherapartmentImagesUrl
                                                             .length,
                                                     gridDelegate:
                                                         SliverGridDelegateWithFixedCrossAxisCount(
@@ -1853,7 +1853,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                               decoration: BoxDecoration(
                                                                   image: DecorationImage(
                                                                       image: NetworkImage(
-                                                                          OtherHotelImagesUrl[
+                                                                          OtherapartmentImagesUrl[
                                                                               index]),
                                                                       fit: BoxFit
                                                                           .cover)),
@@ -1865,8 +1865,8 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                                   size: 40.0,
                                                                 ),
                                                                 onPressed: () {
-                                                                  _removeOtherHotelPhotos(
-                                                                      OtherHotelImagesUrl[
+                                                                  _removeOtherapartmentPhotos(
+                                                                      OtherapartmentImagesUrl[
                                                                           index]);
                                                                 },
                                                               )),
@@ -2652,7 +2652,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                         checkBoxCategory:
                                                             "Internet",
                                                         checkBoxText:
-                                                            'WiFi is available in the hotel rooms and is free of charge',
+                                                            'WiFi is available in the apartment rooms and is free of charge',
                                                         checkBoxValue:
                                                             subFacilitiesBoolValue,
                                                         subFacilities:
@@ -3502,7 +3502,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                                                   onPressed: () {
                                                     //uploadMainFunction(_selectedFile);
                                                     //uploadFile();
-                                                    _uploadHotelData();
+                                                    _uploadapartmentData();
                                                     Navigator.of(context).push(
                                                         MaterialPageRoute(
                                                             builder: (context) =>

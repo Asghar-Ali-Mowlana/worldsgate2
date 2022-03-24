@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:worldsgate/screens/dataentryoperator/apartments/deoupdateapartmentdetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
+import 'package:worldsgate/screens/dataentryoperator/apartments/deomanageapartments.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import '../../../widgets/sidelayout.dart';
@@ -14,20 +14,20 @@ class DeoViewApartments extends StatefulWidget {
   //const DeoViewApartments({Key? key}) : super(key: key);
 
   String? uid;
-  String? hotelid;
+  String? apartmentid;
 
   // constructor
-  DeoViewApartments(this.uid, this.hotelid);
+  DeoViewApartments(this.uid, this.apartmentid);
 
   @override
-  _DeoViewApartmentsState createState() => _DeoViewApartmentsState(uid, hotelid);
+  _DeoViewApartmentsState createState() => _DeoViewApartmentsState(uid, apartmentid);
 }
 
 class _DeoViewApartmentsState extends State<DeoViewApartments> {
   String? uid;
-  String? hotelid;
+  String? apartmentid;
 
-  _DeoViewApartmentsState(this.uid, this.hotelid);
+  _DeoViewApartmentsState(this.uid, this.apartmentid);
 
   String? cusname;
 
@@ -53,17 +53,17 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
   var address;
   var description;
   var stars;
-  var hotelCoverPhoto;
-  var allOtherHotelImages = [];
-  var otherHotelImages;
+  var apartmentCoverPhoto;
+  var allOtherapartmentImages = [];
+  var otherapartmentImages;
   var mainfacilities = [];
   var subFacilities;
 
   getyo() async {
-    // print("The hotel ID is " + hotelid.toString());
+    // print("The apartment ID is " + apartmentid.toString());
     await FirebaseFirestore.instance
-        .collection('hotels')
-        .doc(hotelid.toString())
+        .collection('apartments')
+        .doc(apartmentid.toString())
         .get()
         .then(((DocumentSnapshot doc) {
       if ((doc.data() as Map<String, dynamic>).containsKey('name')) {
@@ -79,8 +79,8 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
         stars = doc['stars'];
       }
       if ((doc.data() as Map<String, dynamic>)
-          .containsKey('otherhotelimages')) {
-        allOtherHotelImages = doc['otherhotelimages'].toList();
+          .containsKey('otherapartmentimages')) {
+        allOtherapartmentImages = doc['otherapartmentimages'].toList();
       }
       if ((doc.data() as Map<String, dynamic>).containsKey('mainfacilities')) {
         mainfacilities = doc['mainfacilities'].toList();
@@ -94,12 +94,12 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
         );
       }
       if ((doc.data() as Map<String, dynamic>).containsKey('coverimage')) {
-        hotelCoverPhoto = doc['coverimage'];
+        apartmentCoverPhoto = doc['coverimage'];
       }
     }));
     try {
       setState(() {
-        otherHotelImages = allOtherHotelImages;
+        otherapartmentImages = allOtherapartmentImages;
       });
     } catch (e) {
       print(e);
@@ -230,7 +230,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
   List<Widget> imageBuilderOne() {
     List<Widget> m = [];
     int numberOfImagesDisplayed =
-        otherHotelImages.length >= 2 ? 2 : otherHotelImages.length;
+        otherapartmentImages.length >= 2 ? 2 : otherapartmentImages.length;
     for (int i = 0; i < numberOfImagesDisplayed; i++) {
       m.add(
         Column(
@@ -242,7 +242,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                 width: MediaQuery.of(context).size.width / 5.85,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(otherHotelImages[i].toString()),
+                    image: NetworkImage(otherapartmentImages[i].toString()),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -259,7 +259,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
   List<Widget> imageBuilderTwo() {
     List<Widget> m = [];
     int numberOfImagesDisplayed =
-        otherHotelImages.length >= 7 ? 7 : otherHotelImages.length;
+        otherapartmentImages.length >= 7 ? 7 : otherapartmentImages.length;
     for (int i = 2; i < numberOfImagesDisplayed; i++) {
       m.add(
         Row(
@@ -272,7 +272,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                 width: MediaQuery.of(context).size.width / 9.95,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(otherHotelImages[i].toString()),
+                    image: NetworkImage(otherapartmentImages[i].toString()),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -305,7 +305,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                     width: MediaQuery.of(context).size.width / 2.85,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: NetworkImage(hotelCoverPhoto.toString()),
+                        image: NetworkImage(apartmentCoverPhoto.toString()),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -417,7 +417,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
           return AlertDialog(
             backgroundColor: Color(0xFFdb9e1f),
             title: Text(
-              'DELETE HOTEL DOCUMENT',
+              'DELETE apartment DOCUMENT',
               style: TextStyle(color: Color(0xFF000000)),
             ),
             content: TextField(
@@ -456,7 +456,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                 ),
                 onPressed: () {
                   valueText == "12345"
-                      ? _deleteHotelDocument()
+                      ? _deleteapartmentDocument()
                       : print("Wrong password entered");
                 },
                 child: const Text('DELETE'),
@@ -466,23 +466,23 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
         });
   }
 
-  _deleteHotelDocument() async {
+  _deleteapartmentDocument() async {
     try {
-      await FirebaseStorage.instance.refFromURL(hotelCoverPhoto).delete();
+      await FirebaseStorage.instance.refFromURL(apartmentCoverPhoto).delete();
 
-      for (int i = 0; i < otherHotelImages.length; i++) {
-        await FirebaseStorage.instance.refFromURL(otherHotelImages[i]).delete();
+      for (int i = 0; i < otherapartmentImages.length; i++) {
+        await FirebaseStorage.instance.refFromURL(otherapartmentImages[i]).delete();
       }
 
       await FirebaseFirestore.instance
-          .collection("hotels")
-          .doc(hotelid.toString())
+          .collection("apartments")
+          .doc(apartmentid.toString())
           .delete()
-          .then((value) => print("Hotel Document Deleted"))
+          .then((value) => print("apartment Document Deleted"))
           .catchError((error) => print("Failed to delete user: $error"));
 
       Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => DeoManageHotels(widget.uid)));
+          MaterialPageRoute(builder: (context) => DeoManageApartments(widget.uid)));
     } catch (e) {
       print(e);
     }
@@ -588,7 +588,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                                             ],
                                           )),
                                     ),
-                                    //row for button and booking hotel heading
+                                    //row for button and booking apartment heading
                                     Container(
                                       margin: EdgeInsets.only(top: 10.0),
                                       child: Row(
@@ -881,7 +881,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                                                       builder: (context) =>
                                                           UpdateAparmentDetails(
                                                               widget.uid,
-                                                              widget.hotelid)));
+                                                              widget.apartmentid)));
                                             },
                                             child: const Text(
                                               'Update',
