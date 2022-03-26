@@ -64,9 +64,9 @@ class _UserHomePageState extends State<UserHomePage> {
         children: [
           SingleChildScrollView(
             child: ResponsiveWidget(
-              mobile: buildColumnContent(context, "mobile"),
-              tab: buildColumnContent(context, "tab"),
-              desktop: buildColumnContent(context, "desktop"),
+              mobile: buildColumnContent(context, "mobile", 120, 120, 50),
+              tab: buildColumnContent(context, "tab", 120, 120, 50),
+              desktop: buildColumnContent(context, "desktop", 180, 180, 100),
             ),
           ),
           Positioned(
@@ -81,8 +81,9 @@ class _UserHomePageState extends State<UserHomePage> {
     ));
   }
 
-  Column buildColumnContent(BuildContext context, String tex) {
+  Column buildColumnContent(BuildContext context, String tex, double wi, double heig, double imagewi) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
                   margin: EdgeInsets.only(top:  MediaQuery.of(context).size.height / 7.95),
@@ -109,24 +110,28 @@ class _UserHomePageState extends State<UserHomePage> {
                     ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40.0, bottom: 0.0),
-                  child: Text(
-                    "What would you like to order, MOHAMED?",
-                    style: TextStyle(color: Colors.white),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 10.95),
+                    child: Text(
+                      "What would you like to order, $cusname?",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 40.0, bottom: 20.0),
-                  child: Text(
-                    "Explore",
-                    style: TextStyle(color: Colors.white, fontSize: 16.0),
+                Center(
+                  child: Container(
+                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height / 20.95, bottom: 20.0),
+                    child: Text(
+                      "Explore",
+                      style: TextStyle(color: Colors.white, fontSize: 16.0),
+                    ),
                   ),
                 ),
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 14.0),
+                    padding: const EdgeInsets.only(left: 14.0,top: 20.0),
                     child: Text(
                       "Booking $tex",
                       style: TextStyle(
@@ -158,8 +163,8 @@ class _UserHomePageState extends State<UserHomePage> {
                                       UserHotelBooking(widget.uid, widget.city)));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -172,7 +177,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Hotel.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),
@@ -208,8 +213,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -222,7 +227,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Appartment.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),
@@ -258,8 +263,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -272,7 +277,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Car.png",
-                                        width: 40,
+                                        width: imagewi-10,
                                       ),
                                     ),
                                   ),
@@ -308,8 +313,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -322,7 +327,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Yacht.png",
-                                        width: 40,
+                                        width: imagewi-10,
                                       ),
                                     ),
                                   ),
@@ -358,8 +363,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -372,7 +377,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/restaurant.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),
@@ -408,8 +413,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -422,7 +427,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Bar.png",
-                                        width: 40,
+                                        width: imagewi-10,
                                       ),
                                     ),
                                   ),
@@ -447,7 +452,7 @@ class _UserHomePageState extends State<UserHomePage> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 14.0),
+                    padding: const EdgeInsets.only(left: 14.0,top: 20.0),
                     child: Text(
                       "Delivery",
                       style: TextStyle(
@@ -481,8 +486,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -495,7 +500,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Food.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),
@@ -531,8 +536,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -545,7 +550,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Grocery.png",
-                                        width: 45,
+                                        width: imagewi-5,
                                       ),
                                     ),
                                   ),
@@ -581,8 +586,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -595,7 +600,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/pharmecy.png",
-                                        width: 45,
+                                        width: imagewi-5,
                                       ),
                                     ),
                                   ),
@@ -620,7 +625,7 @@ class _UserHomePageState extends State<UserHomePage> {
                 Align(
                   alignment: Alignment.topLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 14.0),
+                    padding: const EdgeInsets.only(left: 14.0,top: 20.0),
                     child: Text(
                       "Online Shopping",
                       style: TextStyle(
@@ -654,8 +659,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -668,7 +673,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Electronics.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),
@@ -704,8 +709,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -718,7 +723,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Dress.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),
@@ -754,8 +759,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               //     )));
                             },
                             child: Container(
-                              height: 120.0,
-                              width: 120,
+                              height: heig,
+                              width: wi,
                               decoration: BoxDecoration(
                                 color: Color(0xFF262626),
                                 borderRadius: BorderRadius.circular(10.0),
@@ -768,7 +773,7 @@ class _UserHomePageState extends State<UserHomePage> {
                                       alignment: Alignment.topCenter,
                                       child: Image.asset(
                                         "assets/images/homepageicons/Cosmetics.png",
-                                        width: 50,
+                                        width: imagewi,
                                       ),
                                     ),
                                   ),

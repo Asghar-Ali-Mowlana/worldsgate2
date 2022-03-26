@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
@@ -107,10 +108,6 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
     final Query unpicked = packageCollection.where('city',
         isEqualTo: city != null ? city : widget.city);
 
-    //final Query unpicked = packageCollection
-    //  .where('city', isEqualTo: city != null ? city : widget.city)
-    //.limit(10);
-    //final double height = MediaQuery.of(context).size.height;
     final start = dateRange.start;
     final end = dateRange.end;
     return SafeArea(
@@ -121,214 +118,196 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
       body: Stack(
         children: [
           SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(top: 125.0, bottom: 5.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 14.0),
-                      child: Text(
-                        "Hotel Booking",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+            child: ResponsiveWidget(
+                mobile: buildColumnContent(start, end, context, unpicked),
+                tab: buildColumnContent(start, end, context, unpicked),
+                desktop: buildColumnContent(start, end, context, unpicked),
+
+            ),
+          ),
+          Positioned(
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
+              child: Container(
+                  child: VendomeHeader.cus(
+                drawer: _scaffoldState,
+                cusname: cusname==null? "Loading": cusname,
+                cusaddress: widget.city,
+              ))),
+        ],
+      ),
+    ));
+  }
+
+  Column buildColumnContent(DateTime start, DateTime end, BuildContext context, Query<Object?> unpicked) {
+    return Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 125.0, bottom: 5.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 14.0),
+                    child: Text(
+                      "Hotel Booking",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 220.0,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(color: Color(0xFFBA780F))),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Color(0xFFBA780F)),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 12.0),
-                                child: DropdownButtonFormField(
-                                    decoration: InputDecoration(
-                                      hintText: "City",
-                                      hintStyle: TextStyle(color: Colors.white),
-                                      //labelText: 'City',
-                                      labelStyle: TextStyle(
-                                          color: Colors.white70, height: 0.1),
-                                      enabled: true,
-                                      enabledBorder: InputBorder.none,
-                                      focusedBorder: InputBorder.none,
-                                    ),
-                                    dropdownColor: Color(0xFF000000),
-                                    icon: Icon(
-                                      // Add this
-                                      Icons.arrow_drop_down, // Add this
-                                      color: Color(0xFFBA780F), // Add this
-                                    ),
-                                    //focusColor: Color(0xFFdb9e1f),
-                                    style: TextStyle(color: Colors.white),
-                                    isDense: true,
-                                    //icon: Visibility (visible:false, child: Icon(Icons.arrow_downward)),
-                                    value: city,
-                                    items: places.map(buildMenuItem).toList(),
-                                    onChanged: (value) => setState(() {
-                                          this.city = value as String?;
-                                          setState(() {
-                                            _isLocationSelected = true;
-                                          });
-                                        })),
-                              ) /*TextFormField(
-                              style: TextStyle(color: Colors.white),
-                              controller: _controller,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Color(0xFF000000),
-                                hintText: "ibis Styles Sharajah",
-                                contentPadding: const EdgeInsets.only(
-                                    left: 14.0, bottom: 8.0, top: 15.0),
-                                hintStyle: TextStyle(color: Colors.white),
-                                enabled: true,
-                                prefixIcon: IconButton(
-                                  icon: Icon(Icons.search),
-                                  color: Color(0xFFdb9e1f),
-                                  onPressed: () {
-                                    //_controller..text = "";
-                                  },
-                                ),
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.keyboard_voice_outlined),
-                                  color: Color(0xFFdb9e1f),
-                                  onPressed: () {
-                                    //_controller..text = "";
-                                  },
-                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      new BorderSide(color: Color(0xFF000000)),
-                                ),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide:
-                                      new BorderSide(color: Color(0xFFdb9e1f)),
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Hotel name cannot be empty";
-                                }
-                              },
-                              onSaved: (value) {
-                                _controller.text = value!;
-                              },
-                              keyboardType: TextInputType.text,
-                            ),*/
-                              ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                    color: Color(0xFFBA780F).withOpacity(0.6)),
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.calendar_today_outlined),
-                                  color: Color(0xFFdb9e1f),
-                                  onPressed: () {
-                                    pickDateRange();
-                                  },
-                                ),
-                                Text(
-                                    "${DateFormat.EEEE().format(start)} ${DateFormat.d().format(start)} ${DateFormat.MMMM().format(start)} - ${DateFormat.EEEE().format(end)} ${DateFormat.d().format(end)} ${DateFormat.MMMM().format(end)}",
-                                    style: TextStyle(color: Colors.white))
-                              ],
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
-                          child: Container(
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 220.0,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: Color(0xFFBA780F))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
+                        child: Container(
                             decoration: BoxDecoration(
                               border: Border(
                                 bottom: BorderSide(color: Color(0xFFBA780F)),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                IconButton(
-                                  icon: Icon(Icons.person_outline_outlined),
-                                  color: Color(0xFFdb9e1f),
-                                  onPressed: () {},
-                                ),
-                                Text("1 room . 2 adults . 0 children",
-                                    style: TextStyle(color: Colors.white))
-                              ],
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 0, horizontal: 12.0),
+                              child: DropdownButtonFormField(
+                                  decoration: InputDecoration(
+                                    hintText: "City",
+                                    hintStyle: TextStyle(color: Colors.white),
+                                    //labelText: 'City',
+                                    labelStyle: TextStyle(
+                                        color: Colors.white70, height: 0.1),
+                                    enabled: true,
+                                    enabledBorder: InputBorder.none,
+                                    focusedBorder: InputBorder.none,
+                                  ),
+                                  dropdownColor: Color(0xFF000000),
+                                  icon: Icon(
+                                    // Add this
+                                    Icons.arrow_drop_down, // Add this
+                                    color: Color(0xFFBA780F), // Add this
+                                  ),
+                                  //focusColor: Color(0xFFdb9e1f),
+                                  style: TextStyle(color: Colors.white),
+                                  isDense: true,
+                                  //icon: Visibility (visible:false, child: Icon(Icons.arrow_downward)),
+                                  value: city,
+                                  items: places.map(buildMenuItem).toList(),
+                                  onChanged: (value) => setState(() {
+                                        this.city = value as String?;
+                                        setState(() {
+                                          _isLocationSelected = true;
+                                        });
+                                      })),
+                            )
+                            ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                  color: Color(0xFFBA780F).withOpacity(0.6)),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(56.0, 0.0, 56.0, 0.0),
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                primary: Color(0xFF000000),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    side: BorderSide(color: Color(0xFFdb9e1f))),
-                                side: BorderSide(
-                                  width: 2.5,
-                                  color: Color(0xFFdb9e1f),
-                                ),
-                                textStyle: const TextStyle(fontSize: 16)),
-                            onPressed: () {},
-                            child: const Text(
-                              'Search',
-                              style: TextStyle(color: Colors.white),
-                            ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.calendar_today_outlined),
+                                color: Color(0xFFdb9e1f),
+                                onPressed: () {
+                                  pickDateRange();
+                                },
+                              ),
+                              Text(
+                                  "${DateFormat.EEEE().format(start)} ${DateFormat.d().format(start)} ${DateFormat.MMMM().format(start)} - ${DateFormat.EEEE().format(end)} ${DateFormat.d().format(end)} ${DateFormat.MMMM().format(end)}",
+                                  style: TextStyle(color: Colors.white))
+                            ],
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(6.0, 6.0, 6.0, 0.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(color: Color(0xFFBA780F)),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.person_outline_outlined),
+                                color: Color(0xFFdb9e1f),
+                                onPressed: () {},
+                              ),
+                              Text("1 room . 2 adults . 0 children",
+                                  style: TextStyle(color: Colors.white))
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(56.0, 0.0, 56.0, 0.0),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              primary: Color(0xFF000000),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                  side: BorderSide(color: Color(0xFFdb9e1f))),
+                              side: BorderSide(
+                                width: 2.5,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              textStyle: const TextStyle(fontSize: 16)),
+                          onPressed: () {},
+                          child: const Text(
+                            'Search',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 25.0, bottom: 0.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 14.0),
-                      child: Text(
-                        "Stay with Premium Brands",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 25.0, bottom: 0.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 14.0),
+                    child: Text(
+                      "Stay with Premium Brands",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-                Container(
+              ),
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
                   height: 180.0,
                   child: ListView(
                     shrinkWrap: true,
@@ -591,504 +570,296 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
                     ],
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(top: 25.0, bottom: 0.0),
-                  child: Align(
-                    alignment: Alignment.topLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 14.0),
-                      child: Text(
-                        "Nearby Hotels",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 25.0, bottom: 0.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 14.0),
+                    child: Text(
+                      "Nearby Hotels",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Container(
-                    //height: 2400.0,
-                    width: MediaQuery.of(context).size.width,
-                    child: StreamBuilder<QuerySnapshot>(
-                      stream: unpicked.snapshots(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        } else {
-                          return ListView(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            children: snapshot.data!.docs.map((doc) {
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          UserViewHotelDetails(widget.uid,
-                                              doc.id, widget.city)));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, left: 10.0, right: 10.0),
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Stack(
-                                      children: [
-                                        Container(
-                                          height: 220.0,
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Color(0xFFBA780F)),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 16.0,
-                                                right: 10.0,
-                                                bottom: 16.0),
-                                            child: Container(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.end,
-                                                children: [
-                                                  Align(
-                                                    alignment:
-                                                        Alignment.topRight,
-                                                    child: Container(
-                                                      height: 100.0,
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              2,
-                                                      decoration:
-                                                          BoxDecoration(),
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Text(
-                                                            "${doc['name']} - ${doc['city']}",
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 2.0),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .start,
-                                                              children: [
-                                                                Icon(
-                                                                  Icons
-                                                                      .location_on_outlined,
-                                                                  color: Color(
-                                                                      0xFFBA780F),
-                                                                  size: 15.0,
-                                                                ),
-                                                                Icon(
-                                                                  Icons
-                                                                      .arrow_upward_outlined,
-                                                                  color: Color(
-                                                                      0xFFBA780F),
-                                                                  size: 15.0,
-                                                                ),
-                                                                Text(
-                                                                  " 4 Km From Center",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    fontSize:
-                                                                        11,
-                                                                    color: Colors
-                                                                        .white,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment.end,
-                                                    children: [
-                                                      Text(
-                                                        "Price for 1 night 2 adults",
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xFFBA780F),
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .only(
-                                                                top: 2.0,
-                                                                bottom: 2.0),
-                                                        child: Text(
-                                                          /*
-                                                          "Price ${doc['price']} AED"*/
-                                                          "Price  AED",
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Container(
+                  //height: 2400.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: unpicked.snapshots(),
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else {
+                        return ListView(
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: snapshot.data!.docs.map((doc) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        UserViewHotelDetails(widget.uid,
+                                            doc.id, widget.city)));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 16.0, left: 10.0, right: 10.0),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        height: 220.0,
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          border: Border.all(
+                                              color: Color(0xFFBA780F)),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 16.0,
+                                              right: 10.0,
+                                              bottom: 16.0),
+                                          child: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.topRight,
+                                                  child: Container(
+                                                    height: 100.0,
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width /
+                                                            2,
+                                                    decoration:
+                                                        BoxDecoration(),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          "${doc['name']} - ${doc['city']}",
                                                           style: TextStyle(
                                                             fontSize: 14,
-                                                            color: Colors.white,
+                                                            color:
+                                                                Colors.white,
                                                           ),
                                                         ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 2.0),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Icon(
+                                                                Icons
+                                                                    .location_on_outlined,
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                size: 15.0,
+                                                              ),
+                                                              Icon(
+                                                                Icons
+                                                                    .arrow_upward_outlined,
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                size: 15.0,
+                                                              ),
+                                                              Text(
+                                                                " 4 Km From Center",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      11,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      "Price for 1 night 2 adults",
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color:
+                                                            Color(0xFFBA780F),
                                                       ),
-                                                      Text(
-                                                        "-${doc['taxandcharges']} AED Taxes and Charges",
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets
+                                                                  .only(
+                                                              top: 2.0,
+                                                              bottom: 2.0),
+                                                      child: Text(
+                                                        /*
+                                                        "Price ${doc['price']} AED"*/
+                                                        "Price  AED",
                                                         style: TextStyle(
-                                                          fontSize: 12,
+                                                          fontSize: 14,
                                                           color: Colors.white,
                                                         ),
                                                       ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(top: 2.0),
-                                                        child: Text(
-                                                          "${doc['cancellationfee']}% for Cancellation",
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Color(
-                                                                0xFFBA780F),
-                                                          ),
-                                                        ),
+                                                    ),
+                                                    Text(
+                                                      "-${doc['taxandcharges']} AED Taxes and Charges",
+                                                      style: TextStyle(
+                                                        fontSize: 12,
+                                                        color: Colors.white,
                                                       ),
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Container(
-                                          height: 220.0,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width /
-                                              2.5,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Color(0xFFBA780F)),
-                                            image: DecorationImage(
-                                              image: NetworkImage(
-                                                  doc['coverimage'] == null
-                                                      ? ""
-                                                      : doc['coverimage']),
-                                              fit: BoxFit.fill,
-                                            ),
-                                          ),
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 113.0, right: 0.0),
-                                                height: 220.0,
-                                                width: MediaQuery.of(context)
-                                                    .size
-                                                    .width,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20),
-                                                    gradient: LinearGradient(
-                                                        begin: FractionalOffset
-                                                            .topCenter,
-                                                        end: FractionalOffset
-                                                            .bottomCenter,
-                                                        colors: [
-                                                          Colors.white70
-                                                              .withOpacity(0.0),
-                                                          Colors.orange
-                                                              .withOpacity(0.8),
-                                                        ],
-                                                        stops: [
-                                                          0.0,
-                                                          0.7
-                                                        ])),
-                                                child: Stack(
-                                                  children: [
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .bottomCenter,
-                                                      child: Container(
-                                                        margin: const EdgeInsets
-                                                                .only(
-                                                            top: 68.0,
-                                                            right: 0.0),
-                                                        child: Column(
-                                                          children: [
-                                                            Align(
-                                                              alignment: Alignment
-                                                                  .bottomCenter,
-                                                              child: Text(
-                                                                "${doc['promotion']}% off",
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize: 24,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .black,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
+                                                    ),
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets
+                                                              .only(top: 2.0),
+                                                      child: Text(
+                                                        "${doc['cancellationfee']}% for Cancellation",
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Color(
+                                                              0xFFBA780F),
                                                         ),
                                                       ),
                                                     ),
                                                   ],
-                                                ),
-                                              ),
-                                            ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }).toList(),
-                          );
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                /*Container(
-                  height: 2400.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: ListView(
-                    //scrollDirection: Axis.vertical,
-                    //shrinkWrap: true,
-                    //primary: false,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            top: 16.0, left: 10.0, right: 10.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Stack(
-                            children: [
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 16.0, right: 10.0, bottom: 16.0),
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10.0),
-                                            child: Text(
-                                              "GIO Hotel Apartments - Dubai",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 82.0, top: 2.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Icon(
-                                                  Icons.arrow_upward_outlined,
-                                                  color: Color(0xFFBA780F),
-                                                  size: 15.0,
-                                                ),
-                                                Text(
-                                                  " 4 Km From Center",
-                                                  style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
                                       ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          Text(
-                                            "Price for 1 night 2 adults",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Color(0xFFBA780F),
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                top: 2.0, bottom: 2.0),
-                                            child: Text(
-                                              "Price 450 AED",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            "-51 AED Taxes and Charges",
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 2.0),
-                                            child: Text(
-                                              "10% for Cancellation",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Color(0xFFBA780F),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 220.0,
-                                width: MediaQuery.of(context).size.width / 2.5,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Color(0xFFBA780F)),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/premiumbrands/premiumbrands1.jpeg',
-                                    ),
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 113.0, right: 0.0),
-                                      height: 220.0,
-                                      width: MediaQuery.of(context).size.width,
-                                      decoration: BoxDecoration(
+                                      Container(
+                                        height: 220.0,
+                                        width: MediaQuery.of(context)
+                                                .size
+                                                .width /
+                                            2.5,
+                                        decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(20),
-                                          gradient: LinearGradient(
-                                              begin: FractionalOffset.topCenter,
-                                              end:
-                                                  FractionalOffset.bottomCenter,
-                                              colors: [
-                                                Colors.white70.withOpacity(0.0),
-                                                Colors.orange.withOpacity(0.8),
-                                              ],
-                                              stops: [
-                                                0.0,
-                                                0.7
-                                              ])),
-                                      child: Stack(
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Container(
+                                          border: Border.all(
+                                              color: Color(0xFFBA780F)),
+                                          image: DecorationImage(
+                                            image: NetworkImage(
+                                                doc['coverimage'] == null
+                                                    ? ""
+                                                    : doc['coverimage']),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            Container(
                                               margin: const EdgeInsets.only(
-                                                  top: 68.0, right: 0.0),
-                                              child: Column(
+                                                  top: 113.0, right: 0.0),
+                                              height: 220.0,
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          20),
+                                                  gradient: LinearGradient(
+                                                      begin: FractionalOffset
+                                                          .topCenter,
+                                                      end: FractionalOffset
+                                                          .bottomCenter,
+                                                      colors: [
+                                                        Colors.white70
+                                                            .withOpacity(0.0),
+                                                        Colors.orange
+                                                            .withOpacity(0.8),
+                                                      ],
+                                                      stops: [
+                                                        0.0,
+                                                        0.7
+                                                      ])),
+                                              child: Stack(
                                                 children: [
                                                   Align(
-                                                    alignment:
-                                                        Alignment.bottomCenter,
-                                                    child: Text(
-                                                      "20% off",
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black,
+                                                    alignment: Alignment
+                                                        .bottomCenter,
+                                                    child: Container(
+                                                      margin: const EdgeInsets
+                                                              .only(
+                                                          top: 68.0,
+                                                          right: 0.0),
+                                                      child: Column(
+                                                        children: [
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomCenter,
+                                                            child: Text(
+                                                              "${doc['promotion']}% off",
+                                                              style:
+                                                                  TextStyle(
+                                                                fontSize: 24,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                color: Colors
+                                                                    .black,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                            );
+                          }).toList(),
+                        );
+                      }
+                    },
                   ),
-                ),*/
-              ],
-            ),
-          ),
-          Positioned(
-              left: 0.0,
-              top: 0.0,
-              right: 0.0,
-              child: Container(
-                  child: VendomeHeader.cus(
-                drawer: _scaffoldState,
-                cusname: cusname,
-                cusaddress: widget.city,
-              ))),
-        ],
-      ),
-    ));
+                ),
+              ),
+            ],
+          );
   }
 }

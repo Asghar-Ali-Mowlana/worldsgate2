@@ -3,6 +3,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
@@ -525,420 +526,10 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
           : Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 160.0,
-                    ),
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SideLayout(),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: Container(
-                                margin: EdgeInsets.only(
-                                  left: MediaQuery.of(context).size.width / 80,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      child: Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                name,
-                                                style: TextStyle(
-                                                    fontSize: 30,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              RatingBar.builder(
-                                                initialRating: stars == 1
-                                                    ? 1
-                                                    : stars == 2
-                                                        ? 2
-                                                        : stars == 3
-                                                            ? 3
-                                                            : stars == 4
-                                                                ? 4
-                                                                : stars == 5
-                                                                    ? 5
-                                                                    : 0,
-                                                direction: Axis.horizontal,
-                                                ignoreGestures: true,
-                                                itemCount: 5,
-                                                itemSize: width * 0.016,
-                                                itemPadding:
-                                                    EdgeInsets.symmetric(
-                                                        horizontal: 4.0),
-                                                itemBuilder: (context, _) =>
-                                                    Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                ),
-                                                onRatingUpdate: (rating) {
-                                                  print(rating);
-                                                },
-                                              ),
-                                            ],
-                                          )),
-                                    ),
-                                    //row for button and booking hotel heading
-                                    Container(
-                                      margin: EdgeInsets.only(top: 10.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on,
-                                                  color: Color(0xFFdb9e1f),
-                                                  size: width * 0.015,
-                                                ),
-                                                Text(
-                                                  "  ${address} - Great location - show map",
-                                                  style: TextStyle(
-                                                    fontSize: width * 0.008,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: MaterialButton(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0)),
-                                                  side: BorderSide(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              elevation: 5.0,
-                                              height: MediaQuery.of(context)
-                                                      .size
-                                                      .height /
-                                                  18,
-                                              minWidth: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  30,
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                                            AddHotelDetails(
-                                                                widget.uid)));
-                                              },
-                                              child: Text(
-                                                "Reserve",
-                                                style: TextStyle(
-                                                  fontSize: width * 0.013,
-                                                  color: Color(0xFFdb9e1f),
-                                                ),
-                                              ),
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      child: Column(
-                                        children: imageBuilderThree(),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 50.0,
-                                    ),
-                                    Container(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            right: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                4.9,
-                                            bottom: 30),
-                                        child: Text(
-                                          description,
-                                          style: TextStyle(fontSize: 16.0),
-                                        ),
-                                      ),
-                                    ),
-                                    //table
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: 24.0, top: 8.0),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            child: Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color:
-                                                            Color(0xFFdb9e1f),
-                                                      ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              6.01,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height /
-                                                              10,
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Room Type",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color:
-                                                            Color(0xFFdb9e1f),
-                                                      ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              6.01,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height /
-                                                              10,
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Sleeps",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      decoration: BoxDecoration(
-                                                        //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                        color:
-                                                            Color(0xFFdb9e1f),
-                                                      ),
-                                                      width:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              6.01,
-                                                      height:
-                                                          MediaQuery.of(context)
-                                                                  .size
-                                                                  .height /
-                                                              10,
-                                                      child: Center(
-                                                        child: Text(
-                                                          "Price",
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    //4th column
-                                                    // Container(
-                                                    //   decoration: BoxDecoration(
-                                                    //     //border: Border.all(color: Color(0xFFdb9e1f)),
-                                                    //     color:
-                                                    //         Color(0xFFdb9e1f),
-                                                    //   ),
-                                                    //   width:
-                                                    //       MediaQuery.of(context)
-                                                    //               .size
-                                                    //               .width /
-                                                    //           6.01,
-                                                    //   height:
-                                                    //       MediaQuery.of(context)
-                                                    //               .size
-                                                    //               .height /
-                                                    //           10,
-                                                    //   child: Center(
-                                                    //     child: Text(
-                                                    //       "Room Type",
-                                                    //       style: TextStyle(
-                                                    //           color:
-                                                    //               Colors.white,
-                                                    //           fontWeight:
-                                                    //               FontWeight
-                                                    //                   .bold),
-                                                    //     ),
-                                                    //   ),
-                                                    // ),
-                                                  ],
-                                                ),
-                                                IntrinsicHeight(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .stretch,
-                                                    children: roomall(),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Text(
-                                      "Facilities of $name",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20.0,
-                                      ),
-                                    ),
-                                    SizedBox(height: 20.0),
-                                    Text(
-                                      "Most popular facilities",
-                                      style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 16.0),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Wrap(
-                                      spacing: 20.0,
-                                      children: mainfacilitiez(),
-                                    ),
-                                    SizedBox(height: 20.0),
-                                    /*Text(
-                                      "Other facilities",
-                                      style: TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 16.0),
-                                    ),
-                                    SizedBox(height: 10.0),*/
-                                    Wrap(
-                                        children: subFacilities != null
-                                            ? allSubFacilitiesKeys()
-                                            : []),
-                                    SizedBox(height: 50.0),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Container(
-                                          width: 200.0,
-                                          height: 50.0,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                primary: Color(0xFF000000),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    side: BorderSide(
-                                                        color:
-                                                            Color(0xFFdb9e1f))),
-                                                side: BorderSide(
-                                                  width: 2.5,
-                                                  color: Color(0xFFdb9e1f),
-                                                ),
-                                                textStyle: const TextStyle(
-                                                    fontSize: 16)),
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          UpdateHotelDetails(
-                                                              widget.uid,
-                                                              widget.hotelid)));
-                                            },
-                                            child: const Text(
-                                              'Update',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 50.0,
-                                        ),
-                                        Container(
-                                          width: 200.0,
-                                          height: 50.0,
-                                          child: ElevatedButton(
-                                            style: ElevatedButton.styleFrom(
-                                                primary: Color(0xFF000000),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                            Radius.circular(
-                                                                20.0)),
-                                                    side: BorderSide(
-                                                        color:
-                                                            Color(0xFFdb9e1f))),
-                                                side: BorderSide(
-                                                  width: 2.5,
-                                                  color: Color(0xFFdb9e1f),
-                                                ),
-                                                textStyle: const TextStyle(
-                                                    fontSize: 16)),
-                                            onPressed: () {
-                                              _displayTextInputDialog(context);
-                                            },
-                                            child: const Text(
-                                              'Delete',
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      child: Column(
-                                        children: [],
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                ResponsiveWidget(
+                    mobile: buildColumnContent(context, width),
+                    tab: buildColumnContent(context, width),
+                    desktop: buildColumnContent(context, width)
                 ),
                 Positioned(
                     left: 0.0,
@@ -952,5 +543,429 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
               ],
             ),
     ));
+  }
+
+  Column buildColumnContent(BuildContext context, double width) {
+    return Column(
+                children: [
+                  SizedBox(
+                    height: 160.0,
+                  ),
+                  Expanded(
+                    child: LayoutBuilder(
+
+                        builder: (context, constraints) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            (constraints.maxWidth >= 1008)
+                                ?SideLayout():Container(),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.vertical,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                    left: MediaQuery.of(context).size.width / 80,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Container(
+                                        child: Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  name,
+                                                  style: TextStyle(
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                RatingBar.builder(
+                                                  initialRating: stars == 1
+                                                      ? 1
+                                                      : stars == 2
+                                                          ? 2
+                                                          : stars == 3
+                                                              ? 3
+                                                              : stars == 4
+                                                                  ? 4
+                                                                  : stars == 5
+                                                                      ? 5
+                                                                      : 0,
+                                                  direction: Axis.horizontal,
+                                                  ignoreGestures: true,
+                                                  itemCount: 5,
+                                                  itemSize: width * 0.016,
+                                                  itemPadding:
+                                                      EdgeInsets.symmetric(
+                                                          horizontal: 4.0),
+                                                  itemBuilder: (context, _) =>
+                                                      Icon(
+                                                    Icons.star,
+                                                    color: Colors.amber,
+                                                  ),
+                                                  onRatingUpdate: (rating) {
+                                                    print(rating);
+                                                  },
+                                                ),
+                                              ],
+                                            )),
+                                      ),
+                                      //row for button and booking hotel heading
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.topLeft,
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    Icons.location_on,
+                                                    color: Color(0xFFdb9e1f),
+                                                    size: width * 0.015,
+                                                  ),
+                                                  Text(
+                                                    "  ${address} - Great location - show map",
+                                                    style: TextStyle(
+                                                      fontSize: width * 0.008,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment.topRight,
+                                              child: MaterialButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    side: BorderSide(
+                                                        color:
+                                                            Color(0xFFdb9e1f))),
+                                                elevation: 5.0,
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height /
+                                                    18,
+                                                minWidth: MediaQuery.of(context)
+                                                        .size
+                                                        .width /
+                                                    30,
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                                              AddHotelDetails(
+                                                                  widget.uid)));
+                                                },
+                                                child: Text(
+                                                  "Reserve",
+                                                  style: TextStyle(
+                                                    fontSize: width * 0.013,
+                                                    color: Color(0xFFdb9e1f),
+                                                  ),
+                                                ),
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: imageBuilderThree(),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 50.0,
+                                      ),
+                                      Container(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              right: MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  4.9,
+                                              bottom: 30),
+                                          child: Text(
+                                            description,
+                                            style: TextStyle(fontSize: 16.0),
+                                          ),
+                                        ),
+                                      ),
+                                      //table
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: 24.0, top: 8.0),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                              child: Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                          color:
+                                                              Color(0xFFdb9e1f),
+                                                        ),
+                                                        width:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                6.01,
+                                                        height:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .height /
+                                                                10,
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Room Type",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                          color:
+                                                              Color(0xFFdb9e1f),
+                                                        ),
+                                                        width:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                6.01,
+                                                        height:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .height /
+                                                                10,
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Sleeps",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                          color:
+                                                              Color(0xFFdb9e1f),
+                                                        ),
+                                                        width:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .width /
+                                                                6.01,
+                                                        height:
+                                                            MediaQuery.of(context)
+                                                                    .size
+                                                                    .height /
+                                                                10,
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Price",
+                                                            style: TextStyle(
+                                                                color:
+                                                                    Colors.white,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      //4th column
+                                                      // Container(
+                                                      //   decoration: BoxDecoration(
+                                                      //     //border: Border.all(color: Color(0xFFdb9e1f)),
+                                                      //     color:
+                                                      //         Color(0xFFdb9e1f),
+                                                      //   ),
+                                                      //   width:
+                                                      //       MediaQuery.of(context)
+                                                      //               .size
+                                                      //               .width /
+                                                      //           6.01,
+                                                      //   height:
+                                                      //       MediaQuery.of(context)
+                                                      //               .size
+                                                      //               .height /
+                                                      //           10,
+                                                      //   child: Center(
+                                                      //     child: Text(
+                                                      //       "Room Type",
+                                                      //       style: TextStyle(
+                                                      //           color:
+                                                      //               Colors.white,
+                                                      //           fontWeight:
+                                                      //               FontWeight
+                                                      //                   .bold),
+                                                      //     ),
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
+                                                  IntrinsicHeight(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .stretch,
+                                                      children: roomall(),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(
+                                        "Facilities of $name",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20.0,
+                                        ),
+                                      ),
+                                      SizedBox(height: 20.0),
+                                      Text(
+                                        "Most popular facilities",
+                                        style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 16.0),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Wrap(
+                                        spacing: 20.0,
+                                        children: mainfacilitiez(),
+                                      ),
+                                      SizedBox(height: 20.0),
+                                      /*Text(
+                                        "Other facilities",
+                                        style: TextStyle(
+                                            color: Colors.white70,
+                                            fontSize: 16.0),
+                                      ),
+                                      SizedBox(height: 10.0),*/
+                                      Wrap(
+                                          children: subFacilities != null
+                                              ? allSubFacilitiesKeys()
+                                              : []),
+                                      SizedBox(height: 50.0),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            width: 200.0,
+                                            height: 50.0,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFF000000),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  20.0)),
+                                                      side: BorderSide(
+                                                          color:
+                                                              Color(0xFFdb9e1f))),
+                                                  side: BorderSide(
+                                                    width: 2.5,
+                                                    color: Color(0xFFdb9e1f),
+                                                  ),
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 16)),
+                                              onPressed: () {
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            UpdateHotelDetails(
+                                                                widget.uid,
+                                                                widget.hotelid)));
+                                              },
+                                              child: const Text(
+                                                'Update',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 50.0,
+                                          ),
+                                          Container(
+                                            width: 200.0,
+                                            height: 50.0,
+                                            child: ElevatedButton(
+                                              style: ElevatedButton.styleFrom(
+                                                  primary: Color(0xFF000000),
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius.circular(
+                                                                  20.0)),
+                                                      side: BorderSide(
+                                                          color:
+                                                              Color(0xFFdb9e1f))),
+                                                  side: BorderSide(
+                                                    width: 2.5,
+                                                    color: Color(0xFFdb9e1f),
+                                                  ),
+                                                  textStyle: const TextStyle(
+                                                      fontSize: 16)),
+                                              onPressed: () {
+                                                _displayTextInputDialog(context);
+                                              },
+                                              child: const Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        child: Column(
+                                          children: [],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              );
   }
 }

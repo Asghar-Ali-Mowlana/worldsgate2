@@ -5,6 +5,9 @@ import 'package:worldsgate/screens/dataentryoperator/hotels/deoaddhoteldetails.d
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
 import 'package:worldsgate/screens/loginpage.dart';
+import 'package:worldsgate/screens/user/usercarbooking.dart';
+import 'package:worldsgate/screens/user/userhomepage.dart';
+import 'package:worldsgate/screens/user/userhotelbooking.dart';
 import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
 
 Future main() async {
@@ -42,7 +45,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: UserCarBooking("WpzPfHN360dyUtmpSo2a3yhXVak2", "Al Barsha"),
     );
   }
 }

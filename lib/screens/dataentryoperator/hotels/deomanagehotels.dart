@@ -3,6 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
 import 'package:worldsgate/screens/user/userhotelbooking.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
@@ -124,7 +125,7 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
     }
   }
 
-  List<Widget> newbuilder() {
+  List<Widget> newbuilder(double fontsize, double columntextwidth) {
     List<Widget> m = [];
 
     for (int i = 0; i < entryList.length; i++) {
@@ -145,9 +146,8 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
           entryList[i].value.length.toString());
 
       for (int j = 0; j < entryList[i].value.length; j++) {
-        m.add(StreamBuilder(
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            return Padding(
+        m.add(
+            Padding(
               padding:
                   const EdgeInsets.only(top: 16.0, left: 10.0, right: 10.0),
               child: Stack(
@@ -159,108 +159,111 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
                               entryList[i].value[j]["hotel_id"].toString())));
                     },
                     child: Container(
-                      height: MediaQuery.of(context).size.height / 6,
-                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 5.5,
+                      width: MediaQuery.of(context).size.width/1,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(color: Color(0xFFBA780F)),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10.0),
-                                child: Text(
-                                  "${entryList[i].value[j]["hotel_name"].toString()}",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    color: Color(0xFFBA780F),
-                                    size: 15.0,
-                                  ),
-                                  Icon(
-                                    Icons.arrow_upward_outlined,
-                                    color: Color(0xFFBA780F),
-                                    size: 15.0,
-                                  ),
-                                  Text(
-                                    " 4 Km From Center",
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0, top: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Container(
+
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "${entryList[i].value[j]["hotel_name"].toString()}",
+                                      style: TextStyle(
+                                        fontSize: fontsize,
+                                        color: Colors.white,
+
+                                      ),
+                                      textAlign: TextAlign.right,
                                     ),
-                                  ),
-                                ],
-                              ),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Icon(
+                                          Icons.location_on_outlined,
+                                          color: Color(0xFFBA780F),
+                                          size: 15.0,
+                                        ),
+                                        Icon(
+                                          Icons.arrow_upward_outlined,
+                                          color: Color(0xFFBA780F),
+                                          size: 15.0,
+                                        ),
+                                        Text(
+                                          " 4 Km From Center",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
 
-                              Text(
-                                "Price for 1 night 2 adults",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFFBA780F),
-                                ),
-                              ),
-                              //price
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 2.0, bottom: 2.0),
-                                child: Text(
-                                  entryList[i].value[j]["price"]!=null ?"Price ${entryList[i].value[j]["price"]} AED": "Loading",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                                    Text(
+                                      "Price for 1 night 2 adults",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Color(0xFFBA780F),
+                                      ),
+                                    ),
+                                    //price
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 2.0, bottom: 2.0),
+                                      child: Text(
+                                        entryList[i].value[j]["price"]!=null ?"Price ${entryList[i].value[j]["price"]} AED": "Loading",
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
 
-                              //taxcharge
-                              Text(
-                                "${entryList[i].value[j]["taxandcharges"]} AED Taxes and Charges",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
+                                    //taxcharge
+                                    Text(
+                                      "${entryList[i].value[j]["taxandcharges"]} AED Taxes and Charges",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    //cancellation fee
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 2.0),
+                                      child: Text(
+                                        "${entryList[i].value[j]["cancellationfee"]}% for Cancellation",
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFFBA780F),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              //cancellation fee
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child: Text(
-                                  "${entryList[i].value[j]["cancellationfee"]}% for Cancellation",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFFBA780F),
-                                  ),
-                                ),
-                              ),
+                              width: columntextwidth,
 
-                              //
-                              //
-                              // Text("Hotel name is " +
-                              //     entryList[i].value[j]["hotel_name"] +
-                              //     " & " +
-                              //     "Promotion is " +
-                              //     entryList[i].value[j]["promotion"])
-                            ],
-                          ),
-                        ],
+                            ),
+
+                          ],
+                        ),
                       ),
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height / 6,
-                    width: MediaQuery.of(context).size.width / 9,
+                    height: MediaQuery.of(context).size.height / 5.5,
+                    width: MediaQuery.of(context).size.width / 6,
+                    //desk 9
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                       image: DecorationImage(
@@ -294,7 +297,7 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
                                 alignment: Alignment.bottomCenter,
                                 child: Container(
                                   margin: const EdgeInsets.only(
-                                      top: 6.0, right: 0.0),
+                                      top: 16.0, right: 0.0),
                                   child: Column(
                                     children: [
                                       Align(
@@ -302,7 +305,7 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
                                         child: Text(
                                           "${entryList[i].value[j]["promotion"]}% off",
                                           style: TextStyle(
-                                            fontSize: 20,
+                                            fontSize: fontsize,
                                             fontWeight: FontWeight.bold,
                                             color: Colors.black,
                                           ),
@@ -320,9 +323,8 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
                   ),
                 ],
               ),
-            );
-          },
-        ));
+            ),
+          );
       }
     }
 
@@ -337,7 +339,7 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
     getyo();
     getname();
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
       });
@@ -368,102 +370,11 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
           : Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 160.0,
-                    ),
+                ResponsiveWidget(
+                    mobile: buildColumnContent(context, 14, 350.0),
+                    tab: buildColumnContent(context, 16, 800.0),
+                    desktop: buildColumnContent(context, 16, 800.0)
 
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SideLayout(),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  //row for button and booking hotel heading
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0),
-                                            child: Text(
-                                              "Booking > Hotel (${totaladded.toString()})",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 18.0),
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: MaterialButton(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0)),
-                                                  side: BorderSide(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              elevation: 5.0,
-                                              height: 40,
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                                            AddHotelDetails(
-                                                                widget.uid)));
-                                              },
-                                              child: Text(
-                                                "+ Add new",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Color(0xFFdb9e1f),
-                                                ),
-                                              ),
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Column(
-                                        children: newbuilder(),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Container(
-                    //   child: Column(
-                    //     children: newbuilder(),
-                    //   ),
-                    // ),
-                  ],
                 ),
                 Positioned(
                     left: 0.0,
@@ -477,5 +388,111 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
               ],
             ),
     ));
+  }
+
+  Column buildColumnContent(BuildContext context, double fontshize, double columntextwidth) {
+    return Column(
+                children: [
+                  SizedBox(
+                    height: 160.0,
+                  ),
+
+                  Expanded(
+                    child: LayoutBuilder(
+
+                        builder: (context, constraints) {
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            (constraints.maxWidth >= 1008)
+                            ?SideLayout():Container(),
+                            Expanded(
+                              child: Container(
+                                child: Column(
+                                  children: [
+                                    //row for button and booking hotel heading
+                                    Container(
+                                      margin: EdgeInsets.only(top: 10.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topLeft,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 14.0),
+                                              child: Text(
+                                                "Booking > Hotel (${totaladded.toString()})",
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                right: 18.0),
+                                            child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: MaterialButton(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                10.0)),
+                                                    side: BorderSide(
+                                                        color:
+                                                            Color(0xFFdb9e1f))),
+                                                elevation: 5.0,
+                                                height: 40,
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                                              AddHotelDetails(
+                                                                  widget.uid)));
+                                                },
+                                                child: Text(
+                                                  "+ Add new",
+                                                  style: TextStyle(
+                                                    fontSize: 20,
+                                                    color: Color(0xFFdb9e1f),
+                                                  ),
+                                                ),
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: Column(
+                                          children: newbuilder(fontshize, columntextwidth),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    ),
+                  ),
+
+                  // Container(
+                  //   child: Column(
+                  //     children: newbuilder(),
+                  //   ),
+                  // ),
+                ],
+              );
   }
 }
