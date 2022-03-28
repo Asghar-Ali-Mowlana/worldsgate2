@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
+import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
 import '../../../widgets/deonavigationdrawer.dart';
@@ -1281,7 +1282,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          DeoManageHotels(widget.uid)));
+                                          DeoManageCars(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',
