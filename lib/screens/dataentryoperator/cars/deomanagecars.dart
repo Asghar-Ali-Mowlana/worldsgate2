@@ -406,7 +406,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 14.0),
                                   child: Text(
-                                    "Booking > Hotel (${totaladded.toString()})",
+                                    "Booking > Car (${totaladded.toString()})",
                                     style: TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
@@ -446,14 +446,14 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                             ],
                           ),
                         ),
-                        Expanded(
+                        /*Expanded(
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
                             child: Column(
                               children: newbuilder(fontshize, columntextwidth),
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     ),
                   ),
