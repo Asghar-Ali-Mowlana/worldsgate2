@@ -321,7 +321,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getname();
     Future.delayed(Duration(seconds: 1), () {
