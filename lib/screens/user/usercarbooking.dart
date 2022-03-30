@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/user/userviewcardetails.dart';
 
 import '../../helper/responsive_helper.dart';
 import '../../widgets/header.dart';
@@ -40,6 +41,9 @@ class _UserCarBookingState extends State<UserCarBooking> {
 
   @override
   Widget build(BuildContext context) {
+    final CollectionReference packageCollection =
+    FirebaseFirestore.instance.collection('cars');
+
     return SafeArea(
      
 
@@ -59,9 +63,9 @@ class _UserCarBookingState extends State<UserCarBooking> {
             children: [
               SingleChildScrollView(
                 child: ResponsiveWidget(
-                  mobile: buildColumnContent(context, "mobile"),
-                  tab: buildColumnContent(context, "tab"),
-                  desktop: buildColumnContent(context, "desktop"),
+                  mobile: buildColumnContent(context, "mobile", packageCollection),
+                  tab: buildColumnContent(context, "tab", packageCollection),
+                  desktop: buildColumnContent(context, "desktop", packageCollection),
                 ),
               ),
               Positioned(
@@ -76,7 +80,7 @@ class _UserCarBookingState extends State<UserCarBooking> {
         ));
   }
 
-  Column buildColumnContent(BuildContext context, String tex) {
+  Column buildColumnContent(BuildContext context, String tex, Query<Object?> packageCollection ) {
     return Column(
 
       children: [
@@ -105,7518 +109,1348 @@ class _UserCarBookingState extends State<UserCarBooking> {
                 builder: (context, constraints) {
                   return
                     (constraints.maxWidth >= 920 && constraints.maxWidth < 1380)
-                        ?Wrap(
-                      direction: Axis.horizontal,
-                      spacing: (constraints.maxWidth >= 1120 && constraints.maxWidth < 1240) ? 100.0 : (constraints.maxWidth >= 1240 && constraints.maxWidth < 1400)? 200.0 : 30.0,
-                      runSpacing: 40.0,
-                      children: [
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
+                        ?StreamBuilder<QuerySnapshot>(
+                        stream: packageCollection.snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return Wrap(
+                              direction: Axis.horizontal,
+                              spacing: (constraints.maxWidth >= 1120 && constraints.maxWidth < 1240) ? 100.0 : (constraints.maxWidth >= 1240 && constraints.maxWidth < 1400)? 200.0 : 30.0,
+                              runSpacing: 40.0,
+                              children: snapshot.data!.docs.map((doc)
+                              {
+                                return  InkWell(
+                                  onTap: (){
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                        // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                        UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                                  },
+                                  child: Container(
+                                    height: 235.0,
+                                    width: 450,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      // border: Border.all(color: Color(0xFFBA780F)),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              '${doc['coverimage']}'),
+                                          fit: BoxFit.cover
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Column(
                                         children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
+                                          Container(
 
+                                            // margin: const EdgeInsets.only(
+                                            //     right: 1.0, left: 2.0),
+                                            height: 90.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(
+                                                  20),
+                                              //border: Border.all(color: Color(0xFFBA780F)),
+                                              // color: Colors.black,
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .bottomCenter,
+                                                  end: FractionalOffset.topCenter,
+                                                  colors: [
+                                                    Colors.black87.withOpacity(
+                                                        0.0),
+                                                    Colors.black87,
+                                                  ],
+                                                  stops: [
+                                                    0.0,
+                                                    0.7
+                                                  ]),
+
+
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(12.0),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
+                                                crossAxisAlignment: CrossAxisAlignment
+                                                    .end,
                                                 children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
+                                                  Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: Text(
+                                                      "${doc['name']}"
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0),),),
+                                                  Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: Text("${doc['model']}",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0),),),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            margin: const EdgeInsets.only(
+                                                top: 60.0),
+                                            height: 85.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(20.0),
+                                                bottomRight: Radius.circular(
+                                                    20.0),),
+                                              //border: Border.all(color: Color(0xFFBA780F)),
+                                              // color: Colors.black,
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .topCenter,
+                                                  end: FractionalOffset
+                                                      .bottomCenter,
+                                                  colors: [
+                                                    Color(0xFFf2f2f2).withOpacity(
+                                                        0.3),
+                                                    Color(0xFFb3b3b3).withOpacity(
+                                                        0.9),
+                                                  ],
+                                                  stops: [
+                                                    0.0,
+                                                    1.0
+                                                  ]),
 
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
+
+                                            ),
+                                            child: BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 3, sigmaY: 3),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 12.0,),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment
+                                                      .spaceBetween,
+
+                                                  children: [
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .topLeft,
+                                                      child: Container(
+                                                        width: 100.0,
+
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .end,
+
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                  top: MediaQuery
+                                                                      .of(context)
+                                                                      .size
+                                                                      .height *
+                                                                      0.02),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment
+                                                                    .end,
+
+                                                                children: [
+                                                                  Text("${doc['topspeed']}",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize: 20.0),),
+                                                                  Text("km/h",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white54,
+                                                                        fontSize: 16.0),)
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Text("Top Speed",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                  fontSize: 14.0),),
+                                                          ],
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .topCenter,
+                                                      child: Container(
+                                                        width: 230.0,
 
                                                         child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .start,
+
                                                           children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
+
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment
+                                                                  .spaceBetween,
+                                                              children: [
+                                                                Container(
+                                                                  width: 65.0,
+
+                                                                  decoration: BoxDecoration(
+
+                                                                    border: Border
+                                                                        .all(
+                                                                        color: Color(
+                                                                            0xFFBA780F),
+                                                                        width: 1.5),
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                      top: 2.0),
+
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          size: 20.0,
+                                                                          color: Color(
+                                                                              0xFFBA780F),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "Delivery",
+                                                                          style: TextStyle(
+                                                                              color: Color(
+                                                                                  0xFFBA780F),
+                                                                              fontSize: 14.0,
+                                                                              decoration: TextDecoration
+                                                                                  .underline),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "${doc['delivery']}",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              fontSize: 13.0),),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+
+                                                                  width: 65.0,
+                                                                  decoration: BoxDecoration(
+
+                                                                    border: Border
+                                                                        .all(
+                                                                        color: Color(
+                                                                            0xFFBA780F),
+                                                                        width: 1.5),
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                      top: 2.0),
+
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Icon(
+                                                                          Icons
+                                                                              .directions_car_rounded,
+                                                                          size: 20.0,
+                                                                          color: Color(
+                                                                              0xFFBA780F),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "Model",
+                                                                          style: TextStyle(
+                                                                              color: Color(
+                                                                                  0xFFBA780F),
+                                                                              fontSize: 14.0,
+                                                                              decoration: TextDecoration
+                                                                                  .underline),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "${doc['model']}",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              fontSize: 13.0),),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  width: 65.0,
+
+                                                                  decoration: BoxDecoration(
+
+                                                                    border: Border
+                                                                        .all(
+                                                                        color: Color(
+                                                                            0xFFBA780F),
+                                                                        width: 1.5),
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                      top: 2.0),
+
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Icon(
+                                                                          Icons
+                                                                              .add_road,
+                                                                          size: 20.0,
+                                                                          color: Color(
+                                                                              0xFFBA780F),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "${doc['distance']} KM",
+                                                                          style: TextStyle(
+                                                                              color: Color(
+                                                                                  0xFFBA780F),
+                                                                              fontSize: 14.0,
+                                                                              decoration: TextDecoration
+                                                                                  .underline),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "Included",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              fontSize: 13.0),),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
                                                             ),
 
                                                           ],
                                                         ),
                                                       ),
-                                                      Container(
-
-                                                        width: 65.0,
+                                                    ),
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .topRight,
+                                                      child: Container(
+                                                        width: 80.0,
+                                                        margin: EdgeInsets.only(
+                                                            top: MediaQuery
+                                                                .of(context)
+                                                                .size
+                                                                .height * 0.02,
+                                                            bottom: 7.0),
                                                         decoration: BoxDecoration(
+                                                          border: Border(
 
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
+                                                            left: BorderSide(
+                                                                width: 1.0,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
                                                         ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
                                                         child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .end,
 
+                                                          children: [
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment
+                                                                  .end,
+
+                                                              children: [
+                                                                Text("${doc['price']}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black87,
+                                                                      fontSize: 20.0),),
+                                                                Text("\$",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 20.0),)
+                                                              ],
+                                                            ),
+                                                            Text("Rent Price",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                  fontSize: 14.0),),
+                                                            // Row(
+                                                            //   children: [
+                                                            //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                                            //   ],
+                                                            // ),
                                                           ],
                                                         ),
                                                       ),
-                                                      Container(
-                                                        width: 65.0,
+                                                    ),
 
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
+                                                  ],
                                                 ),
                                               ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
                                             ),
                                           ),
-
                                         ],
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
+                                );
 
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
 
 
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
+                              }).toList(),
 
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-
-                      ],
+                            );
+                          }
+                        }
                     )
                         : (constraints.maxWidth >= 1380)
-                        ?Wrap(
-                  direction: Axis.horizontal,
-                      spacing: 30.0,
-                      runSpacing: 40.0,
-                      children: [
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
+                        ?StreamBuilder<QuerySnapshot>(
+                        stream: packageCollection.snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return Wrap(
+                              direction: Axis.horizontal,
+                              spacing: 30.0,
+                              runSpacing: 40.0,
+                              children: snapshot.data!.docs.map((doc)
+                            {
+                            return  InkWell(
+                              onTap: (){
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                    // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                    UserViewCarDetails(widget.uid, doc['carid'].toString(), widget.city)));
+                              },
+                              child: Container(
+                                  height: 235.0,
+                                  width: 450,
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
+                                    borderRadius: BorderRadius.circular(30),
+                                    // border: Border.all(color: Color(0xFFBA780F)),
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            '${doc['coverimage']}'),
+                                        fit: BoxFit.cover
+                                    ),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
+                                  child: Align(
+                                    alignment: Alignment.topCenter,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
                                       children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
+                                        Container(
 
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                          // margin: const EdgeInsets.only(
+                                          //     right: 1.0, left: 2.0),
+                                          height: 90.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                                20),
+                                            //border: Border.all(color: Color(0xFFBA780F)),
+                                            // color: Colors.black,
+                                            gradient: LinearGradient(
+                                                begin: FractionalOffset
+                                                    .bottomCenter,
+                                                end: FractionalOffset.topCenter,
+                                                colors: [
+                                                  Colors.black87.withOpacity(
+                                                      0.0),
+                                                  Colors.black87,
                                                 ],
-                                              ),
-                                            ),
+                                                stops: [
+                                                  0.0,
+                                                  0.7
+                                                ]),
+
+
                                           ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(12.0),
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment
+                                                  .end,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Text(
+                                                    "${doc['name']}"
+                                                        .toUpperCase(),
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16.0),),),
+                                                Align(
+                                                  alignment: Alignment.topRight,
+                                                  child: Text("${doc['model']}",
+                                                    style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 16.0),),),
+                                              ],
                                             ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: 235.0,
-                          width: 450,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                fit: BoxFit.cover
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              children: [
-                                Container(
-
-                                  // margin: const EdgeInsets.only(
-                                  //     right: 1.0, left: 2.0),
-                                  height: 90.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.bottomCenter,
-                                        end: FractionalOffset.topCenter,
-                                        colors: [
-                                          Colors.black87.withOpacity(0.0),
-                                          Colors.black87,
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          0.7
-                                        ]),
-
-
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  clipBehavior: Clip.antiAlias,
-                                  margin: const EdgeInsets.only(
-                                      top:60.0),
-                                  height: 85.0,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                    //border: Border.all(color: Color(0xFFBA780F)),
-                                    // color: Colors.black,
-                                    gradient: LinearGradient(
-                                        begin: FractionalOffset.topCenter,
-                                        end: FractionalOffset.bottomCenter,
-                                        colors: [
-                                          Color(0xFFf2f2f2).withOpacity(0.3),
-                                          Color(0xFFb3b3b3).withOpacity(0.9),
-                                        ],
-                                        stops: [
-                                          0.0,
-                                          1.0
-                                        ]),
-
-
-                                  ),
-                                  child: BackdropFilter(
-                                    filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(right: 12.0, ),
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Container(
-                                              width: 100.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Container(
-                                                    margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                    child: Row(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-
-                                                      children: [
-                                                        Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                        Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topCenter,
-                                            child: Container(
-                                              width: 230.0,
-
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                children: [
-
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-
-                                                        width: 65.0,
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: 65.0,
-
-                                                        decoration: BoxDecoration(
-
-                                                          border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                        ),
-                                                        margin: EdgeInsets.only(top: 2.0),
-
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(4.0),
-                                                              child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              width: 80.0,
-                                              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                              decoration: BoxDecoration(
-                                                border: Border(
-
-                                                  left: BorderSide(width: 1.0, color: Colors.black),
-                                                ),
-                                              ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-
-                                                    children: [
-                                                      Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                      Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                    ],
-                                                  ),
-                                                  Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  // Row(
-                                                  //   children: [
-                                                  //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                  //   ],
-                                                  // ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-
-
-
-
-
-                      ],
-                    )
-
-                        :ListView(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      children: [
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Container(
-                              height: 235.0,
-                              width: MediaQuery.of(context).size.width*1,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                // border: Border.all(color: Color(0xFFBA780F)),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                    fit: BoxFit.cover
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Column(
-                                  children: [
-                                    Container(
-
-                                      // margin: const EdgeInsets.only(
-                                      //     right: 1.0, left: 2.0),
-                                      height: 90.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.bottomCenter,
-                                            end: FractionalOffset.topCenter,
-                                            colors: [
-                                              Colors.black87.withOpacity(0.0),
-                                              Colors.black87,
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              0.7
-                                            ]),
-
-
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      margin: const EdgeInsets.only(
-                                          top:60.0),
-                                      height: 85.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.topCenter,
-                                            end: FractionalOffset.bottomCenter,
-                                            colors: [
-                                              Color(0xFFf2f2f2).withOpacity(0.3),
-                                              Color(0xFFb3b3b3).withOpacity(0.9),
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              1.0
-                                            ]),
-
-
-                                      ),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(right: 12.0, ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Container(
-                                                  width: 100.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                    children: [
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.end,
-
-                                                          children: [
-                                                            Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                            Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  width: 230.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                    children: [
-
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-
-                                                            width: 65.0,
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Container(
-                                                  width: 100.0,
-                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-
-                                                      left: BorderSide(width: 1.0, color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-
-                                                        children: [
-                                                          Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                          Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                        ],
-                                                      ),
-                                                      Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      //   ],
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-
-                                            ],
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Container(
-                              height: 235.0,
-                              width: MediaQuery.of(context).size.width*1,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                // border: Border.all(color: Color(0xFFBA780F)),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                    fit: BoxFit.cover
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Column(
-                                  children: [
-                                    Container(
-
-                                      // margin: const EdgeInsets.only(
-                                      //     right: 1.0, left: 2.0),
-                                      height: 90.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.bottomCenter,
-                                            end: FractionalOffset.topCenter,
-                                            colors: [
-                                              Colors.black87.withOpacity(0.0),
-                                              Colors.black87,
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              0.7
-                                            ]),
+                                        Container(
+                                          clipBehavior: Clip.antiAlias,
+                                          margin: const EdgeInsets.only(
+                                              top: 60.0),
+                                          height: 85.0,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20.0),
+                                              bottomRight: Radius.circular(
+                                                  20.0),),
+                                            //border: Border.all(color: Color(0xFFBA780F)),
+                                            // color: Colors.black,
+                                            gradient: LinearGradient(
+                                                begin: FractionalOffset
+                                                    .topCenter,
+                                                end: FractionalOffset
+                                                    .bottomCenter,
+                                                colors: [
+                                                  Color(0xFFf2f2f2).withOpacity(
+                                                      0.3),
+                                                  Color(0xFFb3b3b3).withOpacity(
+                                                      0.9),
+                                                ],
+                                                stops: [
+                                                  0.0,
+                                                  1.0
+                                                ]),
 
 
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                          ],
+                                          ),
+                                          child: BackdropFilter(
+                                            filter: ImageFilter.blur(
+                                                sigmaX: 3, sigmaY: 3),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                right: 12.0,),
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment
+                                                    .spaceBetween,
+
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment
+                                                        .topLeft,
+                                                    child: Container(
+                                                      width: 100.0,
+
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment
+                                                            .end,
+
+                                                        children: [
+                                                          Container(
+                                                            margin: EdgeInsets
+                                                                .only(
+                                                                top: MediaQuery
+                                                                    .of(context)
+                                                                    .size
+                                                                    .height *
+                                                                    0.02),
+                                                            child: Row(
+                                                              mainAxisAlignment: MainAxisAlignment
+                                                                  .end,
+
+                                                              children: [
+                                                                Text("${doc['topspeed']}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 20.0),),
+                                                                Text("km/h",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white54,
+                                                                      fontSize: 16.0),)
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          Text("Top Speed",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black87,
+                                                                fontSize: 14.0),),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment: Alignment
+                                                        .topCenter,
+                                                    child: Container(
+                                                      width: 230.0,
+
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment
+                                                            .start,
+
+                                                        children: [
+
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Container(
+                                                                width: 65.0,
+
+                                                                decoration: BoxDecoration(
+
+                                                                  border: Border
+                                                                      .all(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      width: 1.5),
+                                                                ),
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                    top: 2.0),
+
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment
+                                                                      .spaceBetween,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Icon(
+                                                                        Icons
+                                                                            .star,
+                                                                        size: 20.0,
+                                                                        color: Color(
+                                                                            0xFFBA780F),),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Text(
+                                                                        "Delivery",
+                                                                        style: TextStyle(
+                                                                            color: Color(
+                                                                                0xFFBA780F),
+                                                                            fontSize: 14.0,
+                                                                            decoration: TextDecoration
+                                                                                .underline),),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Text(
+                                                                        "${doc['delivery']}",
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize: 13.0),),
+                                                                    ),
+
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Container(
+
+                                                                width: 65.0,
+                                                                decoration: BoxDecoration(
+
+                                                                  border: Border
+                                                                      .all(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      width: 1.5),
+                                                                ),
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                    top: 2.0),
+
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment
+                                                                      .spaceBetween,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Icon(
+                                                                        Icons
+                                                                            .directions_car_rounded,
+                                                                        size: 20.0,
+                                                                        color: Color(
+                                                                            0xFFBA780F),),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Text(
+                                                                        "Model",
+                                                                        style: TextStyle(
+                                                                            color: Color(
+                                                                                0xFFBA780F),
+                                                                            fontSize: 14.0,
+                                                                            decoration: TextDecoration
+                                                                                .underline),),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Text(
+                                                                        "${doc['model']}",
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize: 13.0),),
+                                                                    ),
+
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                width: 65.0,
+
+                                                                decoration: BoxDecoration(
+
+                                                                  border: Border
+                                                                      .all(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      width: 1.5),
+                                                                ),
+                                                                margin: EdgeInsets
+                                                                    .only(
+                                                                    top: 2.0),
+
+                                                                child: Column(
+                                                                  mainAxisAlignment: MainAxisAlignment
+                                                                      .spaceBetween,
+                                                                  children: [
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Icon(
+                                                                        Icons
+                                                                            .add_road,
+                                                                        size: 20.0,
+                                                                        color: Color(
+                                                                            0xFFBA780F),),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Text(
+                                                                        "${doc['distance']} KM",
+                                                                        style: TextStyle(
+                                                                            color: Color(
+                                                                                0xFFBA780F),
+                                                                            fontSize: 14.0,
+                                                                            decoration: TextDecoration
+                                                                                .underline),),
+                                                                    ),
+                                                                    Padding(
+                                                                      padding: const EdgeInsets
+                                                                          .all(
+                                                                          4.0),
+                                                                      child: Text(
+                                                                        "Included",
+                                                                        style: TextStyle(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize: 13.0),),
+                                                                    ),
+
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Align(
+                                                    alignment: Alignment
+                                                        .topRight,
+                                                    child: Container(
+                                                      width: 80.0,
+                                                      margin: EdgeInsets.only(
+                                                          top: MediaQuery
+                                                              .of(context)
+                                                              .size
+                                                              .height * 0.02,
+                                                          bottom: 7.0),
+                                                      decoration: BoxDecoration(
+                                                        border: Border(
+
+                                                          left: BorderSide(
+                                                              width: 1.0,
+                                                              color: Colors
+                                                                  .black),
+                                                        ),
+                                                      ),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment
+                                                            .end,
+
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .end,
+
+                                                            children: [
+                                                              Text("${doc['price']}",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black87,
+                                                                    fontSize: 20.0),),
+                                                              Text("\$",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize: 20.0),)
+                                                            ],
+                                                          ),
+                                                          Text("Rent Price",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black87,
+                                                                fontSize: 14.0),),
+                                                          // Row(
+                                                          //   children: [
+                                                          //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                                          //   ],
+                                                          // ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                         ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            );
+
+
+
+                        }).toList(),
+
+                            );
+                          }
+                        }
+                        )
+
+                        :StreamBuilder<QuerySnapshot>(
+                        stream: packageCollection.snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return Wrap(
+                              direction: Axis.horizontal,
+                              spacing: 30.0,
+                              runSpacing: 40.0,
+                              children: snapshot.data!.docs.map((doc)
+                              {
+                                return  InkWell(
+                                  onTap: (){
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) =>
+                                        // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                        UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                                  },
+                                  child: Container(
+                                    height: 235.0,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      // border: Border.all(color: Color(0xFFBA780F)),
+                                      image: DecorationImage(
+                                          image: NetworkImage(
+                                              '${doc['coverimage']}'),
+                                          fit: BoxFit.cover
                                       ),
                                     ),
-                                    Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      margin: const EdgeInsets.only(
-                                          top:60.0),
-                                      height: 85.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.topCenter,
-                                            end: FractionalOffset.bottomCenter,
-                                            colors: [
-                                              Color(0xFFf2f2f2).withOpacity(0.3),
-                                              Color(0xFFb3b3b3).withOpacity(0.9),
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              1.0
-                                            ]),
+                                    child: Align(
+                                      alignment: Alignment.topCenter,
+                                      child: Column(
+                                        children: [
+                                          Container(
+
+                                            // margin: const EdgeInsets.only(
+                                            //     right: 1.0, left: 2.0),
+                                            height: 90.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(
+                                                  20),
+                                              //border: Border.all(color: Color(0xFFBA780F)),
+                                              // color: Colors.black,
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .bottomCenter,
+                                                  end: FractionalOffset.topCenter,
+                                                  colors: [
+                                                    Colors.black87.withOpacity(
+                                                        0.0),
+                                                    Colors.black87,
+                                                  ],
+                                                  stops: [
+                                                    0.0,
+                                                    0.7
+                                                  ]),
 
 
-                                      ),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(right: 12.0, ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(12.0),
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment
+                                                    .end,
+                                                children: [
+                                                  Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: Text(
+                                                      "${doc['name']}"
+                                                          .toUpperCase(),
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0),),),
+                                                  Align(
+                                                    alignment: Alignment.topRight,
+                                                    child: Text("${doc['model']}",
+                                                      style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 16.0),),),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            clipBehavior: Clip.antiAlias,
+                                            margin: const EdgeInsets.only(
+                                                top: 60.0),
+                                            height: 85.0,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.only(
+                                                bottomLeft: Radius.circular(20.0),
+                                                bottomRight: Radius.circular(
+                                                    20.0),),
+                                              //border: Border.all(color: Color(0xFFBA780F)),
+                                              // color: Colors.black,
+                                              gradient: LinearGradient(
+                                                  begin: FractionalOffset
+                                                      .topCenter,
+                                                  end: FractionalOffset
+                                                      .bottomCenter,
+                                                  colors: [
+                                                    Color(0xFFf2f2f2).withOpacity(
+                                                        0.3),
+                                                    Color(0xFFb3b3b3).withOpacity(
+                                                        0.9),
+                                                  ],
+                                                  stops: [
+                                                    0.0,
+                                                    1.0
+                                                  ]),
 
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Container(
-                                                  width: 100.0,
 
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                            ),
+                                            child: BackdropFilter(
+                                              filter: ImageFilter.blur(
+                                                  sigmaX: 3, sigmaY: 3),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                  right: 12.0,),
+                                                child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment
+                                                      .spaceBetween,
 
-                                                    children: [
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                  children: [
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .topLeft,
+                                                      child: Container(
+                                                        width: 100.0,
+
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .end,
 
                                                           children: [
-                                                            Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                            Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
+                                                            Container(
+                                                              margin: EdgeInsets
+                                                                  .only(
+                                                                  top: MediaQuery
+                                                                      .of(context)
+                                                                      .size
+                                                                      .height *
+                                                                      0.02),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment
+                                                                    .end,
+
+                                                                children: [
+                                                                  Text("${doc['topspeed']}",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white,
+                                                                        fontSize: 20.0),),
+                                                                  Text("km/h",
+                                                                    style: TextStyle(
+                                                                        color: Colors
+                                                                            .white54,
+                                                                        fontSize: 16.0),)
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Text("Top Speed",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                  fontSize: 14.0),),
                                                           ],
                                                         ),
                                                       ),
-                                                      Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  width: 230.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                    children: [
-
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-
-                                                            width: 65.0,
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Container(
-                                                  width: 100.0,
-                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-
-                                                      left: BorderSide(width: 1.0, color: Colors.black),
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .topCenter,
+                                                      child: Container(
+                                                        width: 230.0,
 
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-
-                                                        children: [
-                                                          Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                          Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                        ],
-                                                      ),
-                                                      Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      //   ],
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Container(
-                              height: 235.0,
-                              width: MediaQuery.of(context).size.width*1,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                // border: Border.all(color: Color(0xFFBA780F)),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                    fit: BoxFit.cover
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Column(
-                                  children: [
-                                    Container(
-
-                                      // margin: const EdgeInsets.only(
-                                      //     right: 1.0, left: 2.0),
-                                      height: 90.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.bottomCenter,
-                                            end: FractionalOffset.topCenter,
-                                            colors: [
-                                              Colors.black87.withOpacity(0.0),
-                                              Colors.black87,
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              0.7
-                                            ]),
-
-
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      margin: const EdgeInsets.only(
-                                          top:60.0),
-                                      height: 85.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.topCenter,
-                                            end: FractionalOffset.bottomCenter,
-                                            colors: [
-                                              Color(0xFFf2f2f2).withOpacity(0.3),
-                                              Color(0xFFb3b3b3).withOpacity(0.9),
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              1.0
-                                            ]),
-
-
-                                      ),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(right: 12.0, ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Container(
-                                                  width: 100.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                    children: [
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .start,
 
                                                           children: [
-                                                            Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                            Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
+
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment
+                                                                  .spaceBetween,
+                                                              children: [
+                                                                Container(
+                                                                  width: 65.0,
+
+                                                                  decoration: BoxDecoration(
+
+                                                                    border: Border
+                                                                        .all(
+                                                                        color: Color(
+                                                                            0xFFBA780F),
+                                                                        width: 1.5),
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                      top: 2.0),
+
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Icon(
+                                                                          Icons
+                                                                              .star,
+                                                                          size: 20.0,
+                                                                          color: Color(
+                                                                              0xFFBA780F),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "Delivery",
+                                                                          style: TextStyle(
+                                                                              color: Color(
+                                                                                  0xFFBA780F),
+                                                                              fontSize: 14.0,
+                                                                              decoration: TextDecoration
+                                                                                  .underline),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "${doc['delivery']}",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              fontSize: 13.0),),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+
+                                                                  width: 65.0,
+                                                                  decoration: BoxDecoration(
+
+                                                                    border: Border
+                                                                        .all(
+                                                                        color: Color(
+                                                                            0xFFBA780F),
+                                                                        width: 1.5),
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                      top: 2.0),
+
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Icon(
+                                                                          Icons
+                                                                              .directions_car_rounded,
+                                                                          size: 20.0,
+                                                                          color: Color(
+                                                                              0xFFBA780F),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "Model",
+                                                                          style: TextStyle(
+                                                                              color: Color(
+                                                                                  0xFFBA780F),
+                                                                              fontSize: 14.0,
+                                                                              decoration: TextDecoration
+                                                                                  .underline),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "${doc['model']}",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              fontSize: 13.0),),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  width: 65.0,
+
+                                                                  decoration: BoxDecoration(
+
+                                                                    border: Border
+                                                                        .all(
+                                                                        color: Color(
+                                                                            0xFFBA780F),
+                                                                        width: 1.5),
+                                                                  ),
+                                                                  margin: EdgeInsets
+                                                                      .only(
+                                                                      top: 2.0),
+
+                                                                  child: Column(
+                                                                    mainAxisAlignment: MainAxisAlignment
+                                                                        .spaceBetween,
+                                                                    children: [
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Icon(
+                                                                          Icons
+                                                                              .add_road,
+                                                                          size: 20.0,
+                                                                          color: Color(
+                                                                              0xFFBA780F),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "${doc['distance']} KM",
+                                                                          style: TextStyle(
+                                                                              color: Color(
+                                                                                  0xFFBA780F),
+                                                                              fontSize: 14.0,
+                                                                              decoration: TextDecoration
+                                                                                  .underline),),
+                                                                      ),
+                                                                      Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .all(
+                                                                            4.0),
+                                                                        child: Text(
+                                                                          "Included",
+                                                                          style: TextStyle(
+                                                                              color: Colors
+                                                                                  .white,
+                                                                              fontSize: 13.0),),
+                                                                      ),
+
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+
                                                           ],
                                                         ),
                                                       ),
-                                                      Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  width: 230.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                    children: [
-
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-
-                                                            width: 65.0,
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Container(
-                                                  width: 100.0,
-                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-
-                                                      left: BorderSide(width: 1.0, color: Colors.black),
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                                    Align(
+                                                      alignment: Alignment
+                                                          .topRight,
+                                                      child: Container(
+                                                        width: 80.0,
+                                                        margin: EdgeInsets.only(
+                                                            top: MediaQuery
+                                                                .of(context)
+                                                                .size
+                                                                .height * 0.02,
+                                                            bottom: 7.0),
+                                                        decoration: BoxDecoration(
+                                                          border: Border(
 
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-
-                                                        children: [
-                                                          Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                          Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                        ],
-                                                      ),
-                                                      Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      //   ],
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Container(
-                              height: 235.0,
-                              width: MediaQuery.of(context).size.width*1,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                // border: Border.all(color: Color(0xFFBA780F)),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                    fit: BoxFit.cover
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Column(
-                                  children: [
-                                    Container(
-
-                                      // margin: const EdgeInsets.only(
-                                      //     right: 1.0, left: 2.0),
-                                      height: 90.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.bottomCenter,
-                                            end: FractionalOffset.topCenter,
-                                            colors: [
-                                              Colors.black87.withOpacity(0.0),
-                                              Colors.black87,
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              0.7
-                                            ]),
-
-
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      margin: const EdgeInsets.only(
-                                          top:60.0),
-                                      height: 85.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.topCenter,
-                                            end: FractionalOffset.bottomCenter,
-                                            colors: [
-                                              Color(0xFFf2f2f2).withOpacity(0.3),
-                                              Color(0xFFb3b3b3).withOpacity(0.9),
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              1.0
-                                            ]),
-
-
-                                      ),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(right: 12.0, ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Container(
-                                                  width: 100.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                    children: [
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.end,
+                                                            left: BorderSide(
+                                                                width: 1.0,
+                                                                color: Colors
+                                                                    .black),
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment
+                                                              .end,
 
                                                           children: [
-                                                            Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                            Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment
+                                                                  .end,
+
+                                                              children: [
+                                                                Text("${doc['price']}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black87,
+                                                                      fontSize: 20.0),),
+                                                                Text("\$",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 20.0),)
+                                                              ],
+                                                            ),
+                                                            Text("Rent Price",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black87,
+                                                                  fontSize: 14.0),),
+                                                            // Row(
+                                                            //   children: [
+                                                            //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                                            //   ],
+                                                            // ),
                                                           ],
                                                         ),
                                                       ),
-                                                      Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  width: 230.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                    children: [
-
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-
-                                                            width: 65.0,
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Container(
-                                                  width: 100.0,
-                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-
-                                                      left: BorderSide(width: 1.0, color: Colors.black),
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
 
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-
-                                                        children: [
-                                                          Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                          Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                        ],
-                                                      ),
-                                                      Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      //   ],
-                                                      // ),
-                                                    ],
-                                                  ),
+                                                  ],
                                                 ),
                                               ),
-
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Container(
-                              height: 235.0,
-                              width: MediaQuery.of(context).size.width*1,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30),
-                                // border: Border.all(color: Color(0xFFBA780F)),
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8&w=1000&q=80'),
-                                    fit: BoxFit.cover
-                                ),
-                              ),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Column(
-                                  children: [
-                                    Container(
-
-                                      // margin: const EdgeInsets.only(
-                                      //     right: 1.0, left: 2.0),
-                                      height: 90.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.bottomCenter,
-                                            end: FractionalOffset.topCenter,
-                                            colors: [
-                                              Colors.black87.withOpacity(0.0),
-                                              Colors.black87,
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              0.7
-                                            ]),
+                                  ),
+                                );
 
 
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("Ferari F8".toUpperCase(), style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                            Align(
-                                              alignment: Alignment.topRight,
-                                              child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 16.0),),),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      clipBehavior: Clip.antiAlias,
-                                      margin: const EdgeInsets.only(
-                                          top:60.0),
-                                      height: 85.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20.0), bottomRight: Radius.circular(20.0),),
-                                        //border: Border.all(color: Color(0xFFBA780F)),
-                                        // color: Colors.black,
-                                        gradient: LinearGradient(
-                                            begin: FractionalOffset.topCenter,
-                                            end: FractionalOffset.bottomCenter,
-                                            colors: [
-                                              Color(0xFFf2f2f2).withOpacity(0.3),
-                                              Color(0xFFb3b3b3).withOpacity(0.9),
-                                            ],
-                                            stops: [
-                                              0.0,
-                                              1.0
-                                            ]),
 
+                              }).toList(),
 
-                                      ),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(right: 12.0, ),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                                            children: [
-                                              Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Container(
-                                                  width: 100.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                    children: [
-                                                      Container(
-                                                        margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02),
-                                                        child: Row(
-                                                          mainAxisAlignment: MainAxisAlignment.end,
-
-                                                          children: [
-                                                            Text("340", style: TextStyle(color: Colors.white, fontSize: 20.0),),
-                                                            Text("km/h", style: TextStyle(color: Colors.white54, fontSize: 16.0),)
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      Text("Top Speed", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topCenter,
-                                                child: Container(
-                                                  width: 230.0,
-
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                                                    children: [
-
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                        children: [
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.star, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Delivery", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Free", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-
-                                                            width: 65.0,
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.directions_car_rounded, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Model", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("2020", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Container(
-                                                            width: 65.0,
-
-                                                            decoration: BoxDecoration(
-
-                                                              border: Border.all(color: Color(0xFFBA780F), width: 1.5),
-                                                            ),
-                                                            margin: EdgeInsets.only(top: 2.0),
-
-                                                            child: Column(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              children: [
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Icon(Icons.add_road, size: 20.0, color: Color(0xFFBA780F),),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("250 KM", style: TextStyle(color: Color(0xFFBA780F), fontSize: 14.0, decoration: TextDecoration.underline), ),
-                                                                ),
-                                                                Padding(
-                                                                  padding: const EdgeInsets.all(4.0),
-                                                                  child: Text("Included", style: TextStyle(color: Colors.white, fontSize: 13.0),),
-                                                                ),
-
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
-
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              Align(
-                                                alignment: Alignment.topRight,
-                                                child: Container(
-                                                  width: 100.0,
-                                                  margin: EdgeInsets.only(top: MediaQuery.of(context).size.height*0.02, bottom: 7.0),
-                                                  decoration: BoxDecoration(
-                                                    border: Border(
-
-                                                      left: BorderSide(width: 1.0, color: Colors.black),
-                                                    ),
-                                                  ),
-                                                  child: Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-
-                                                    children: [
-                                                      Row(
-                                                        mainAxisAlignment: MainAxisAlignment.end,
-
-                                                        children: [
-                                                          Text("1,350", style: TextStyle(color: Colors.black87, fontSize: 20.0),),
-                                                          Text("\$", style: TextStyle(color: Colors.white, fontSize: 20.0),)
-                                                        ],
-                                                      ),
-                                                      Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      // Row(
-                                                      //   children: [
-                                                      //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                      //   ],
-                                                      // ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      ],
+                            );
+                          }
+                        }
                     );
                 }
             ),
