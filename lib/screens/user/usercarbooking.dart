@@ -124,430 +124,7 @@ class _UserCarBookingState extends State<UserCarBooking> {
                               runSpacing: 40.0,
                               children: snapshot.data!.docs.map((doc)
                               {
-                                return  InkWell(
-                                  onTap: (){
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                        // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                        UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
-                                  },
-                                  child: Container(
-                                    height: 235.0,
-                                    width: 450,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      // border: Border.all(color: Color(0xFFBA780F)),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              '${doc['coverimage']}'),
-                                          fit: BoxFit.cover
-                                      ),
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Column(
-                                        children: [
-                                          Container(
-
-                                            // margin: const EdgeInsets.only(
-                                            //     right: 1.0, left: 2.0),
-                                            height: 90.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(
-                                                  20),
-                                              //border: Border.all(color: Color(0xFFBA780F)),
-                                              // color: Colors.black,
-                                              gradient: LinearGradient(
-                                                  begin: FractionalOffset
-                                                      .bottomCenter,
-                                                  end: FractionalOffset.topCenter,
-                                                  colors: [
-                                                    Colors.black87.withOpacity(
-                                                        0.0),
-                                                    Colors.black87,
-                                                  ],
-                                                  stops: [
-                                                    0.0,
-                                                    0.7
-                                                  ]),
-
-
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12.0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment
-                                                    .end,
-                                                children: [
-                                                  Align(
-                                                    alignment: Alignment.topRight,
-                                                    child: Text(
-                                                      "${doc['name']}"
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16.0),),),
-                                                  Align(
-                                                    alignment: Alignment.topRight,
-                                                    child: Text("${doc['model']}",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16.0),),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            clipBehavior: Clip.antiAlias,
-                                            margin: const EdgeInsets.only(
-                                                top: 60.0),
-                                            height: 85.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(20.0),
-                                                bottomRight: Radius.circular(
-                                                    20.0),),
-                                              //border: Border.all(color: Color(0xFFBA780F)),
-                                              // color: Colors.black,
-                                              gradient: LinearGradient(
-                                                  begin: FractionalOffset
-                                                      .topCenter,
-                                                  end: FractionalOffset
-                                                      .bottomCenter,
-                                                  colors: [
-                                                    Color(0xFFf2f2f2).withOpacity(
-                                                        0.3),
-                                                    Color(0xFFb3b3b3).withOpacity(
-                                                        0.9),
-                                                  ],
-                                                  stops: [
-                                                    0.0,
-                                                    1.0
-                                                  ]),
-
-
-                                            ),
-                                            child: BackdropFilter(
-                                              filter: ImageFilter.blur(
-                                                  sigmaX: 3, sigmaY: 3),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 12.0,),
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment
-                                                      .spaceBetween,
-
-                                                  children: [
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .topLeft,
-                                                      child: Container(
-                                                        width: 100.0,
-
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment
-                                                              .end,
-
-                                                          children: [
-                                                            Container(
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                  top: MediaQuery
-                                                                      .of(context)
-                                                                      .size
-                                                                      .height *
-                                                                      0.02),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment
-                                                                    .end,
-
-                                                                children: [
-                                                                  Text("${doc['topspeed']}",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize: 20.0),),
-                                                                  Text("km/h",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white54,
-                                                                        fontSize: 16.0),)
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Text("Top Speed",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black87,
-                                                                  fontSize: 14.0),),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .topCenter,
-                                                      child: Container(
-                                                        width: 230.0,
-
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment
-                                                              .start,
-
-                                                          children: [
-
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment
-                                                                  .spaceBetween,
-                                                              children: [
-                                                                Container(
-                                                                  width: 65.0,
-
-                                                                  decoration: BoxDecoration(
-
-                                                                    border: Border
-                                                                        .all(
-                                                                        color: Color(
-                                                                            0xFFBA780F),
-                                                                        width: 1.5),
-                                                                  ),
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                      top: 2.0),
-
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Icon(
-                                                                          Icons
-                                                                              .star,
-                                                                          size: 20.0,
-                                                                          color: Color(
-                                                                              0xFFBA780F),),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Text(
-                                                                          "Delivery",
-                                                                          style: TextStyle(
-                                                                              color: Color(
-                                                                                  0xFFBA780F),
-                                                                              fontSize: 14.0,
-                                                                              decoration: TextDecoration
-                                                                                  .underline),),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Text(
-                                                                          "${doc['delivery']}",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize: 13.0),),
-                                                                      ),
-
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                Container(
-
-                                                                  width: 65.0,
-                                                                  decoration: BoxDecoration(
-
-                                                                    border: Border
-                                                                        .all(
-                                                                        color: Color(
-                                                                            0xFFBA780F),
-                                                                        width: 1.5),
-                                                                  ),
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                      top: 2.0),
-
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Icon(
-                                                                          Icons
-                                                                              .directions_car_rounded,
-                                                                          size: 20.0,
-                                                                          color: Color(
-                                                                              0xFFBA780F),),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Text(
-                                                                          "Model",
-                                                                          style: TextStyle(
-                                                                              color: Color(
-                                                                                  0xFFBA780F),
-                                                                              fontSize: 14.0,
-                                                                              decoration: TextDecoration
-                                                                                  .underline),),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Text(
-                                                                          "${doc['model']}",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize: 13.0),),
-                                                                      ),
-
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                                Container(
-                                                                  width: 65.0,
-
-                                                                  decoration: BoxDecoration(
-
-                                                                    border: Border
-                                                                        .all(
-                                                                        color: Color(
-                                                                            0xFFBA780F),
-                                                                        width: 1.5),
-                                                                  ),
-                                                                  margin: EdgeInsets
-                                                                      .only(
-                                                                      top: 2.0),
-
-                                                                  child: Column(
-                                                                    mainAxisAlignment: MainAxisAlignment
-                                                                        .spaceBetween,
-                                                                    children: [
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Icon(
-                                                                          Icons
-                                                                              .add_road,
-                                                                          size: 20.0,
-                                                                          color: Color(
-                                                                              0xFFBA780F),),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Text(
-                                                                          "${doc['distance']} KM",
-                                                                          style: TextStyle(
-                                                                              color: Color(
-                                                                                  0xFFBA780F),
-                                                                              fontSize: 14.0,
-                                                                              decoration: TextDecoration
-                                                                                  .underline),),
-                                                                      ),
-                                                                      Padding(
-                                                                        padding: const EdgeInsets
-                                                                            .all(
-                                                                            4.0),
-                                                                        child: Text(
-                                                                          "Included",
-                                                                          style: TextStyle(
-                                                                              color: Colors
-                                                                                  .white,
-                                                                              fontSize: 13.0),),
-                                                                      ),
-
-                                                                    ],
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .topRight,
-                                                      child: Container(
-                                                        width: 80.0,
-                                                        margin: EdgeInsets.only(
-                                                            top: MediaQuery
-                                                                .of(context)
-                                                                .size
-                                                                .height * 0.02,
-                                                            bottom: 7.0),
-                                                        decoration: BoxDecoration(
-                                                          border: Border(
-
-                                                            left: BorderSide(
-                                                                width: 1.0,
-                                                                color: Colors
-                                                                    .black),
-                                                          ),
-                                                        ),
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment
-                                                              .end,
-
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment
-                                                                  .end,
-
-                                                              children: [
-                                                                Text("${doc['price']}",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black87,
-                                                                      fontSize: 20.0),),
-                                                                Text("\$",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize: 20.0),)
-                                                              ],
-                                                            ),
-                                                            Text("Rent Price",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black87,
-                                                                  fontSize: 14.0),),
-                                                            // Row(
-                                                            //   children: [
-                                                            //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                            //   ],
-                                                            // ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
+                                return  carContainer(context, doc, 235.0, 450.0);
 
 
 
@@ -572,16 +149,61 @@ class _UserCarBookingState extends State<UserCarBooking> {
                               runSpacing: 40.0,
                               children: snapshot.data!.docs.map((doc)
                             {
-                            return  InkWell(
-                              onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                    // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                    UserViewCarDetails(widget.uid, doc['carid'].toString(), widget.city)));
-                              },
-                              child: Container(
-                                  height: 235.0,
-                                  width: 450,
+                            return  carContainer(context, doc, 235.0, 450.0);
+
+
+
+                        }).toList(),
+
+                            );
+                          }
+                        }
+                        )
+
+                        :StreamBuilder<QuerySnapshot>(
+                        stream: packageCollection.snapshots(),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            return Wrap(
+                              direction: Axis.horizontal,
+                              spacing: 30.0,
+                              runSpacing: 40.0,
+                              children: snapshot.data!.docs.map((doc)
+                              {
+                                return  carContainer(context, doc, 235.0, double.infinity);
+
+
+
+                              }).toList(),
+
+                            );
+                          }
+                        }
+                    );
+                }
+            ),
+          ),
+        ),
+
+      ],
+    );
+  }
+
+  InkWell carContainer(BuildContext context, QueryDocumentSnapshot<Object?> doc, double conHeight, double conWidth) {
+    return InkWell(
+                                onTap: (){
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) =>
+                                      // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                      UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                                },
+                                child: Container(
+                                  height: conHeight,
+                                  width: conWidth,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(30),
                                     // border: Border.all(color: Color(0xFFBA780F)),
@@ -681,505 +303,59 @@ class _UserCarBookingState extends State<UserCarBooking> {
                                             child: Padding(
                                               padding: const EdgeInsets.only(
                                                 right: 12.0,),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment
-                                                    .spaceBetween,
-
-                                                children: [
-                                                  Align(
-                                                    alignment: Alignment
-                                                        .topLeft,
-                                                    child: Container(
-                                                      width: 100.0,
-
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment
-                                                            .end,
-
-                                                        children: [
-                                                          Container(
-                                                            margin: EdgeInsets
-                                                                .only(
-                                                                top: MediaQuery
-                                                                    .of(context)
-                                                                    .size
-                                                                    .height *
-                                                                    0.02),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment
-                                                                  .end,
-
-                                                              children: [
-                                                                Text("${doc['topspeed']}",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize: 20.0),),
-                                                                Text("km/h",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .white54,
-                                                                      fontSize: 16.0),)
-                                                              ],
-                                                            ),
-                                                          ),
-                                                          Text("Top Speed",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black87,
-                                                                fontSize: 14.0),),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment
-                                                        .topCenter,
-                                                    child: Container(
-                                                      width: 230.0,
-
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment
-                                                            .start,
-
-                                                        children: [
-
-                                                          Row(
-                                                            mainAxisAlignment: MainAxisAlignment
-                                                                .spaceBetween,
-                                                            children: [
-                                                              Container(
-                                                                width: 65.0,
-
-                                                                decoration: BoxDecoration(
-
-                                                                  border: Border
-                                                                      .all(
-                                                                      color: Color(
-                                                                          0xFFBA780F),
-                                                                      width: 1.5),
-                                                                ),
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                    top: 2.0),
-
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment
-                                                                      .spaceBetween,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Icon(
-                                                                        Icons
-                                                                            .star,
-                                                                        size: 20.0,
-                                                                        color: Color(
-                                                                            0xFFBA780F),),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Text(
-                                                                        "Delivery",
-                                                                        style: TextStyle(
-                                                                            color: Color(
-                                                                                0xFFBA780F),
-                                                                            fontSize: 14.0,
-                                                                            decoration: TextDecoration
-                                                                                .underline),),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Text(
-                                                                        "${doc['delivery']}",
-                                                                        style: TextStyle(
-                                                                            color: Colors
-                                                                                .white,
-                                                                            fontSize: 13.0),),
-                                                                    ),
-
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Container(
-
-                                                                width: 65.0,
-                                                                decoration: BoxDecoration(
-
-                                                                  border: Border
-                                                                      .all(
-                                                                      color: Color(
-                                                                          0xFFBA780F),
-                                                                      width: 1.5),
-                                                                ),
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                    top: 2.0),
-
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment
-                                                                      .spaceBetween,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Icon(
-                                                                        Icons
-                                                                            .directions_car_rounded,
-                                                                        size: 20.0,
-                                                                        color: Color(
-                                                                            0xFFBA780F),),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Text(
-                                                                        "Model",
-                                                                        style: TextStyle(
-                                                                            color: Color(
-                                                                                0xFFBA780F),
-                                                                            fontSize: 14.0,
-                                                                            decoration: TextDecoration
-                                                                                .underline),),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Text(
-                                                                        "${doc['model']}",
-                                                                        style: TextStyle(
-                                                                            color: Colors
-                                                                                .white,
-                                                                            fontSize: 13.0),),
-                                                                    ),
-
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                              Container(
-                                                                width: 65.0,
-
-                                                                decoration: BoxDecoration(
-
-                                                                  border: Border
-                                                                      .all(
-                                                                      color: Color(
-                                                                          0xFFBA780F),
-                                                                      width: 1.5),
-                                                                ),
-                                                                margin: EdgeInsets
-                                                                    .only(
-                                                                    top: 2.0),
-
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment
-                                                                      .spaceBetween,
-                                                                  children: [
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Icon(
-                                                                        Icons
-                                                                            .add_road,
-                                                                        size: 20.0,
-                                                                        color: Color(
-                                                                            0xFFBA780F),),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Text(
-                                                                        "${doc['distance']} KM",
-                                                                        style: TextStyle(
-                                                                            color: Color(
-                                                                                0xFFBA780F),
-                                                                            fontSize: 14.0,
-                                                                            decoration: TextDecoration
-                                                                                .underline),),
-                                                                    ),
-                                                                    Padding(
-                                                                      padding: const EdgeInsets
-                                                                          .all(
-                                                                          4.0),
-                                                                      child: Text(
-                                                                        "Included",
-                                                                        style: TextStyle(
-                                                                            color: Colors
-                                                                                .white,
-                                                                            fontSize: 13.0),),
-                                                                    ),
-
-                                                                  ],
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment
-                                                        .topRight,
-                                                    child: Container(
-                                                      width: 80.0,
-                                                      margin: EdgeInsets.only(
-                                                          top: MediaQuery
-                                                              .of(context)
-                                                              .size
-                                                              .height * 0.02,
-                                                          bottom: 7.0),
-                                                      decoration: BoxDecoration(
-                                                        border: Border(
-
-                                                          left: BorderSide(
-                                                              width: 1.0,
-                                                              color: Colors
-                                                                  .black),
-                                                        ),
-                                                      ),
-                                                      child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment
-                                                            .end,
-
-                                                        children: [
-                                                          Row(
-                                                            mainAxisAlignment: MainAxisAlignment
-                                                                .end,
-
-                                                            children: [
-                                                              Text("${doc['price']}",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black87,
-                                                                    fontSize: 20.0),),
-                                                              Text("\$",
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize: 20.0),)
-                                                            ],
-                                                          ),
-                                                          Text("Rent Price",
-                                                            style: TextStyle(
-                                                                color: Colors
-                                                                    .black87,
-                                                                fontSize: 14.0),),
-                                                          // Row(
-                                                          //   children: [
-                                                          //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
-                                                          //   ],
-                                                          // ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                            );
-
-
-
-                        }).toList(),
-
-                            );
-                          }
-                        }
-                        )
-
-                        :StreamBuilder<QuerySnapshot>(
-                        stream: packageCollection.snapshots(),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else {
-                            return Wrap(
-                              direction: Axis.horizontal,
-                              spacing: 30.0,
-                              runSpacing: 40.0,
-                              children: snapshot.data!.docs.map((doc)
-                              {
-                                return  InkWell(
-                                  onTap: (){
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                        // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                        UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
-                                  },
-                                  child: Container(
-                                    height: 235.0,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      // border: Border.all(color: Color(0xFFBA780F)),
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              '${doc['coverimage']}'),
-                                          fit: BoxFit.cover
-                                      ),
-                                    ),
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: Column(
-                                        children: [
-                                          Container(
-
-                                            // margin: const EdgeInsets.only(
-                                            //     right: 1.0, left: 2.0),
-                                            height: 90.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(
-                                                  20),
-                                              //border: Border.all(color: Color(0xFFBA780F)),
-                                              // color: Colors.black,
-                                              gradient: LinearGradient(
-                                                  begin: FractionalOffset
-                                                      .bottomCenter,
-                                                  end: FractionalOffset.topCenter,
-                                                  colors: [
-                                                    Colors.black87.withOpacity(
-                                                        0.0),
-                                                    Colors.black87,
-                                                  ],
-                                                  stops: [
-                                                    0.0,
-                                                    0.7
-                                                  ]),
-
-
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(12.0),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment
-                                                    .end,
-                                                children: [
-                                                  Align(
-                                                    alignment: Alignment.topRight,
-                                                    child: Text(
-                                                      "${doc['name']}"
-                                                          .toUpperCase(),
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16.0),),),
-                                                  Align(
-                                                    alignment: Alignment.topRight,
-                                                    child: Text("${doc['model']}",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 16.0),),),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            clipBehavior: Clip.antiAlias,
-                                            margin: const EdgeInsets.only(
-                                                top: 60.0),
-                                            height: 85.0,
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(20.0),
-                                                bottomRight: Radius.circular(
-                                                    20.0),),
-                                              //border: Border.all(color: Color(0xFFBA780F)),
-                                              // color: Colors.black,
-                                              gradient: LinearGradient(
-                                                  begin: FractionalOffset
-                                                      .topCenter,
-                                                  end: FractionalOffset
-                                                      .bottomCenter,
-                                                  colors: [
-                                                    Color(0xFFf2f2f2).withOpacity(
-                                                        0.3),
-                                                    Color(0xFFb3b3b3).withOpacity(
-                                                        0.9),
-                                                  ],
-                                                  stops: [
-                                                    0.0,
-                                                    1.0
-                                                  ]),
-
-
-                                            ),
-                                            child: BackdropFilter(
-                                              filter: ImageFilter.blur(
-                                                  sigmaX: 3, sigmaY: 3),
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 12.0,),
+                                              child: Container(
+                                                margin: EdgeInsets.only(left: 20.0, top: 2.0),
                                                 child: Row(
                                                   mainAxisAlignment: MainAxisAlignment
                                                       .spaceBetween,
 
                                                   children: [
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .topLeft,
-                                                      child: Container(
-                                                        width: 100.0,
-
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment
-                                                              .end,
-
-                                                          children: [
-                                                            Container(
-                                                              margin: EdgeInsets
-                                                                  .only(
-                                                                  top: MediaQuery
-                                                                      .of(context)
-                                                                      .size
-                                                                      .height *
-                                                                      0.02),
-                                                              child: Row(
-                                                                mainAxisAlignment: MainAxisAlignment
-                                                                    .end,
-
-                                                                children: [
-                                                                  Text("${doc['topspeed']}",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontSize: 20.0),),
-                                                                  Text("km/h",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .white54,
-                                                                        fontSize: 16.0),)
-                                                                ],
-                                                              ),
-                                                            ),
-                                                            Text("Top Speed",
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black87,
-                                                                  fontSize: 14.0),),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    // Align(
+                                                    //   alignment: Alignment
+                                                    //       .topLeft,
+                                                    //   child: Container(
+                                                    //     width: 100.0,
+                                                    //
+                                                    //     child: Column(
+                                                    //       crossAxisAlignment: CrossAxisAlignment
+                                                    //           .end,
+                                                    //
+                                                    //       children: [
+                                                    //         Container(
+                                                    //           margin: EdgeInsets
+                                                    //               .only(
+                                                    //               top: MediaQuery
+                                                    //                   .of(context)
+                                                    //                   .size
+                                                    //                   .height *
+                                                    //                   0.02),
+                                                    //           child: Row(
+                                                    //             mainAxisAlignment: MainAxisAlignment
+                                                    //                 .end,
+                                                    //
+                                                    //             children: [
+                                                    //               Text("${doc['topspeed']}",
+                                                    //                 style: TextStyle(
+                                                    //                     color: Colors
+                                                    //                         .white,
+                                                    //                     fontSize: 20.0),),
+                                                    //               Text("km/h",
+                                                    //                 style: TextStyle(
+                                                    //                     color: Colors
+                                                    //                         .white54,
+                                                    //                     fontSize: 16.0),)
+                                                    //             ],
+                                                    //           ),
+                                                    //         ),
+                                                    //         Text("Top Speed",
+                                                    //           style: TextStyle(
+                                                    //               color: Colors
+                                                    //                   .black87,
+                                                    //               fontSize: 14.0),),
+                                                    //       ],
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
                                                     Align(
                                                       alignment: Alignment
                                                           .topCenter,
@@ -1439,26 +615,11 @@ class _UserCarBookingState extends State<UserCarBooking> {
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                );
-
-
-
-                              }).toList(),
-
-                            );
-                          }
-                        }
-                    );
-                }
-            ),
-          ),
-        ),
-
-      ],
-    );
+                                ),
+                              );
   }
 }

@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: UserViewCarDetails("Oqsxr0M6r5XfEDMOqqoXZAc3mgz1", "JNjUXXEwcoXziGpjgYgi", "Al barshoo"),
+      home: UserCarBooking("Oqsxr0M6r5XfEDMOqqoXZAc3mgz1", "JNjUXXEwcoXziGpjgYgi"),
     );
   }
 }
