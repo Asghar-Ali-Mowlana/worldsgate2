@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,13 +7,13 @@ import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
-import 'package:worldsgate/screens/user/userhotelbooking.dart';
+import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
+import 'package:worldsgate/screens/user/usercarbooking.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
 import '../../../widgets/sidelayout.dart';
-//import 'deoaddhoteldetails.dart';
+//import 'deoaddcardetails.dart';
 
 class DeoManageCars extends StatefulWidget {
   // const DeoManageCars({ Key? key }) : super(key: key);
@@ -28,7 +30,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
   String? datecreated;
-  String? hotelname;
+  String? carname;
 
   List<Map> dategroupbylist = <Map>[];
 
@@ -53,7 +55,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
 
   getyo() async {
     FirebaseFirestore.instance
-        .collection('hotels')
+        .collection('cars')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((myDocuments) {
@@ -61,41 +63,45 @@ class _DeoManageCarsState extends State<DeoManageCars> {
       totaladded = myDocuments.docs.length;
     });
     await FirebaseFirestore.instance
-        .collection('hotels')
+        .collection('cars')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((QuerySnapshot querySnapshot) => {
-              querySnapshot.docs.forEach((doc) {
-                DateTime dt = (doc['datecreated'] as Timestamp).toDate();
-                String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
+      querySnapshot.docs.forEach((doc) {
+        DateTime dt = (doc['datecreated'] as Timestamp).toDate();
+        String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
 
-                if (querySnapshot.docs.contains("price")) {
-                  dategroupbylist.add({
-                    "hotel_id": doc.id,
-                    "hotel_name": '${doc['name']}',
-                    "promotion": '${doc['promotion']}',
-                    "cancellationfee": '${doc['cancellationfee']}',
-                    "taxandcharges": '${doc['taxandcharges']}',
-                    "coverimage": '${doc['coverimage']}',
-                    "price": '${doc['price']}',
-                    "added_date": '${formattedDate}',
-                  });
-                } else {
-                  dategroupbylist.add({
-                    "hotel_id": doc.id,
-                    "hotel_name": '${doc['name']}',
-                    "promotion": '${doc['promotion']}',
-                    "cancellationfee": '${doc['cancellationfee']}',
-                    "taxandcharges": '${doc['taxandcharges']}',
-                    "coverimage": '${doc['coverimage']}',
-                    "added_date": '${formattedDate}',
-                  });
-                }
-              })
-            });
+        if (querySnapshot.docs.contains("price")) {
+          dategroupbylist.add({
+            "carid": doc.id,
+            "name": '${doc['name']}',
+            "brand": '${doc['brand']}',
+            "coverimage": '${doc['coverimage']}',
+            "price": '${doc['price']}',
+            "delivery": '${doc['delivery']}',
+            "model": '${doc['model']}',
+            "color": '${doc['color']}',
+            "added_date": '${formattedDate}',
+            "age": '${doc['age']}',
+          });
+        } else {
+          dategroupbylist.add({
+            "carid": doc.id,
+            "name": '${doc['name']}',
+            "brand": '${doc['brand']}',
+            "coverimage": '${doc['coverimage']}',
+            "delivery": '${doc['delivery']}',
+            "model": '${doc['model']}',
+            "color": '${doc['color']}',
+            "added_date": '${formattedDate}',
+            "age": '${doc['age']}',
+          });
+        }
+      })
+    });
 
     final maps = dategroupbylist.groupBy<String, Map>(
-      (item) => item['added_date'],
+          (item) => item['added_date'],
       valueTransform: (item) => item..remove('added_date'),
     );
 
@@ -120,6 +126,10 @@ class _DeoManageCarsState extends State<DeoManageCars> {
     }
   }
 
+
+
+
+
   List<Widget> newbuilder(double fontsize, double columntextwidth) {
     List<Widget> m = [];
 
@@ -127,6 +137,8 @@ class _DeoManageCarsState extends State<DeoManageCars> {
       //print(entryList.length);
 
       m.add(Container(
+        width: double.infinity,
+        //heigh: double.infinity,
         margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
         child: Column(
           children: [
@@ -137,183 +149,1306 @@ class _DeoManageCarsState extends State<DeoManageCars> {
           ],
         ),
       ));
-      print("Number of hotels added on a specific date : " +
+      print("Number of cars added on a specific date : " +
           entryList[i].value.length.toString());
 
+      //entryList[i].value[j]["coverimage"]
       for (int j = 0; j < entryList[i].value.length; j++) {
         m.add(
-          Padding(
-            padding: const EdgeInsets.only(top: 16.0, left: 10.0, right: 10.0),
-            child: Stack(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => DeoViewHotels(widget.uid,
-                            entryList[i].value[j]["hotel_id"].toString())));
-                  },
-                  child: Container(
-                    height: MediaQuery.of(context).size.height / 5.5,
-                    width: MediaQuery.of(context).size.width / 1,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Color(0xFFBA780F)),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 8.0, top: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Container(
+          Column(
+
+            children: [
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LayoutBuilder(
+
+                    builder: (context, constraints) {
+                      return
+                        (constraints.maxWidth >= 920 && constraints.maxWidth < 1380)
+                            ?
+
+                        InkWell(
+                          onTap: (){
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) =>
+                            //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                            //     UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                          },
+                          child: Container(
+                            height: 235.0,
+                            width: 450,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              // border: Border.all(color: Color(0xFFBA780F)),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      '${entryList[i].value[j]["coverimage"]}'),
+                                  fit: BoxFit.cover
+                              ),
+                            ),
                             child: Align(
-                              alignment: Alignment.topRight,
+                              alignment: Alignment.topCenter,
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
-                                  Text(
-                                    "${entryList[i].value[j]["hotel_name"].toString()}",
-                                    style: TextStyle(
-                                      fontSize: fontsize,
-                                      color: Colors.white,
+                                  Container(
+
+                                    // margin: const EdgeInsets.only(
+                                    //     right: 1.0, left: 2.0),
+                                    height: 90.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          20),
+                                      //border: Border.all(color: Color(0xFFBA780F)),
+                                      // color: Colors.black,
+                                      gradient: LinearGradient(
+                                          begin: FractionalOffset
+                                              .bottomCenter,
+                                          end: FractionalOffset.topCenter,
+                                          colors: [
+                                            Colors.black87.withOpacity(
+                                                0.0),
+                                            Colors.black87,
+                                          ],
+                                          stops: [
+                                            0.0,
+                                            0.7
+                                          ]),
+
+
                                     ),
-                                    textAlign: TextAlign.right,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .end,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text(
+                                              "${entryList[i].value[j]["name"]}"
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0),),),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text("${entryList[i].value[j]["model"]}",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0),),),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Icon(
-                                        Icons.location_on_outlined,
-                                        color: Color(0xFFBA780F),
-                                        size: 15.0,
-                                      ),
-                                      Icon(
-                                        Icons.arrow_upward_outlined,
-                                        color: Color(0xFFBA780F),
-                                        size: 15.0,
-                                      ),
-                                      Text(
-                                        " 4 Km From Center",
-                                        style: TextStyle(
-                                          fontSize: 11,
-                                          color: Colors.white,
+                                  Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: const EdgeInsets.only(
+                                        top: 60.0),
+                                    height: 85.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20.0),
+                                        bottomRight: Radius.circular(
+                                            20.0),),
+                                      //border: Border.all(color: Color(0xFFBA780F)),
+                                      // color: Colors.black,
+                                      gradient: LinearGradient(
+                                          begin: FractionalOffset
+                                              .topCenter,
+                                          end: FractionalOffset
+                                              .bottomCenter,
+                                          colors: [
+                                            Color(0xFFf2f2f2).withOpacity(
+                                                0.3),
+                                            Color(0xFFb3b3b3).withOpacity(
+                                                0.9),
+                                          ],
+                                          stops: [
+                                            0.0,
+                                            1.0
+                                          ]),
+
+
+                                    ),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 3, sigmaY: 3),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 12.0,),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween,
+
+                                          children: [
+                                            Align(
+                                              alignment: Alignment
+                                                  .topLeft,
+                                              child: Container(
+                                                width: 100.0,
+
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .end,
+
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets
+                                                          .only(
+                                                          top: MediaQuery
+                                                              .of(context)
+                                                              .size
+                                                              .height *
+                                                              0.02),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment
+                                                            .end,
+
+                                                        children: [
+                                                          Text("${entryList[i].value[j]["topspeed"]}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20.0),),
+                                                          Text("km/h",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white54,
+                                                                fontSize: 16.0),)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text("Top Speed",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black87,
+                                                          fontSize: 14.0),),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment
+                                                  .topCenter,
+                                              child: Container(
+                                                width: 230.0,
+
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .start,
+
+                                                  children: [
+
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          width: 65.0,
+
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .star,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Delivery",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["delivery"]}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+
+                                                          width: 65.0,
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .directions_car_rounded,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Model",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["model"]}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          width: 65.0,
+
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .add_road,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["distance"]} KM",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Included",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment
+                                                  .topRight,
+                                              child: Container(
+                                                width: 80.0,
+                                                margin: EdgeInsets.only(
+                                                    top: MediaQuery
+                                                        .of(context)
+                                                        .size
+                                                        .height * 0.02,
+                                                    bottom: 7.0),
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+
+                                                    left: BorderSide(
+                                                        width: 1.0,
+                                                        color: Colors
+                                                            .black),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .end,
+
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .end,
+
+                                                      children: [
+                                                        Text("${entryList[i].value[j]["price"]}",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black87,
+                                                              fontSize: 20.0),),
+                                                        Text("\$",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white,
+                                                              fontSize: 20.0),)
+                                                      ],
+                                                    ),
+                                                    Text("Rent Price",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black87,
+                                                          fontSize: 14.0),),
+                                                    // Row(
+                                                    //   children: [
+                                                    //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                                    //   ],
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                          ],
                                         ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  Text(
-                                    "Price for 1 night 2 adults",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFFBA780F),
-                                    ),
-                                  ),
-                                  //price
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 2.0, bottom: 2.0),
-                                    child: Text(
-                                      entryList[i].value[j]["price"] != null
-                                          ? "Price ${entryList[i].value[j]["price"]} AED"
-                                          : "Loading",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-
-                                  //taxcharge
-                                  Text(
-                                    "${entryList[i].value[j]["taxandcharges"]} AED Taxes and Charges",
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  //cancellation fee
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 2.0),
-                                    child: Text(
-                                      "${entryList[i].value[j]["cancellationfee"]}% for Cancellation",
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Color(0xFFBA780F),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            width: columntextwidth,
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 5.5,
-                  width: MediaQuery.of(context).size.width / 6,
-                  //desk 9
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    image: DecorationImage(
-                      image: NetworkImage(entryList[i].value[j]["coverimage"]),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 60.0, right: 0.0),
-                        height: 80.0,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            gradient: LinearGradient(
-                                begin: FractionalOffset.topCenter,
-                                end: FractionalOffset.bottomCenter,
-                                colors: [
-                                  Colors.white70.withOpacity(0.0),
-                                  Colors.orange.withOpacity(0.8),
-                                ],
-                                stops: [
-                                  0.0,
-                                  0.7
-                                ])),
-                        child: Stack(
-                          children: [
-                            Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Container(
-                                margin: const EdgeInsets.only(
-                                    top: 16.0, right: 0.0),
-                                child: Column(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Text(
-                                        "${entryList[i].value[j]["promotion"]}% off",
-                                        style: TextStyle(
-                                          fontSize: fontsize,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
+                        )
+
+
+                            : (constraints.maxWidth >= 1380)
+                            ? InkWell(
+                          onTap: (){
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) =>
+                            //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                            //     UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                          },
+                          child: Container(
+                            height: 235.0,
+                            width: 450,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              // border: Border.all(color: Color(0xFFBA780F)),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      '${entryList[i].value[j]["coverimage"]}'),
+                                  fit: BoxFit.cover
+                              ),
+                            ),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Column(
+                                children: [
+                                  Container(
+
+                                    // margin: const EdgeInsets.only(
+                                    //     right: 1.0, left: 2.0),
+                                    height: 90.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          20),
+                                      //border: Border.all(color: Color(0xFFBA780F)),
+                                      // color: Colors.black,
+                                      gradient: LinearGradient(
+                                          begin: FractionalOffset
+                                              .bottomCenter,
+                                          end: FractionalOffset.topCenter,
+                                          colors: [
+                                            Colors.black87.withOpacity(
+                                                0.0),
+                                            Colors.black87,
+                                          ],
+                                          stops: [
+                                            0.0,
+                                            0.7
+                                          ]),
+
+
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .end,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text(
+                                              "${entryList[i].value[j]["name"]}"
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0),),),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text("${entryList[i].value[j]["model"]}",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0),),),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: const EdgeInsets.only(
+                                        top: 60.0),
+                                    height: 85.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20.0),
+                                        bottomRight: Radius.circular(
+                                            20.0),),
+                                      //border: Border.all(color: Color(0xFFBA780F)),
+                                      // color: Colors.black,
+                                      gradient: LinearGradient(
+                                          begin: FractionalOffset
+                                              .topCenter,
+                                          end: FractionalOffset
+                                              .bottomCenter,
+                                          colors: [
+                                            Color(0xFFf2f2f2).withOpacity(
+                                                0.3),
+                                            Color(0xFFb3b3b3).withOpacity(
+                                                0.9),
+                                          ],
+                                          stops: [
+                                            0.0,
+                                            1.0
+                                          ]),
+
+
+                                    ),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 3, sigmaY: 3),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 12.0,),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween,
+
+                                          children: [
+                                            Align(
+                                              alignment: Alignment
+                                                  .topLeft,
+                                              child: Container(
+                                                width: 100.0,
+
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .end,
+
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets
+                                                          .only(
+                                                          top: MediaQuery
+                                                              .of(context)
+                                                              .size
+                                                              .height *
+                                                              0.02),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment
+                                                            .end,
+
+                                                        children: [
+                                                          Text("${entryList[i].value[j]["topspeed"]}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20.0),),
+                                                          Text("km/h",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white54,
+                                                                fontSize: 16.0),)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text("Top Speed",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black87,
+                                                          fontSize: 14.0),),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment
+                                                  .topCenter,
+                                              child: Container(
+                                                width: 230.0,
+
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .start,
+
+                                                  children: [
+
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          width: 65.0,
+
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .star,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Delivery",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["delivery"]}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+
+                                                          width: 65.0,
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .directions_car_rounded,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Model",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["model"]}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          width: 65.0,
+
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .add_road,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["distance"]} KM",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Included",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment
+                                                  .topRight,
+                                              child: Container(
+                                                width: 80.0,
+                                                margin: EdgeInsets.only(
+                                                    top: MediaQuery
+                                                        .of(context)
+                                                        .size
+                                                        .height * 0.02,
+                                                    bottom: 7.0),
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+
+                                                    left: BorderSide(
+                                                        width: 1.0,
+                                                        color: Colors
+                                                            .black),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .end,
+
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .end,
+
+                                                      children: [
+                                                        Text("${entryList[i].value[j]["price"]}",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black87,
+                                                              fontSize: 20.0),),
+                                                        Text("\$",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white,
+                                                              fontSize: 20.0),)
+                                                      ],
+                                                    ),
+                                                    Text("Rent Price",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black87,
+                                                          fontSize: 14.0),),
+                                                    // Row(
+                                                    //   children: [
+                                                    //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                                    //   ],
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                          ],
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                          ),
+                        )
+
+                            : InkWell(
+                          onTap: (){
+                            // Navigator.of(context).push(MaterialPageRoute(
+                            //     builder: (context) =>
+                            //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                            //     UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                          },
+                          child: Container(
+                            height: 235.0,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              // border: Border.all(color: Color(0xFFBA780F)),
+                              image: DecorationImage(
+                                  image: NetworkImage(
+                                      '${entryList[i].value[j]["coverimage"]}'),
+                                  fit: BoxFit.cover
+                              ),
+                            ),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Column(
+                                children: [
+                                  Container(
+
+                                    // margin: const EdgeInsets.only(
+                                    //     right: 1.0, left: 2.0),
+                                    height: 90.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(
+                                          20),
+                                      //border: Border.all(color: Color(0xFFBA780F)),
+                                      // color: Colors.black,
+                                      gradient: LinearGradient(
+                                          begin: FractionalOffset
+                                              .bottomCenter,
+                                          end: FractionalOffset.topCenter,
+                                          colors: [
+                                            Colors.black87.withOpacity(
+                                                0.0),
+                                            Colors.black87,
+                                          ],
+                                          stops: [
+                                            0.0,
+                                            0.7
+                                          ]),
+
+
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12.0),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment
+                                            .end,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text(
+                                              "${entryList[i].value[j]["name"]}"
+                                                  .toUpperCase(),
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0),),),
+                                          Align(
+                                            alignment: Alignment.topRight,
+                                            child: Text("${entryList[i].value[j]["model"]}",
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 16.0),),),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    clipBehavior: Clip.antiAlias,
+                                    margin: const EdgeInsets.only(
+                                        top: 60.0),
+                                    height: 85.0,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.only(
+                                        bottomLeft: Radius.circular(20.0),
+                                        bottomRight: Radius.circular(
+                                            20.0),),
+                                      //border: Border.all(color: Color(0xFFBA780F)),
+                                      // color: Colors.black,
+                                      gradient: LinearGradient(
+                                          begin: FractionalOffset
+                                              .topCenter,
+                                          end: FractionalOffset
+                                              .bottomCenter,
+                                          colors: [
+                                            Color(0xFFf2f2f2).withOpacity(
+                                                0.3),
+                                            Color(0xFFb3b3b3).withOpacity(
+                                                0.9),
+                                          ],
+                                          stops: [
+                                            0.0,
+                                            1.0
+                                          ]),
+
+
+                                    ),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 3, sigmaY: 3),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 12.0,),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment
+                                              .spaceBetween,
+
+                                          children: [
+                                            Align(
+                                              alignment: Alignment
+                                                  .topLeft,
+                                              child: Container(
+                                                width: 100.0,
+
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .end,
+
+                                                  children: [
+                                                    Container(
+                                                      margin: EdgeInsets
+                                                          .only(
+                                                          top: MediaQuery
+                                                              .of(context)
+                                                              .size
+                                                              .height *
+                                                              0.02),
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment
+                                                            .end,
+
+                                                        children: [
+                                                          Text("${entryList[i].value[j]["topspeed"]}",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 20.0),),
+                                                          Text("km/h",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white54,
+                                                                fontSize: 16.0),)
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Text("Top Speed",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black87,
+                                                          fontSize: 14.0),),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment
+                                                  .topCenter,
+                                              child: Container(
+                                                width: 230.0,
+
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .start,
+
+                                                  children: [
+
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .spaceBetween,
+                                                      children: [
+                                                        Container(
+                                                          width: 65.0,
+
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .star,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Delivery",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["delivery"]}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+
+                                                          width: 65.0,
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .directions_car_rounded,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Model",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["model"]}",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          width: 65.0,
+
+                                                          decoration: BoxDecoration(
+
+                                                            border: Border
+                                                                .all(
+                                                                color: Color(
+                                                                    0xFFBA780F),
+                                                                width: 1.5),
+                                                          ),
+                                                          margin: EdgeInsets
+                                                              .only(
+                                                              top: 2.0),
+
+                                                          child: Column(
+                                                            mainAxisAlignment: MainAxisAlignment
+                                                                .spaceBetween,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Icon(
+                                                                  Icons
+                                                                      .add_road,
+                                                                  size: 20.0,
+                                                                  color: Color(
+                                                                      0xFFBA780F),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "${entryList[i].value[j]["distance"]} KM",
+                                                                  style: TextStyle(
+                                                                      color: Color(
+                                                                          0xFFBA780F),
+                                                                      fontSize: 14.0,
+                                                                      decoration: TextDecoration
+                                                                          .underline),),
+                                                              ),
+                                                              Padding(
+                                                                padding: const EdgeInsets
+                                                                    .all(
+                                                                    4.0),
+                                                                child: Text(
+                                                                  "Included",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .white,
+                                                                      fontSize: 13.0),),
+                                                              ),
+
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                            Align(
+                                              alignment: Alignment
+                                                  .topRight,
+                                              child: Container(
+                                                width: 80.0,
+                                                margin: EdgeInsets.only(
+                                                    top: MediaQuery
+                                                        .of(context)
+                                                        .size
+                                                        .height * 0.02,
+                                                    bottom: 7.0),
+                                                decoration: BoxDecoration(
+                                                  border: Border(
+
+                                                    left: BorderSide(
+                                                        width: 1.0,
+                                                        color: Colors
+                                                            .black),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment
+                                                      .end,
+
+                                                  children: [
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment
+                                                          .end,
+
+                                                      children: [
+                                                        Text("${entryList[i].value[j]["price"]}",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .black87,
+                                                              fontSize: 20.0),),
+                                                        Text("\$",
+                                                          style: TextStyle(
+                                                              color: Colors
+                                                                  .white,
+                                                              fontSize: 20.0),)
+                                                      ],
+                                                    ),
+                                                    Text("Rent Price",
+                                                      style: TextStyle(
+                                                          color: Colors
+                                                              .black87,
+                                                          fontSize: 14.0),),
+                                                    // Row(
+                                                    //   children: [
+                                                    //     Text("Rent Price", style: TextStyle(color: Colors.black87, fontSize: 14.0),),
+                                                    //   ],
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                    }
                 ),
-              ],
-            ),
+              ),
+
+            ],
           ),
         );
       }
@@ -341,40 +1476,40 @@ class _DeoManageCarsState extends State<DeoManageCars> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      key: _scaffoldState,
+          key: _scaffoldState,
 
-      // appBar: AppBar(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0.0,
-      //   iconTheme: IconThemeData(color: Color(0xFFdb9e1f)),
-      // ),
+          // appBar: AppBar(
+          //   backgroundColor: Colors.transparent,
+          //   elevation: 0.0,
+          //   iconTheme: IconThemeData(color: Color(0xFFdb9e1f)),
+          // ),
 
-      //endDrawer: new DeoNavigationDrawer(),
+          //endDrawer: new DeoNavigationDrawer(),
 
-      drawer: new DeoNavigationDrawer(widget.uid),
+          drawer: new DeoNavigationDrawer(widget.uid),
 
-      backgroundColor: Color(0xFF000000),
-      body: (_isLoading == true)
-          ? Center(child: CircularProgressIndicator())
-          : Stack(
-              fit: StackFit.expand,
-              children: <Widget>[
-                ResponsiveWidget(
-                    mobile: buildColumnContent(context, 14, 350.0),
-                    tab: buildColumnContent(context, 16, 800.0),
-                    desktop: buildColumnContent(context, 16, 800.0)),
-                Positioned(
-                    left: 0.0,
-                    top: 0.0,
-                    right: 0.0,
-                    child: Container(
-                        child: VendomeHeader(
-                      drawer: _scaffoldState,
-                      cusname: cusname,
-                    ))),
-              ],
-            ),
-    ));
+          backgroundColor: Color(0xFF000000),
+          body: (_isLoading == true)
+              ? Center(child: CircularProgressIndicator())
+              : Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              ResponsiveWidget(
+                  mobile: buildColumnContent(context, 14, 350.0),
+                  tab: buildColumnContent(context, 16, 800.0),
+                  desktop: buildColumnContent(context, 16, 800.0)),
+              Positioned(
+                  left: 0.0,
+                  top: 0.0,
+                  right: 0.0,
+                  child: Container(
+                      child: VendomeHeader(
+                        drawer: _scaffoldState,
+                        cusname: cusname,
+                      ))),
+            ],
+          ),
+        ));
   }
 
   Column buildColumnContent(
@@ -395,7 +1530,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                   child: Container(
                     child: Column(
                       children: [
-                        //row for button and booking hotel heading
+                        //row for button and booking car heading
                         Container(
                           margin: EdgeInsets.only(top: 10.0),
                           child: Row(
@@ -429,8 +1564,8 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                                     onPressed: () {
                                       Navigator.of(context).push(MaterialPageRoute(
                                           builder: (context) =>
-                                              // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                              AddCarDetails(widget.uid)));
+                                          // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                          AddCarDetails(widget.uid)));
                                     },
                                     child: Text(
                                       "+ Add new",
@@ -446,14 +1581,17 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                             ],
                           ),
                         ),
-                        /*Expanded(
+                        Expanded(
                           child: SingleChildScrollView(
                             scrollDirection: Axis.vertical,
-                            child: Column(
+                            child: Wrap(
+                              direction: Axis.horizontal,
+                              spacing: 10.0,
+                              runSpacing: 10.0,
                               children: newbuilder(fontshize, columntextwidth),
                             ),
                           ),
-                        ),*/
+                        ),
                       ],
                     ),
                   ),

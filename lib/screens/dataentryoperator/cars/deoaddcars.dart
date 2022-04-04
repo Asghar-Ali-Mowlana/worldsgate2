@@ -301,6 +301,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         'luggage': luggage,
         'otherfeatures': otherFeatures,
         'carid': newCarId,
+        //example added
+        'topspeed': 123,
       });
     } catch (e) {
       print(e);

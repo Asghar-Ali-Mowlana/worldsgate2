@@ -114,6 +114,7 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
         child: Scaffold(
       key: _scaffoldState,
       endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
+      drawer: new UserNavigationDrawer(widget.uid, widget.city),
       backgroundColor: Color(0xFF000000),
       body: Stack(
         children: [

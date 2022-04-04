@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
+import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoupdatecardetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoaddhoteldetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: UserViewCarDetails("WpzPfHN360dyUtmpSo2a3yhXVak2", "jpVLaIPTtU2ufQobK6o0","Al Barsha"),
+      home: LoginPage(),
     );
   }
 }

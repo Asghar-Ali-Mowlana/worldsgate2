@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/user/usercarbooking.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
 import 'package:worldsgate/screens/user/userhotelbooking.dart';
 
@@ -66,8 +67,11 @@ class UserNavigationDrawer extends StatelessWidget {
         ),
         ListTile(
           leading: const Icon(Icons.home_outlined),
-          title: const Text('Home'),
+          title: const Text('Cars'),
           onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => UserCarBooking(uid, city!),
+            ));
 
           },
         ),

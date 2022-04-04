@@ -59,6 +59,7 @@ class _UserCarBookingState extends State<UserCarBooking> {
           // ),
 
           endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
+          drawer: new UserNavigationDrawer(widget.uid, widget.city),
           body: Stack(
             children: [
               SingleChildScrollView(

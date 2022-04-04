@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/user/usercarbooking.dart';
 import 'package:worldsgate/screens/user/userhotelbooking.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
@@ -58,6 +59,7 @@ class _UserHomePageState extends State<UserHomePage> {
       // ),
 
       endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
+      drawer: new UserNavigationDrawer(widget.uid, widget.city),
 
       backgroundColor: Color(0xFF000000),
       body: Stack(
@@ -261,6 +263,9 @@ class _UserHomePageState extends State<UserHomePage> {
                               //
                               //
                               //     )));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => UserCarBooking(widget.uid, widget.city),
+                              ));
                             },
                             child: Container(
                               height: heig,
