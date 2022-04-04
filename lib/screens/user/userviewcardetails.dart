@@ -163,13 +163,15 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
                 Padding(
                   padding: EdgeInsets.only(
                       bottom: MediaQuery.of(context).size.width * 0.005),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.504,
-                    width: MediaQuery.of(context).size.width * 0.549,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(carCoverImage.toString()),
-                        fit: BoxFit.cover,
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Container(
+
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(carCoverImage.toString()),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
@@ -329,31 +331,68 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Container(
-                          width: MediaQuery.of(context).size.width*0.93,
-                          height: 400.0,
-                          decoration: BoxDecoration(
-                            //borderRadius: BorderRadius.circular(10),
-                            // border: Border.all(color: Color(0xFFBA780F)),
-                            image: DecorationImage(
-                                image: NetworkImage(
-                                    'https://stimg.cardekho.com/images/carexteriorimages/930x620/Lamborghini/Aventador/6721/Lamborghini-Aventador-SVJ/1621849426405/front-left-side-47.jpg'),
-                                fit: BoxFit.cover
-                            ),
-
-                            gradient: LinearGradient(
-                                begin: FractionalOffset
-                                    .bottomCenter,
-                                end: FractionalOffset.bottomCenter,
-                                colors: [
-                                  Colors.amber,
-                                  Colors.amber,
-                                ],
-                                stops: [
-                                  0.0,
-                                  1.0
-                                ]),
+                          constraints: BoxConstraints(
+                              maxHeight: 550.0
                           ),
+                          child: AspectRatio(
+                            aspectRatio: 16/9,
+                            child: Stack(
+                              children: [
 
+                                Container(
+
+
+                                  decoration: BoxDecoration(
+                                    //borderRadius: BorderRadius.circular(10),
+                                    // border: Border.all(color: Color(0xFFBA780F)),
+                                    image: DecorationImage(
+                                        image: NetworkImage(
+                                            'https://stimg.cardekho.com/images/carexteriorimages/930x620/Lamborghini/Aventador/6721/Lamborghini-Aventador-SVJ/1621849426405/front-left-side-47.jpg'),
+                                        fit: BoxFit.cover
+                                    ),
+
+                                  ),
+
+                                ),
+                                Container(
+
+                                  decoration: BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(color: Colors.black),
+                                      ),
+
+                                      gradient: LinearGradient(
+                                          begin: Alignment.topCenter,
+                                          end: Alignment.bottomCenter,
+                                          // begin: FractionalOffset
+                                          //     .topCenter,
+                                          // end: FractionalOffset.bottomCenter,
+                                          colors: [
+                                            Colors.black.withOpacity(
+                                                0.0),
+                                            Colors.amber,
+                                            Colors.black87,
+                                          ],
+                                          stops: [
+                                            0.85,
+                                            //orig
+                                            0.5,
+                                            2.5
+                                          ])),),
+                                Align(
+                                  alignment: Alignment.bottomRight,
+                                  child: Text(
+                                    "AED 3. 000, 00",
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.0
+                                    ),
+                                  ),
+                                )
+
+                              ],
+                            ),
+                          ),
                         ),
                       ),
 
