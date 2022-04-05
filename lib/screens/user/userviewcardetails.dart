@@ -5,6 +5,7 @@ import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/widgets/header.dart';
 
 import '../../widgets/usernavigationdrawer.dart';
+import 'dart:math' as math;
 
 class UserViewCarDetails extends StatefulWidget {
   //const UserViewCarDetails({Key? key}) : super(key: key);
@@ -354,47 +355,59 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
                                   ),
 
                                 ),
-                                Container(
-
-                                  decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(color: Colors.black),
-                                      ),
-
-                                      gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          // begin: FractionalOffset
-                                          //     .topCenter,
-                                          // end: FractionalOffset.bottomCenter,
-                                          colors: [
-                                            Colors.black.withOpacity(
-                                                0.0),
-                                            Colors.amber,
-                                            Colors.black87,
-                                          ],
-                                          stops: [
-                                            0.85,
-                                            //orig
-                                            0.5,
-                                            2.5
-                                          ])),),
                                 Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Text(
-                                    "AED 3. 000, 00",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16.0
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+
+                                    height: 80.0,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(color: Colors.black),
+                                        ),
+
+                                        gradient: LinearGradient(
+                                            begin: Alignment.topCenter,
+                                            end: Alignment.bottomCenter,
+                                            // begin: FractionalOffset
+                                            //     .topCenter,
+                                            // end: FractionalOffset.bottomCenter,
+                                            transform: GradientRotation(math.pi / 2),
+                                            colors: [
+
+                                              Colors.amber,
+                                              Colors.amber.withOpacity(0.5),
+                                              Colors.amber.withOpacity(0),
+                                            ],
+                                            )),
+
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(right: 8.0),
+                                        child: Text(
+                                          "AED 3. 000, 00",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 40.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                )
+                                ),
+
 
                               ],
                             ),
                           ),
                         ),
                       ),
+                  Text("$brand $name $model", style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 40.0
+                  ),),
 
                     ],
                   ),
