@@ -17,18 +17,17 @@ import '../../../widgets/deonavigationdrawer.dart';
 import '../../../widgets/header.dart';
 import '../../../widgets/usernavigationdrawer.dart';
 
-class AddCarDetails extends StatefulWidget {
-  //const AddCarDetails({ Key? key }) : super(key: key);
+class AddRestaurantDetails extends StatefulWidget {
+  //const AddRestaurantDetails({Key? key}) : super(key: key);
 
   String? uid;
-
-  AddCarDetails(this.uid);
+  AddRestaurantDetails(this.uid);
 
   @override
-  State<AddCarDetails> createState() => _AddCarDetailsState();
+  State<AddRestaurantDetails> createState() => _AddRestaurantDetailsState();
 }
 
-class _AddCarDetailsState extends State<AddCarDetails> {
+class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
@@ -37,7 +36,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController carEngineController = TextEditingController();
 
   String? model;
   String? delivery;
@@ -295,7 +293,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         //'stars': stars,
         //'taxandcharges': null,
         'gear': gear,
-        'engine': carEngineController.text,
+        'engine': engine,
         'color': color,
         'seats': seats,
         'doors': doors,
@@ -395,8 +393,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               onPressed: () {
                                 carNameController..text = "";
                               }),
-                          hintText: "Enter car name",
-                          labelText: "Car Name",
+                          hintText: "Enter restaurent name",
+                          labelText: "Restaurent Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -411,7 +409,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Car name cannot be empty";
+                            return "Restaurent name cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -419,7 +417,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         },
                         keyboardType: TextInputType.text,
                       ),
-                      SizedBox(
+                      /*SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -700,7 +698,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                           priceController.text = value!;
                         },
                         keyboardType: TextInputType.number,
-                      ),
+                      ),*/
                       SizedBox(
                         height: 20,
                       ),
@@ -717,8 +715,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter car description",
-                          labelText: "Car Description",
+                          hintText: "Enter restaurent description",
+                          labelText: "Restaurent Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -733,7 +731,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Car description cannot be empty";
+                            return "Restaurent description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -747,7 +745,205 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Car Cover Photo",
+                          "Restaurent Tables",
+                          style: TextStyle(color: Colors.white70, fontSize: 16),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 270.0,
+                          height: 50.0,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                                primary: Color(0xFF000000),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20.0)),
+                                    side: BorderSide(color: Color(0xFFdb9e1f))),
+                                side: BorderSide(
+                                  width: 2.5,
+                                  color: Color(0xFFdb9e1f),
+                                ),
+                                textStyle: const TextStyle(fontSize: 16)),
+                            onPressed: () {
+                              //selectFileandUpload();
+                            },
+                            icon: Icon(
+                              Icons.add,
+                              color: Colors.white,
+                              size: 20,
+                            ), //icon data for elevated button
+                            label: Text(
+                              "Add Restaurent Tables",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            /*child: const Text(
+                                            'Hotel Cover Photo',
+                                            style: TextStyle(
+                                                color: Colors.white),
+                                          ),*/
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: DropdownButtonFormField(
+                                      decoration: InputDecoration(
+                                        hintText: "Number of Tables",
+                                        hintStyle:
+                                            TextStyle(color: Colors.white70),
+                                        labelText: 'Tables',
+                                        labelStyle: TextStyle(
+                                            color: Colors.white70, height: 0.1),
+                                        enabled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Colors.white70),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Color(0xFFdb9e1f)),
+                                        ),
+                                      ),
+                                      dropdownColor: Color(0xFF000000),
+                                      //focusColor: Color(0xFFdb9e1f),
+                                      style: TextStyle(color: Colors.white),
+                                      isExpanded: true,
+                                      value: model,
+                                      items: models.map(buildMenuItem).toList(),
+                                      onChanged: (value) => setState(() {
+                                            this.model = value as String?;
+                                          }))),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: DropdownButtonFormField(
+                                      decoration: InputDecoration(
+                                        hintText: "Table Position",
+                                        hintStyle:
+                                            TextStyle(color: Colors.white70),
+                                        labelText: 'Position',
+                                        labelStyle: TextStyle(
+                                            color: Colors.white70, height: 0.1),
+                                        enabled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Colors.white70),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Color(0xFFdb9e1f)),
+                                        ),
+                                      ),
+                                      dropdownColor: Color(0xFF000000),
+                                      //focusColor: Color(0xFFdb9e1f),
+                                      style: TextStyle(color: Colors.white),
+                                      isExpanded: true,
+                                      value: model,
+                                      items: models.map(buildMenuItem).toList(),
+                                      onChanged: (value) => setState(() {
+                                            this.model = value as String?;
+                                          }))),
+                            ),
+                            Container(
+                              width: 170.0,
+                              height: 50.0,
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Color(0xFF000000),
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(00.0)),
+                                          side: BorderSide(
+                                              color: Color(0xFFdb9e1f))),
+                                      side: BorderSide(
+                                        width: 2.5,
+                                        color: Color(0xFFdb9e1f),
+                                      ),
+                                      textStyle: const TextStyle(fontSize: 16)),
+                                  onPressed: () {
+                                    setState(() {
+                                      //typesOfBedsAndCount
+                                      //  .add("${numOfBeds} - ${bedType}");
+                                    });
+                                  },
+                                  icon: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
+                                  label: Text(
+                                    "Add Table",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Container(
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 450.0,
+                              width: MediaQuery.of(context).size.width / 1.6,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFFdb9e1f))),
+                              /*child: ListView.builder(
+                                  itemCount: typesOfBedsAndCount.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return new ListTile(
+                                      title: Text(
+                                        typesOfBedsAndCount[index],
+                                        style: TextStyle(color: Colors.white70),
+                                      ),
+                                      trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.delete,
+                                            color: Color(0xFFdb9e1f),
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              typesOfBedsAndCount.remove(
+                                                  typesOfBedsAndCount[index]);
+                                            });
+                                          }),
+                                    );
+                                  }),*/
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      const Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Restaurent Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -780,7 +976,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Car Cover Photo",
+                              "Restaurent Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -825,7 +1021,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other Car Photos",
+                          "Other Restaurent Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -858,7 +1054,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other Hotel Photos",
+                              "Other Restaurent Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -900,7 +1096,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                           : SizedBox(
                               height: 10,
                             ),
-                      SizedBox(
+                      /*SizedBox(
                         height: 20,
                       ),
                       Align(
@@ -958,47 +1154,38 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: TextFormField(
-                                      style: TextStyle(color: Colors.white),
-                                      controller: carEngineController,
-                                      decoration: InputDecoration(
-                                        suffixIcon: IconButton(
-                                            icon: Icon(
-                                              Icons.cancel,
-                                              color: Color(0xFFdb9e1f),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hintText: "Car Engine",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelText: 'Engine',
+                                            labelStyle: TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
                                             ),
-                                            onPressed: () {
-                                              carEngineController..text = "";
-                                            }),
-                                        hintText: "Enter Car Engine",
-                                        labelText: "Car Engine",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelStyle: new TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value!.length == 0) {
-                                          return "Car engine cannot be empty";
-                                        }
-                                      },
-                                      onSaved: (value) {
-                                        carEngineController.text = value!;
-                                      },
-                                      keyboardType: TextInputType.text,
-                                    ),
-                                  ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
+                                            ),
+                                          ),
+                                          dropdownColor: Color(0xFF000000),
+                                          //focusColor: Color(0xFFdb9e1f),
+                                          style: TextStyle(color: Colors.white),
+                                          isExpanded: true,
+                                          value: engine,
+                                          items: engineType
+                                              .map(buildMenuItem)
+                                              .toList(),
+                                          onChanged: (value) => setState(() {
+                                                this.engine = value as String?;
+                                              }))),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -1071,9 +1258,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                               }))),
                                 ),
                               ],
-                            ),
-                            SizedBox(
-                              height: 10.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1259,7 +1443,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                             )
                           ],
                         ),
-                      ),
+                      ),*/
                       SizedBox(
                         height: 40,
                       ),
