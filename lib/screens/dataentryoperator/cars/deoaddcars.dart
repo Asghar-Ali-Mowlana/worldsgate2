@@ -37,6 +37,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController carEngineController = TextEditingController();
 
   String? model;
   String? delivery;
@@ -294,7 +295,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         //'stars': stars,
         //'taxandcharges': null,
         'gear': gear,
-        'engine': engine,
+        'engine': carEngineController.text,
         'color': color,
         'seats': seats,
         'doors': doors,
@@ -957,38 +958,47 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Car Engine",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Engine',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextFormField(
+                                      style: TextStyle(color: Colors.white),
+                                      controller: carEngineController,
+                                      decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              Icons.cancel,
+                                              color: Color(0xFFdb9e1f),
                                             ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: engine,
-                                          items: engineType
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.engine = value as String?;
-                                              }))),
+                                            onPressed: () {
+                                              carEngineController..text = "";
+                                            }),
+                                        hintText: "Enter Car Engine",
+                                        labelText: "Car Engine",
+                                        hintStyle:
+                                            TextStyle(color: Colors.white70),
+                                        labelStyle: new TextStyle(
+                                            color: Colors.white70, height: 0.1),
+                                        enabled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Colors.white70),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Color(0xFFdb9e1f)),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value!.length == 0) {
+                                          return "Car engine cannot be empty";
+                                        }
+                                      },
+                                      onSaved: (value) {
+                                        carEngineController.text = value!;
+                                      },
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                  ),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -1061,6 +1071,9 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                               }))),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 10.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
