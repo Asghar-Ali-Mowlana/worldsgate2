@@ -66,6 +66,7 @@ flutter:
     - assets/images/headerimages/
     - assets/images/premiumbrands/
     - assets/images/homepageicons/
+    - assets/images/restaurentimages/
 
 flutter_icons:
   android: true
