@@ -30,11 +30,15 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
 
   _DeoViewHotelsState(this.uid, this.hotelid);
 
-  String? cusname;
+
 
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
+
+
+  String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -43,6 +47,7 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -537,9 +542,11 @@ class _DeoViewHotelsState extends State<DeoViewHotels> {
                     right: 0.0,
                     child: Container(
                         child: VendomeHeader(
-                      drawer: _scaffoldState,
-                      cusname: cusname,
-                    ))),
+                          drawer: _scaffoldState,
+                          cusname: cusname,
+                          cusaddress: "",
+                          role: role,
+                        ))),
               ],
             ),
     ));

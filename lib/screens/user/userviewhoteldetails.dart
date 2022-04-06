@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/widgets/header.dart';
 
+import '../../widgets/cusheader.dart';
 import '../../widgets/usernavigationdrawer.dart';
 
 class UserViewHotelDetails extends StatefulWidget {
@@ -38,6 +39,7 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
   List<Map> rooms = <Map>[];
 
   String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -46,6 +48,7 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -434,7 +437,7 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
         : SafeArea(
             child: Scaffold(
               key: _scaffoldState,
-              endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
+              drawer: new UserNavigationDrawer(widget.uid, widget.city),
               backgroundColor: Color(0xFF000000),
               body: Stack(
                 children: [
@@ -454,10 +457,11 @@ class _UserViewHotelDetailsState extends State<UserViewHotelDetails> {
                       top: 0.0,
                       right: 0.0,
                       child: Container(
-                          child: VendomeHeader.cus(
+                          child: VendomeHeaderCustomer(
                         drawer: _scaffoldState,
                         cusname: cusname,
                         cusaddress: widget.city,
+                            role: role,
                       ))),
                 ],
               ),

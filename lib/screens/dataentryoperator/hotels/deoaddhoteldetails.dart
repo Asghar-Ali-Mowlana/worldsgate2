@@ -976,7 +976,9 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
     }
   }
 
+
   String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -985,6 +987,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -8205,9 +8208,11 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
                       right: 0.0,
                       child: Container(
                           child: VendomeHeader(
-                        drawer: _scaffoldState,
-                        cusname: cusname,
-                      ))),
+                            drawer: _scaffoldState,
+                            cusname: cusname,
+                            cusaddress: "",
+                            role: role,
+                          ))),
                 ],
               ),
       ),

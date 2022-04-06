@@ -310,7 +310,9 @@ class _AddCarDetailsState extends State<AddCarDetails> {
     }
   }
 
+
   String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -319,6 +321,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -358,9 +361,11 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                       right: 0.0,
                       child: Container(
                           child: VendomeHeader(
-                        drawer: _scaffoldState,
-                        cusname: cusname,
-                      ))),
+                            drawer: _scaffoldState,
+                            cusname: cusname,
+                            cusaddress: "",
+                            role: role,
+                          ))),
                 ],
               ),
       ),

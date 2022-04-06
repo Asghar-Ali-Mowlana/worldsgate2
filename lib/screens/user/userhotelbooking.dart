@@ -8,6 +8,8 @@ import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 
+import '../../widgets/cusheader.dart';
+
 class UserHotelBooking extends StatefulWidget {
   //const UserHotelBooking({Key? key}) : super(key: key);
 
@@ -26,7 +28,9 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
 
   var _controller = TextEditingController();
 
+
   String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -35,6 +39,7 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -113,7 +118,6 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
     return SafeArea(
         child: Scaffold(
       key: _scaffoldState,
-      endDrawer: new UserNavigationDrawer(widget.uid, widget.city),
       drawer: new UserNavigationDrawer(widget.uid, widget.city),
       backgroundColor: Color(0xFF000000),
       body: Stack(
@@ -131,11 +135,12 @@ class _UserHotelBookingState extends State<UserHotelBooking> {
               top: 0.0,
               right: 0.0,
               child: Container(
-                  child: VendomeHeader.cus(
-                drawer: _scaffoldState,
-                cusname: cusname==null? "Loading": cusname,
-                cusaddress: widget.city,
-              ))),
+                  child: VendomeHeaderCustomer(
+                    drawer: _scaffoldState,
+                    cusname: cusname,
+                    cusaddress: widget.city,
+                    role: role,
+                  ))),
         ],
       ),
     ));

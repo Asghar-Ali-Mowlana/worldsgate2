@@ -41,7 +41,9 @@ class _DeoManageCarsState extends State<DeoManageCars> {
   var subNewMap;
 
   int? totaladded;
+
   String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -50,6 +52,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -667,6 +670,8 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                       child: VendomeHeader(
                         drawer: _scaffoldState,
                         cusname: cusname,
+                        cusaddress: "",
+                        role: role,
                       ))),
             ],
           ),
