@@ -196,10 +196,10 @@ class _DeoManageCarsState extends State<DeoManageCars> {
   InkWell CarContainer(int i, int j, BuildContext context, double conheight, double conwidth) {
     return InkWell(
                         onTap: (){
-                          // Navigator.of(context).push(MaterialPageRoute(
-                          //     builder: (context) =>
-                          //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                          //     UserViewCarDetails(widget.uid, doc['carid'], widget.city)));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+
+                              DeoViewCarDetails(widget.uid, entryList[i].value[j]["carid"])));
                         },
                         child: Container(
                           height: conheight,

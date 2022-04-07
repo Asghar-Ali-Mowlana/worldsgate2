@@ -4,6 +4,7 @@ import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoupdatecardetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoaddhoteldetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
@@ -50,7 +51,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: UserOrderFood("WpzPfHN360dyUtmpSo2a3yhXVak2", "Palm Jumeirah"),
+      home: LoginPage(),
     );
   }
 }
