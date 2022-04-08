@@ -617,6 +617,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
   }
 
   String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -625,6 +626,7 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -3532,9 +3534,11 @@ class _UpdateAparmentDetailsState extends State<UpdateAparmentDetails> {
                       right: 0.0,
                       child: Container(
                           child: VendomeHeader(
-                        drawer: _scaffoldState,
-                        cusname: cusname,
-                      ))),
+                            drawer: _scaffoldState,
+                            cusname: cusname,
+                            cusaddress: "",
+                            role: role,
+                          ))),
                 ],
               ),
       ),

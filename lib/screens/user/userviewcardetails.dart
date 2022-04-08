@@ -37,8 +37,10 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
   var door;
   var name;
   var model;
+  var coverimage;
   var insurance;
   var delivery;
+  var price;
   var kms;
   var age;
   var otherfeaturez = [];
@@ -80,8 +82,10 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
         door = documentSnapshot['doors'];
         luggage = documentSnapshot['luggage'];
         model = documentSnapshot['model'];
+        coverimage = documentSnapshot['coverimage'];
         insurance = documentSnapshot['insurance'];
         delivery = documentSnapshot['delivery'];
+        price = documentSnapshot['price'];
         kms = documentSnapshot['distance'];
         age = documentSnapshot['age'];
         description = documentSnapshot['description'];
@@ -173,17 +177,11 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
                 //     desktop: buildColumnContent(context, "desktop", packageCollection),
                 //   ),
                 // ),
-                Container(
-                  // width: double.infinity,
-                  // height: double.infinity,
-
-                  margin: const EdgeInsets.only(top: 200.0, bottom: 5.0),
-                  child: SingleChildScrollView(
-                    child: ResponsiveWidget(
-                      mobile: buildColumnContent("mob", 15, 13),
-                      tab: buildColumnContent("tab", 16, 14),
-                      desktop: buildColumnContent("des", 17, 15),
-                    ),
+                SingleChildScrollView(
+                  child: ResponsiveWidget(
+                    mobile: buildColumnContent("mob", 15, 13, 70),
+                    tab: buildColumnContent("tab", 16, 14, 100),
+                    desktop: buildColumnContent("des", 17, 15, 120),
                   ),
                 ),
                 Positioned(
@@ -203,9 +201,12 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
   }
 
   Column buildColumnContent(
-      String lala, double headingfontsize, double normalfontsize) {
+      String lala, double headingfontsize, double normalfontsize, double headergap) {
     return Column(
       children: [
+        SizedBox(
+          height: headergap,
+        ),
         Text(
           "Book Now $brand $name $model",
           style: TextStyle(
@@ -230,7 +231,7 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
                       // border: Border.all(color: Color(0xFFBA780F)),
                       image: DecorationImage(
                           image: NetworkImage(
-                              'https://stimg.cardekho.com/images/carexteriorimages/930x620/Lamborghini/Aventador/6721/Lamborghini-Aventador-SVJ/1621849426405/front-left-side-47.jpg'),
+                              '$coverimage'),
                           fit: BoxFit.cover),
                     ),
                   ),
@@ -261,7 +262,7 @@ class _UserViewCarDetailsState extends State<UserViewCarDetails> {
                         child: Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: Text(
-                            "AED 3. 000, 00",
+                            "AED $price",
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: headingfontsize,

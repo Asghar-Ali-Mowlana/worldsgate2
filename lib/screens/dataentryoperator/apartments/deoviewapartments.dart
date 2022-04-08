@@ -29,11 +29,14 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
 
   _DeoViewApartmentsState(this.uid, this.apartmentid);
 
-  String? cusname;
+
 
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
+
+  String? cusname;
+  String? role;
 
   getname() async {
     FirebaseFirestore.instance
@@ -42,6 +45,7 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
         .get()
         .then((myDocuments) {
       cusname = myDocuments.data()!['name'].toString();
+      role = myDocuments.data()!['role'].toString();
     });
   }
 
@@ -946,9 +950,11 @@ class _DeoViewApartmentsState extends State<DeoViewApartments> {
                     right: 0.0,
                     child: Container(
                         child: VendomeHeader(
-                      drawer: _scaffoldState,
-                      cusname: cusname,
-                    ))),
+                          drawer: _scaffoldState,
+                          cusname: cusname,
+                          cusaddress: "",
+                          role: role,
+                        ))),
               ],
             ),
     ));

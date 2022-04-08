@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
+import '../screens/dataentryoperator/apartments/deomanageapartments.dart';
 import '../screens/loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as u;
 
@@ -63,9 +64,9 @@ class DeoNavigationDrawer extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (context) => DeoManageApartments(uid),
-                // ));
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DeoManageApartments(uid),
+                ));
               },
             ),
             ListTile(
@@ -111,10 +112,17 @@ class DeoNavigationDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.home_outlined),
               title: const Text(
-                'Home',
+                'Food',
                 style: TextStyle(color: Colors.white),
               ),
-              onTap: () {},
+              onTap: () {
+
+
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DeoManageCars(uid),
+                ));
+
+              },
             ),
             Text(
               "Online Shopping",
