@@ -27,7 +27,6 @@ class _UserOrderFoodState extends State<UserOrderFood> {
 
   var _controller = TextEditingController();
 
-
   String? cusname;
   String? role;
 
@@ -126,11 +125,11 @@ class _UserOrderFoodState extends State<UserOrderFood> {
           SingleChildScrollView(
             child: ResponsiveWidget(
               mobile: buildColumnContent(
-                  start, end, context, unpicked, height, width),
+                  start, end, context, unpicked, height, width, "mobile"),
               tab: buildColumnContent(
-                  start, end, context, unpicked, height, width),
+                  start, end, context, unpicked, height, width, "tab"),
               desktop: buildColumnContent(
-                  start, end, context, unpicked, height, width),
+                  start, end, context, unpicked, height, width, "desktop"),
             ),
           ),
           Positioned(
@@ -139,126 +138,154 @@ class _UserOrderFoodState extends State<UserOrderFood> {
               right: 0.0,
               child: Container(
                   child: VendomeHeaderCustomer(
-                    drawer: _scaffoldState,
-                    cusname: cusname,
-                    cusaddress: widget.city,
-                    role: role,
-                  ))),
+                drawer: _scaffoldState,
+                cusname: cusname,
+                cusaddress: widget.city,
+                role: role,
+              ))),
         ],
       ),
     ));
   }
 
-  Column buildColumnContent(DateTime start, DateTime end, BuildContext context,
-      Query<Object?> unpicked, double height, double width) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50.0,
-        ),
-        Container(
-          margin: const EdgeInsets.only(top: 125.0),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 14.0),
-              child: Text(
-                "Order your favourite food",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+  Padding buildColumnContent(DateTime start, DateTime end, BuildContext context,
+      Query<Object?> unpicked, double height, double width, String device) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          horizontal: device == "mobile"
+              ? 0
+              : device == "tab"
+                  ? width * 0.1
+                  : device == "desktop"
+                      ? width * 0.13
+                      : width * 0),
+      child: Column(
+        children: [
+          Container(
+            margin: EdgeInsets.only(
+                top: device == "mobile"
+                    ? height * 0.09
+                    : device == "tab"
+                        ? height * 0.1
+                        : device == "desktop"
+                            ? height * 0.13
+                            : 0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 14.0),
+                child: Text(
+                  "Order your favourite food",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: height * 0.02),
-          child: Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: 220.0,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                primary: false,
-                children: <Widget>[
-                  favouriteFoodMethod(height, width, "KFC",
-                      'assets/images/restaurentimages/KFC.png', Colors.red),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: width * 0.03),
-                    child: favouriteFoodMethod(
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: height * 0.02),
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 220.0,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  primary: false,
+                  children: <Widget>[
+                    favouriteFoodMethod(
                         height,
                         width,
-                        "Papa John's",
-                        'assets/images/restaurentimages/Papa Jhones.png',
-                        Colors.green),
+                        "KFC",
+                        'assets/images/restaurentimages/KFC.png',
+                        Colors.red,
+                        device),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: device == "mobile"
+                              ? width * 0.03
+                              : device == "tab"
+                                  ? width * 0.1
+                                  : device == "desktop"
+                                      ? width * 0.01
+                                      : width * 0),
+                      child: favouriteFoodMethod(
+                          height,
+                          width,
+                          "Papa John's",
+                          'assets/images/restaurentimages/Papa Jhones.png',
+                          Colors.green,
+                          device),
+                    ),
+                    favouriteFoodMethod(
+                        height,
+                        width,
+                        "Domino's",
+                        'assets/images/restaurentimages/Dominos.png',
+                        Colors.red,
+                        device),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 14.0),
+                child: Text(
+                  "Favourite Choice",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
                   ),
-                  favouriteFoodMethod(height, width, "Domino's",
-                      'assets/images/restaurentimages/Dominos.png', Colors.red),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Container(
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 14.0),
-              child: Text(
-                "Favourite Choice",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
                 ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: height * 0.02, horizontal: width * 0.02),
-          child: Align(
-            alignment: Alignment.center,
-            child: Container(
-              height: 160.0,
-              child: ListView(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                primary: false,
-                children: <Widget>[
-                  favouriteChoiceMethod(height, width, "Pizza", 19),
-                  favouriteChoiceMethod(height, width, "Biriyani", 19),
-                  favouriteChoiceMethod(height, width, "Burger", 19),
-                  favouriteChoiceMethod(height, width, "Pizza", 19),
-                  favouriteChoiceMethod(height, width, "Pizza", 19),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Container(
-          //margin: const EdgeInsets.only(top: 25.0, bottom: 0.0),
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 14.0),
-              child: Text(
-                "200 Restaurents Nearby You",
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
+          Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: height * 0.02, horizontal: width * 0.02),
+            child: Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: height * 0.15,
+                child: ListView(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  primary: false,
+                  children: <Widget>[
+                    favouriteChoiceMethod(height, width, "Pizza", 19, device),
+                    favouriteChoiceMethod(
+                        height, width, "Biriyani", 19, device),
+                    favouriteChoiceMethod(height, width, "Burger", 19, device),
+                    favouriteChoiceMethod(height, width, "Pizza", 19, device),
+                    favouriteChoiceMethod(height, width, "Pizza", 19, device),
+                  ],
                 ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16.0),
-          child: Container(
-            //height: 2400.0,
-            width: MediaQuery.of(context).size.width,
+          Container(
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 14.0),
+                child: Text(
+                  "200 Restaurents Nearby You",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
             child: StreamBuilder<QuerySnapshot>(
               stream: unpicked.snapshots(),
               builder: (context, snapshot) {
@@ -267,9 +294,10 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                     child: CircularProgressIndicator(),
                   );
                 } else {
-                  return ListView(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                  return Wrap(
+                    //shrinkWrap: true,
+                    //physics: NeverScrollableScrollPhysics(),
+                    direction: Axis.horizontal,
                     children: snapshot.data!.docs.map((doc) {
                       return InkWell(
                         onTap: () {
@@ -278,229 +306,96 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                                   widget.uid, doc.id, widget.city)));
                         },
                         child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 16.0, left: 10.0, right: 10.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: Stack(
-                              children: [
-                                Container(
-                                  height: 220.0,
-                                  width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: Color(0xFFBA780F)),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 16.0, right: 10.0, bottom: 16.0),
-                                    child: Container(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 16.0),
+                          child: Container(
+                              width: device == "mobile"
+                                  ? width
+                                  : device == "tab"
+                                      ? width * 0.1
+                                      : device == "desktop"
+                                          ? width * 0.2
+                                          : width * 0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Color(0xFFBA780F)),
+                              ),
+                              child: device == "mobile"
+                                  ? Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
                                         children: [
-                                          Align(
-                                            alignment: Alignment.topRight,
-                                            child: Container(
-                                              height: 186.0,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2,
-                                              decoration: BoxDecoration(),
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        "Fern El Balad",
-                                                        style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: Colors.white,
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .bold),
-                                                      ),
-                                                      Text("3.2 KM",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color:
-                                                                  Colors.white))
-                                                    ],
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 3.0),
-                                                    child: Text(
-                                                      "Marina Dubai",
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color:
-                                                            Color(0xFFBA780F),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 3.0),
-                                                    child: Text(
-                                                      "Healthy food, Lebanese, Sandwhiches, Pasta",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color:
-                                                              Color(0xFFBA780F),
-                                                          fontStyle:
-                                                              FontStyle.italic),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            top: 2.0),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Image.asset(
-                                                          "assets/images/restaurentimages/DeliveryBike.png",
-                                                          height: height * 0.06,
-                                                          width: width * 0.06,
-                                                        ),
-                                                        Text(
-                                                          "  4 Live Tracking ",
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-                                                        Text(
-                                                          "Yes",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color: Color(
-                                                                  0xFFBA780F)),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      otherDetailsMethod(
-                                                          "Deal Time",
-                                                          "30 Min"),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    5.0),
-                                                        child:
-                                                            otherDetailsMethod(
-                                                                "Delivery Fee",
-                                                                "Free"),
-                                                      ),
-                                                      otherDetailsMethod(
-                                                          "Min Order", "15 AED")
-                                                    ],
-                                                  )
-                                                ],
-                                              ),
-                                            ),
+                                          Stack(
+                                            children: [
+                                              nearByRestaurantsImageMethod(
+                                                  context, doc),
+                                              nearByRestaurantsPromotionMethod(
+                                                  width, doc),
+                                            ],
                                           ),
+                                          SizedBox(
+                                            width: width * 0.03,
+                                          ),
+                                          nearByRestaurantsOtherDetailsMethod(
+                                              context, height, width, device),
                                         ],
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: 180.0,
-                                  width:
-                                      MediaQuery.of(context).size.width / 2.5,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    border:
-                                        Border.all(color: Color(0xFFBA780F)),
-                                    image: DecorationImage(
-                                      image: NetworkImage(
-                                          doc['coverimage'] == null
-                                              ? ""
-                                              : doc['coverimage']),
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                  //conta
-                                  /*child: Stack(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 113.0, right: 0.0),
-                                        height: 220.0,
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            gradient: LinearGradient(
-                                                begin:
-                                                    FractionalOffset.topCenter,
-                                                end: FractionalOffset
-                                                    .bottomCenter,
-                                                colors: [
-                                                  Colors.white70
-                                                      .withOpacity(0.0),
-                                                  Colors.orange
-                                                      .withOpacity(0.8),
-                                                ],
-                                                stops: [
-                                                  0.0,
-                                                  0.7
-                                                ])),
-                                        child: Stack(
+                                    )
+                                  : device == "tab"
+                                      ? Row(
                                           children: [
-                                            Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: Container(
-                                                margin: const EdgeInsets.only(
-                                                    top: 68.0, right: 0.0),
-                                                child: Column(
+                                            Stack(
+                                              children: [
+                                                nearByRestaurantsImageMethod(
+                                                    context, doc),
+                                                nearByRestaurantsPromotionMethod(
+                                                    width, doc),
+                                              ],
+                                            ),
+                                            nearByRestaurantsOtherDetailsMethod(
+                                                context, height, width, device),
+                                          ],
+                                        )
+                                      : device == "desktop"
+                                          ? Column(
+                                              children: [
+                                                Stack(
                                                   children: [
-                                                    Align(
-                                                      alignment: Alignment
-                                                          .bottomCenter,
-                                                      child: Text(
-                                                        "${doc['promotion']}% off",
-                                                        style: TextStyle(
-                                                          fontSize: 24,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    ),
+                                                    nearByRestaurantsImageMethod(
+                                                        context, doc),
+                                                    nearByRestaurantsPromotionMethod(
+                                                        width, doc),
                                                   ],
                                                 ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),*/
-                                ),
-                              ],
-                            ),
-                          ),
+                                                Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child:
+                                                      nearByRestaurantsOtherDetailsMethod(
+                                                          context,
+                                                          height,
+                                                          width,
+                                                          device),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              children: [
+                                                Stack(
+                                                  children: [
+                                                    nearByRestaurantsImageMethod(
+                                                        context, doc),
+                                                    nearByRestaurantsPromotionMethod(
+                                                        width, doc),
+                                                  ],
+                                                ),
+                                                nearByRestaurantsOtherDetailsMethod(
+                                                    context,
+                                                    height,
+                                                    width,
+                                                    device),
+                                              ],
+                                            )),
                         ),
                       );
                     }).toList(),
@@ -509,15 +404,183 @@ class _UserOrderFoodState extends State<UserOrderFood> {
               },
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Container otherDetailsMethod(String otherDetailsHeading, String otherDetail) {
+  Container nearByRestaurantsOtherDetailsMethod(
+      BuildContext context, double height, double width, String device) {
     return Container(
-      height: 70,
-      width: 80,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Container(
+            decoration: BoxDecoration(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Fern El Balad",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(" 3.2 KM",
+                        style: TextStyle(fontSize: 12, color: Colors.white))
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: device == "mobile"
+                          ? height * 0.01
+                          : device == "tab"
+                              ? height * 0.1
+                              : device == "desktop"
+                                  ? height * 0.01
+                                  : height * 0),
+                  child: Text(
+                    "Marina Dubai",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Color(0xFFBA780F),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: device == "mobile"
+                          ? height * 0.001
+                          : device == "tab"
+                              ? height * 0.1
+                              : device == "desktop"
+                                  ? height * 0.001
+                                  : height * 0),
+                  child: Container(
+                    width: device == "mobile" ? width * 0.46 : null,
+                    child: Text(
+                      "Healthy food, Lebanese, Sandwhiches, Pasta",
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFFBA780F),
+                          fontStyle: FontStyle.italic),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      vertical: device == "mobile"
+                          ? height * 0.001
+                          : device == "tab"
+                              ? height * 0.1
+                              : device == "desktop"
+                                  ? height * 0.01
+                                  : height * 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Image.asset(
+                        "assets/images/restaurentimages/DeliveryBike.png",
+                        height: height * 0.06,
+                        width: width * 0.06,
+                      ),
+                      Text(
+                        "  Live Tracking ",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        "Yes",
+                        style:
+                            TextStyle(fontSize: 12, color: Color(0xFFBA780F)),
+                      )
+                    ],
+                  ),
+                ),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      otherDetailsMethod(
+                          height, width, "Deal Time", "30 Min", device),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                        child: otherDetailsMethod(
+                            height, width, "Delivery Fee", "Free", device),
+                      ),
+                      otherDetailsMethod(
+                          height, width, "Min Order", "15 AED", device)
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding nearByRestaurantsPromotionMethod(
+      double width, QueryDocumentSnapshot<Object?> doc) {
+    return Padding(
+      padding: const EdgeInsets.only(
+          left: 12.0, top: 158.0, right: 8.0, bottom: 8.0),
+      child: Container(
+        height: 50,
+        width: width * 0.35,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Color(0xFFBA780F)),
+          color: Color(0xFFBA780F),
+        ),
+        child: Center(
+          child: Text(
+            "${doc['promotion']}% off",
+            style: TextStyle(
+              fontSize: 24,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container nearByRestaurantsImageMethod(
+      BuildContext context, QueryDocumentSnapshot<Object?> doc) {
+    return Container(
+      height: 180.0,
+      width: MediaQuery.of(context).size.width / 2.5,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Color(0xFFBA780F)),
+        image: DecorationImage(
+          image: NetworkImage(
+              /*doc['coverimage'] == null ? "" : doc['coverimage']*/ "https://st.depositphotos.com/1005682/2476/i/600/depositphotos_24762569-stock-photo-fast-food-hamburger-hot-dog.jpg"),
+          fit: BoxFit.fill,
+        ),
+      ),
+    );
+  }
+
+  Container otherDetailsMethod(double height, double width,
+      String otherDetailsHeading, String otherDetail, String device) {
+    return Container(
+      width: device == "mobile"
+          ? width * 0.146
+          : device == "tab"
+              ? width * 0.1
+              : device == "desktop"
+                  ? width * 0.055
+                  : width * 0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Color(0xFFBA780F)),
@@ -525,12 +588,12 @@ class _UserOrderFoodState extends State<UserOrderFood> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(otherDetailsHeading),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Divider(
-              color: Color(0xFFBA780F),
-            ),
+          Text(
+            otherDetailsHeading,
+            textAlign: TextAlign.center,
+          ),
+          Divider(
+            color: Color(0xFFBA780F),
           ),
           Text(otherDetail)
         ],
@@ -538,37 +601,84 @@ class _UserOrderFoodState extends State<UserOrderFood> {
     );
   }
 
-  Padding favouriteChoiceMethod(
-      double height, double width, String foodType, int numOfRestaurents) {
+  Padding favouriteChoiceMethod(double height, double width, String foodType,
+      int numOfRestaurents, String deviceName) {
     return Padding(
-      padding: EdgeInsets.only(right: width * 0.0),
+      padding: EdgeInsets.only(right: width * 0.02),
       child: Align(
         alignment: Alignment.center,
         child: Stack(
           children: [
             Container(
               height: height * 0.15,
-              width: width * 0.18,
+              width: deviceName == "mobile"
+                  ? width * 0.2
+                  : deviceName == "tab"
+                      ? width * 0.1
+                      : deviceName == "desktop"
+                          ? width * 0.07
+                          : width * 0,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Color(0xFFBA780F)),
                   color: Color(0xFF000000)),
             ),
-            Align(
-              alignment: Alignment.topCenter,
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: width * 0.01),
-                child: Image.asset(
-                  'assets/images/restaurentimages/FoodCatageryImages.png',
-                  height: 100,
-                  width: 80,
+                padding: EdgeInsets.symmetric(
+                    horizontal: deviceName == "mobile"
+                        ? width * 0.02
+                        : deviceName == "tab"
+                            ? width * 0.1
+                            : deviceName == "desktop"
+                                ? width * 0
+                                : width * 0),
+                child: Container(
+                  width: deviceName == "mobile"
+                      ? width * 0.16
+                      : deviceName == "tab"
+                          ? width * 0.1
+                          : deviceName == "desktop"
+                              ? width * 0.07
+                              : width * 0,
+                  child: Image.asset(
+                    'assets/images/restaurentimages/FoodCatageryImages.png',
+                    height: deviceName == "mobile"
+                        ? height * 0.1
+                        : deviceName == "tab"
+                            ? height * 0.1
+                            : deviceName == "desktop"
+                                ? height * 0.09
+                                : height * 0,
+                    width: deviceName == "mobile"
+                        ? width * 0.16
+                        : deviceName == "tab"
+                            ? width * 0.1
+                            : deviceName == "desktop"
+                                ? width * 0.1
+                                : width * 0,
+                  ),
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 43.0),
+              margin: EdgeInsets.only(
+                  top: deviceName == "mobile"
+                      ? height * 0.02
+                      : deviceName == "tab"
+                          ? height * 0.1
+                          : deviceName == "desktop"
+                              ? height * 0.04
+                              : height * 0),
               height: height * 0.15,
-              width: width * 0.2,
+              width: deviceName == "mobile"
+                  ? width * 0.2
+                  : deviceName == "tab"
+                      ? width * 0.1
+                      : deviceName == "desktop"
+                          ? width * 0.07
+                          : width * 0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -577,7 +687,14 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      margin: const EdgeInsets.only(top: 63.0),
+                      margin: EdgeInsets.only(
+                          top: deviceName == "mobile"
+                              ? height * 0.085
+                              : deviceName == "tab"
+                                  ? height * 0.1
+                                  : deviceName == "desktop"
+                                      ? height * 0.065
+                                      : height * 0),
                       child: Column(
                         children: [
                           Text(
@@ -613,20 +730,26 @@ class _UserOrderFoodState extends State<UserOrderFood> {
   }
 
   Align favouriteFoodMethod(double height, double width, String restaurentName,
-      String restaurentBrandImage, Color color) {
+      String restaurentBrandImage, Color color, String deviceName) {
     return Align(
       alignment: Alignment.center,
       child: Stack(
         children: [
           Container(
             height: height * 0.3,
-            width: width * 0.3,
+            width: deviceName == "mobile"
+                ? width * 0.3
+                : deviceName == "tab"
+                    ? width * 0.1
+                    : deviceName == "desktop"
+                        ? width * 0.226
+                        : width * 0,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: Border.all(color: Color(0xFFBA780F)),
               image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/premiumbrands/premiumbrands1.jpeg',
+                image: NetworkImage(
+                  "https://images.theconversation.com/files/410720/original/file-20210712-46002-1ku5one.jpg?ixlib=rb-1.1.0&q=45&auto=format&w=1200&h=1200.0&fit=crop",
                 ),
                 fit: BoxFit.fill,
                 // colorFilter: new ColorFilter.mode(
@@ -636,10 +759,24 @@ class _UserOrderFoodState extends State<UserOrderFood> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: width * 0.22, top: height * 0.01),
+            padding: EdgeInsets.only(
+                left: deviceName == "mobile"
+                    ? width * 0.22
+                    : deviceName == "tab"
+                        ? width * 0.1
+                        : deviceName == "desktop"
+                            ? width * 0.20
+                            : width * 0,
+                top: height * 0.01),
             child: Container(
               height: height * 0.03,
-              width: width * 0.06,
+              width: deviceName == "mobile"
+                  ? width * 0.06
+                  : deviceName == "tab"
+                      ? width * 0.1
+                      : deviceName == "desktop"
+                          ? width * 0.02
+                          : width * 0,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(restaurentBrandImage),
@@ -649,9 +786,15 @@ class _UserOrderFoodState extends State<UserOrderFood> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 93.0),
+            margin: EdgeInsets.only(top: height * 0.1),
             height: height * 0.3,
-            width: width * 0.3,
+            width: deviceName == "mobile"
+                ? width * 0.3
+                : deviceName == "tab"
+                    ? width * 0.1
+                    : deviceName == "desktop"
+                        ? width * 0.226
+                        : width * 0,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 //border: Border.all(color: Color(0xFFBA780F)),
@@ -670,7 +813,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
             child: Stack(
               children: [
                 Align(
-                  alignment: Alignment.bottomRight,
+                  alignment: Alignment.center,
                   child: Container(
                     margin: const EdgeInsets.only(top: 73.0),
                     child: Column(
