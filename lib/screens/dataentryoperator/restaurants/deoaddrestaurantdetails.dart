@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
@@ -31,78 +32,26 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController carNameController = TextEditingController();
+  final TextEditingController restaurantNameController = TextEditingController();
   final TextEditingController distanceController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
-  final TextEditingController priceController = TextEditingController();
+  final TextEditingController minimumOrderprepTimeController = TextEditingController();
+  final TextEditingController prepTimeController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController deliverychargeController = TextEditingController();
 
-  String? model;
-  String? delivery;
-  String? insurance;
-  String? brand;
-  String? gear;
-  String? engine;
-  String? color;
-  String? seats;
-  String? doors;
-  String? luggage;
 
-  final models = [
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
-    "2014",
-    "2013",
-    "2012",
-    "2011",
-    "2010",
-  ];
 
+  String? deliverytypechosen;
   final deliveryType = [
     "Free",
     "Paid",
   ];
 
-  final insuranceType = [
-    "Full",
-    "Part",
+  String? livetrackingchosen;
+  final livetracking = [
+    "Yes",
+    "No",
   ];
-
-  final carBrand = ["Lamborghini", "Ferrari", "Rolls Royce", "McLaren"];
-
-  final gearType = [
-    "Auto",
-    "Manual",
-  ];
-
-  final engineType = [
-    "V8",
-  ];
-
-  final carColor = [
-    "Red",
-    "White",
-    "Yellow",
-    "Blue",
-    "Grey",
-    "Black",
-    "Gold",
-    "Tricolor"
-  ];
-
-  final seatsDoorsLuggageCount = [
-    "2",
-    "4",
-    "6",
-  ];
-
-  bool featureBoolValue = true;
 
   List<String> otherFeatures = [
     'Sensors',
@@ -154,7 +103,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/carimages/carmain/$filename';
+          final destination = '/restaurantimages/restaurantmain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -193,7 +142,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   UploadTask? otherTask;
   var otherImageLink;
   List<Uint8List> otherImage = [];
-  List<String> OtherHotelImagesUrl = [];
+  List<String> OtherRestaurantImagesUrl = [];
 
   List<File>? files;
 
@@ -229,7 +178,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
             //otherImage.add(uploadfile);
             //});
             String filename = basename(otherResult!.files[i].name);
-            final destination = '/carimages/carsub/$filename';
+            final destination = '/restaurantimages/restaurantsub/$filename';
             print("The destination is $destination");
 
             final ref = FirebaseStorage.instance.ref(destination);
@@ -253,7 +202,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
             otherImageLink = urlDownload;
 
             setState(() => otherImageLink = urlDownload);
-            OtherHotelImagesUrl.add(otherImageLink);
+            OtherRestaurantImagesUrl.add(otherImageLink);
           }
 
           setState(() {
@@ -268,41 +217,47 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
     }
   }
 
+  bool? livetrackingbool;
+  bool? deliverychargeavailable;
+
   _uploadHotelData() async {
-    String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
+    String newrestaurantid = FirebaseFirestore.instance.collection('restaurants').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('cars').doc(newCarId).set({
-        'name': carNameController.text,
-        'model': model,
-        'delivery': delivery,
-        'insurance': insurance,
-        'brand': brand,
-        'distance': distanceController.text,
-        'age': ageController.text,
-        'price': double.parse(priceController.text),
-        'description': descriptionController.text,
-        //'mainfacilities': mainFacilities,
-        //'subfacilities': subFacilities,
-        //'rooms': roomDeatils,
-        'datecreated': DateTime.now(),
-        'dataentryuid': widget.uid,
-        'coverimage': coverImageLink,
-        'othercarimages': OtherHotelImagesUrl,
-        //'cancellationfee': null,
-        //'stars': stars,
-        //'taxandcharges': null,
-        'gear': gear,
-        'engine': engine,
-        'color': color,
-        'seats': seats,
-        'doors': doors,
-        'luggage': luggage,
-        'otherfeatures': otherFeatures,
-        'carid': newCarId,
-        //example added
-        'topspeed': 123,
-      });
+      if(deliverychargeavailable==true){
+        await FirebaseFirestore.instance.collection('restaurants').doc(newrestaurantid).set({
+          'name': restaurantNameController.text,
+          'minimumorderprice': double.parse(minimumOrderprepTimeController.text),
+          'preparationtime': double.parse(prepTimeController.text),
+          'description': descriptionController.text,
+          'datecreated': DateTime.now(),
+          'dataentryuid': widget.uid,
+          'coverimage': coverImageLink,
+          'otherrestaurantimages': OtherRestaurantImagesUrl,
+          'restaurantid': newrestaurantid,
+          'delivery': deliverytypechosen,
+          'livetracking': livetrackingbool,
+          'deliverycharge': descriptionController.text,
+        });
+
+      }else{
+        await FirebaseFirestore.instance.collection('restaurants').doc(newrestaurantid).set({
+          'name': restaurantNameController.text,
+          'minimumorderprice': double.parse(minimumOrderprepTimeController.text),
+          'preparationtime': double.parse(prepTimeController.text),
+          'description': descriptionController.text,
+          'datecreated': DateTime.now(),
+          'dataentryuid': widget.uid,
+          'coverimage': coverImageLink,
+          'otherrestaurantimages': OtherRestaurantImagesUrl,
+          'restaurantid': newrestaurantid,
+          'delivery': deliverytypechosen,
+          'livetracking': livetrackingbool,
+          'deliverycharge': 0,
+        });
+
+      }
+
     } catch (e) {
       print(e);
     }
@@ -348,9 +303,9 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: addCarDetailsContainer(context, "mobile"),
-                      tab: addCarDetailsContainer(context, "tab"),
-                      desktop: addCarDetailsContainer(context, "desktop"),
+                      mobile: addRestaurantDetailsContainer(context, "mobile"),
+                      tab: addRestaurantDetailsContainer(context, "tab"),
+                      desktop: addRestaurantDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -370,7 +325,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
     );
   }
 
-  Container addCarDetailsContainer(BuildContext context, String device) {
+  Container addRestaurantDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -388,7 +343,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: carNameController,
+                        controller: restaurantNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -396,10 +351,10 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                carNameController..text = "";
+                                restaurantNameController..text = "";
                               }),
-                          hintText: "Enter restaurent name",
-                          labelText: "Restaurent Name",
+                          hintText: "Enter restaurant name",
+                          labelText: "Restaurant Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -414,263 +369,68 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Restaurent name cannot be empty";
+                            return "restaurant name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          carNameController.text = value!;
+                          restaurantNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
-                      /*SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Car Model",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Model',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: model,
-                                      items: models.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.model = value as String?;
-                                          }))),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Type of Delivery",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Delivery',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: delivery,
-                                      items: deliveryType
-                                          .map(buildMenuItem)
-                                          .toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.delivery = value as String?;
-                                          }))),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Type of insurance",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Insurance',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: insurance,
-                                      items: insuranceType
-                                          .map(buildMenuItem)
-                                          .toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.insurance = value as String?;
-                                          }))),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Car Brand",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Brand',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: brand,
-                                      items:
-                                          carBrand.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.brand = value as String?;
-                                          }))),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Container(
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: TextFormField(
-                                style: TextStyle(color: Colors.white),
-                                controller: distanceController,
-                                decoration: InputDecoration(
-                                  suffixIcon: IconButton(
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: Color(0xFFdb9e1f),
-                                      ),
-                                      onPressed: () {
-                                        distanceController..text = "";
-                                      }),
-                                  hintText: "Enter KMs Per Day",
-                                  labelText: "KMs/Day",
-                                  hintStyle: TextStyle(color: Colors.white70),
-                                  labelStyle: new TextStyle(
-                                      color: Colors.white70, height: 0.1),
-                                  enabled: true,
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.white70),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Color(0xFFdb9e1f)),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value!.length == 0) {
-                                    return "KMs/Day cannot be empty";
-                                  }
-                                },
-                                onSaved: (value) {
-                                  distanceController.text = value!;
-                                },
-                                keyboardType: TextInputType.text,
+
+                      SizedBox(height: 20.0,),
+                      TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: minimumOrderprepTimeController,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
+                        style: TextStyle(color: Colors.white),
+                       // controller: restaurantNameController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
                               ),
-                            ),
-                            SizedBox(
-                              width: 16.0,
-                            ),
-                            Expanded(
-                              child: TextFormField(
-                                style: TextStyle(color: Colors.white),
-                                controller: ageController,
-                                decoration: InputDecoration(
-                                  suffixIcon: IconButton(
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        color: Color(0xFFdb9e1f),
-                                      ),
-                                      onPressed: () {
-                                        ageController..text = "";
-                                      }),
-                                  hintText: "Enter minimum age",
-                                  labelText: "Minimum Age",
-                                  hintStyle: TextStyle(color: Colors.white70),
-                                  labelStyle: new TextStyle(
-                                      color: Colors.white70, height: 0.1),
-                                  enabled: true,
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide:
-                                        new BorderSide(color: Colors.white70),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: new BorderSide(
-                                        color: Color(0xFFdb9e1f)),
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value!.length == 0) {
-                                    return "Minimum age cannot be empty";
-                                  }
-                                },
-                                onSaved: (value) {
-                                  ageController.text = value!;
-                                },
-                                keyboardType: TextInputType.text,
-                              ),
-                            )
-                          ],
+                              onPressed: () {
+                              //  restaurantNameController..text = "";
+                              }),
+                          hintText: "Minimum Order Price",
+                          labelText: "Minimum Order Price",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
                         ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "restaurant name cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
+                       //   restaurantNameController.text = value!;
+                        },
+
                       ),
                       SizedBox(
                         height: 20,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: prepTimeController,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                        ],
                         style: TextStyle(color: Colors.white),
-                        controller: priceController,
+                        // controller: restaurantNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -678,35 +438,167 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                priceController..text = "";
+                                prepTimeController..text = "";
                               }),
-                          hintText: "Enter price",
-                          labelText: "Price",
+                          hintText: "Preparation Time",
+                          labelText: "Preparation Time",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
-                              new TextStyle(color: Colors.white70, height: 0.1),
+                          new TextStyle(color: Colors.white70, height: 0.1),
                           enabled: true,
                           enabledBorder: UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.white70),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                                new BorderSide(color: Color(0xFFdb9e1f)),
+                            new BorderSide(color: Color(0xFFdb9e1f)),
                           ),
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Price cannot be empty";
+                            return "preparation time cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          priceController.text = value!;
+                          prepTimeController.text = value!;
                         },
-                        keyboardType: TextInputType.number,
-                      ),*/
+
+                      ),
                       SizedBox(
                         height: 20,
                       ),
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Delivery Type",
+                            hintStyle:
+                            TextStyle(color: Colors.white70),
+                            labelText: 'Delivery Type',
+                            labelStyle: TextStyle(
+                                color: Colors.white70, height: 0.1),
+                            enabled: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style: TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: deliverytypechosen,
+                          items: deliveryType.map(buildMenuItem).toList(),
+                          onChanged: (value) => setState(() {
+                            deliverytypechosen = value as String?;
+                            if(value=="Paid"){
+                              setState(() {
+                                deliverychargeavailable = true;
+                              });
+
+
+                            }else{
+                              setState(() {
+                                deliverychargeavailable = false;
+                              });
+
+
+                            }
+                          })),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      (deliverychargeavailable==true)
+                      ? Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          controller: deliverychargeController,
+                          style: TextStyle(color: Colors.white),
+                          // controller: restaurantNameController,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.cancel,
+                                  color: Color(0xFFdb9e1f),
+                                ),
+                                onPressed: () {
+                                  deliverychargeController..text = "";
+                                }),
+                            hintText: "Delivery Charge",
+                            labelText: "Delivery Charge",
+                            hintStyle: TextStyle(color: Colors.white70),
+                            labelStyle:
+                            new TextStyle(color: Colors.white70, height: 0.1),
+                            enabled: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                              new BorderSide(color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value!.length == 0) {
+                              return "Delivery Charge cannot be empty";
+                            }
+                          },
+                          onSaved: (value) {
+                            deliverychargeController.text = value!;
+                          },
+
+                        ),
+                      ): Container(),
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Live Tracking",
+                            hintStyle:
+                            TextStyle(color: Colors.white70),
+                            labelText: 'Live Tracking',
+                            labelStyle: TextStyle(
+                                color: Colors.white70, height: 0.1),
+                            enabled: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style: TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: livetrackingchosen,
+                          items: livetracking.map(buildMenuItem).toList(),
+                          onChanged: (value) => setState(() {
+                            livetrackingchosen = value as String?;
+                            if(value=="Yes"){
+                              setState(() {
+                                livetrackingbool = true;
+                              });
+
+
+                            }else{
+                              setState(() {
+                                livetrackingbool = false;
+                              });
+
+
+                            }
+                          })),
+                      SizedBox(
+                        height: 20,
+                      ),
+
                       TextFormField(
                         style: TextStyle(color: Colors.white),
                         maxLines: null,
@@ -720,8 +612,8 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter restaurent description",
-                          labelText: "Restaurent Description",
+                          hintText: "Enter restaurant description",
+                          labelText: "Restaurant Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -736,7 +628,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Restaurent description cannot be empty";
+                            return "restaurant description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -747,208 +639,208 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                       SizedBox(
                         height: 30,
                       ),
+                      // // const Align(
+                      // //   alignment: Alignment.centerLeft,
+                      // //   child: Text(
+                      // //     "restaurant Tables",
+                      // //     style: TextStyle(color: Colors.white70, fontSize: 16),
+                      // //   ),
+                      // // ),
+                      // // SizedBox(
+                      // //   height: 15,
+                      // // ),
+                      // // Padding(
+                      // //   padding: const EdgeInsets.all(8.0),
+                      // //   child: Container(
+                      // //     width: 270.0,
+                      // //     height: 50.0,
+                      // //     child: ElevatedButton.icon(
+                      // //       style: ElevatedButton.styleFrom(
+                      // //           primary: Color(0xFF000000),
+                      // //           shape: RoundedRectangleBorder(
+                      // //               borderRadius:
+                      // //                   BorderRadius.all(Radius.circular(20.0)),
+                      // //               side: BorderSide(color: Color(0xFFdb9e1f))),
+                      // //           side: BorderSide(
+                      // //             width: 2.5,
+                      // //             color: Color(0xFFdb9e1f),
+                      // //           ),
+                      // //           textStyle: const TextStyle(fontSize: 16)),
+                      // //       onPressed: () {
+                      // //         //selectFileandUpload();
+                      // //       },
+                      // //       icon: Icon(
+                      // //         Icons.add,
+                      // //         color: Colors.white,
+                      // //         size: 20,
+                      // //       ), //icon data for elevated button
+                      // //       label: Text(
+                      // //         "Add restaurant Tables",
+                      // //         style: TextStyle(color: Colors.white),
+                      // //       ),
+                      // //       /*child: const Text(
+                      // //                       'Hotel Cover Photo',
+                      // //                       style: TextStyle(
+                      // //                           color: Colors.white),
+                      // //                     ),*/
+                      // //     ),
+                      // //   ),
+                      // // ),
+                      // // SizedBox(
+                      // //   height: 15,
+                      // // ),
+                      // // Container(
+                      // //   child: Row(
+                      // //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      // //     children: [
+                      // //       Expanded(
+                      // //         child: Padding(
+                      // //             padding: const EdgeInsets.symmetric(
+                      // //                 horizontal: 8.0),
+                      // //             child: DropdownButtonFormField(
+                      // //                 decoration: InputDecoration(
+                      // //                   hintText: "Number of Tables",
+                      // //                   hintStyle:
+                      // //                       TextStyle(color: Colors.white70),
+                      // //                   labelText: 'Tables',
+                      // //                   labelStyle: TextStyle(
+                      // //                       color: Colors.white70, height: 0.1),
+                      // //                   enabled: true,
+                      // //                   enabledBorder: UnderlineInputBorder(
+                      // //                     borderSide: new BorderSide(
+                      // //                         color: Colors.white70),
+                      // //                   ),
+                      // //                   focusedBorder: UnderlineInputBorder(
+                      // //                     borderSide: new BorderSide(
+                      // //                         color: Color(0xFFdb9e1f)),
+                      // //                   ),
+                      // //                 ),
+                      // //                 dropdownColor: Color(0xFF000000),
+                      // //                 //focusColor: Color(0xFFdb9e1f),
+                      // //                 style: TextStyle(color: Colors.white),
+                      // //                 isExpanded: true,
+                      // //                 value: model,
+                      // //                 items: models.map(buildMenuItem).toList(),
+                      // //                 onChanged: (value) => setState(() {
+                      // //                       this.model = value as String?;
+                      // //                     }))),
+                      // //       ),
+                      // //       Expanded(
+                      // //         child: Padding(
+                      // //             padding: const EdgeInsets.symmetric(
+                      // //                 horizontal: 8.0),
+                      // //             child: DropdownButtonFormField(
+                      // //                 decoration: InputDecoration(
+                      // //                   hintText: "Table Position",
+                      // //                   hintStyle:
+                      // //                       TextStyle(color: Colors.white70),
+                      // //                   labelText: 'Position',
+                      // //                   labelStyle: TextStyle(
+                      // //                       color: Colors.white70, height: 0.1),
+                      // //                   enabled: true,
+                      // //                   enabledBorder: UnderlineInputBorder(
+                      // //                     borderSide: new BorderSide(
+                      // //                         color: Colors.white70),
+                      // //                   ),
+                      // //                   focusedBorder: UnderlineInputBorder(
+                      // //                     borderSide: new BorderSide(
+                      // //                         color: Color(0xFFdb9e1f)),
+                      // //                   ),
+                      // //                 ),
+                      // //                 dropdownColor: Color(0xFF000000),
+                      // //                 //focusColor: Color(0xFFdb9e1f),
+                      // //                 style: TextStyle(color: Colors.white),
+                      // //                 isExpanded: true,
+                      // //                 value: model,
+                      // //                 items: models.map(buildMenuItem).toList(),
+                      // //                 onChanged: (value) => setState(() {
+                      // //                       this.model = value as String?;
+                      // //                     }))),
+                      // //       ),
+                      // //       Container(
+                      // //         width: 170.0,
+                      // //         height: 50.0,
+                      // //         child: Padding(
+                      // //           padding:
+                      // //               const EdgeInsets.symmetric(horizontal: 8.0),
+                      // //           child: ElevatedButton.icon(
+                      // //             style: ElevatedButton.styleFrom(
+                      // //                 primary: Color(0xFF000000),
+                      // //                 shape: RoundedRectangleBorder(
+                      // //                     borderRadius: BorderRadius.all(
+                      // //                         Radius.circular(00.0)),
+                      // //                     side: BorderSide(
+                      // //                         color: Color(0xFFdb9e1f))),
+                      // //                 side: BorderSide(
+                      // //                   width: 2.5,
+                      // //                   color: Color(0xFFdb9e1f),
+                      // //                 ),
+                      // //                 textStyle: const TextStyle(fontSize: 16)),
+                      // //             onPressed: () {
+                      // //               setState(() {
+                      // //                 //typesOfBedsAndCount
+                      // //                 //  .add("${numOfBeds} - ${bedType}");
+                      // //               });
+                      // //             },
+                      // //             icon: Icon(
+                      // //               Icons.add,
+                      // //               color: Colors.white,
+                      // //               size: 20,
+                      // //             ),
+                      // //             label: Text(
+                      // //               "Add Table",
+                      // //               style: TextStyle(color: Colors.white),
+                      // //             ),
+                      // //           ),
+                      // //         ),
+                      // //       ),
+                      // //     ],
+                      // //   ),
+                      // // ),
+                      // // SizedBox(
+                      // //   height: 30,
+                      // // ),
+                      // Container(
+                      //   child: Column(
+                      //     children: [
+                      //       Container(
+                      //         height: 450.0,
+                      //         width: MediaQuery.of(context).size.width / 1.6,
+                      //         decoration: BoxDecoration(
+                      //             border: Border.all(color: Color(0xFFdb9e1f))),
+                      //         /*child: ListView.builder(
+                      //             itemCount: typesOfBedsAndCount.length,
+                      //             itemBuilder:
+                      //                 (BuildContext context, int index) {
+                      //               return new ListTile(
+                      //                 title: Text(
+                      //                   typesOfBedsAndCount[index],
+                      //                   style: TextStyle(color: Colors.white70),
+                      //                 ),
+                      //                 trailing: IconButton(
+                      //                     icon: Icon(
+                      //                       Icons.delete,
+                      //                       color: Color(0xFFdb9e1f),
+                      //                     ),
+                      //                     onPressed: () {
+                      //                       setState(() {
+                      //                         typesOfBedsAndCount.remove(
+                      //                             typesOfBedsAndCount[index]);
+                      //                       });
+                      //                     }),
+                      //               );
+                      //             }),*/
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: 30,
+                      // ),
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Restaurent Tables",
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 270.0,
-                          height: 50.0,
-                          child: ElevatedButton.icon(
-                            style: ElevatedButton.styleFrom(
-                                primary: Color(0xFF000000),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20.0)),
-                                    side: BorderSide(color: Color(0xFFdb9e1f))),
-                                side: BorderSide(
-                                  width: 2.5,
-                                  color: Color(0xFFdb9e1f),
-                                ),
-                                textStyle: const TextStyle(fontSize: 16)),
-                            onPressed: () {
-                              //selectFileandUpload();
-                            },
-                            icon: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                              size: 20,
-                            ), //icon data for elevated button
-                            label: Text(
-                              "Add Restaurent Tables",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            /*child: const Text(
-                                            'Hotel Cover Photo',
-                                            style: TextStyle(
-                                                color: Colors.white),
-                                          ),*/
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Number of Tables",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Tables',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: model,
-                                      items: models.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.model = value as String?;
-                                          }))),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Table Position",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Position',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: model,
-                                      items: models.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.model = value as String?;
-                                          }))),
-                            ),
-                            Container(
-                              width: 170.0,
-                              height: 50.0,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                      primary: Color(0xFF000000),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(00.0)),
-                                          side: BorderSide(
-                                              color: Color(0xFFdb9e1f))),
-                                      side: BorderSide(
-                                        width: 2.5,
-                                        color: Color(0xFFdb9e1f),
-                                      ),
-                                      textStyle: const TextStyle(fontSize: 16)),
-                                  onPressed: () {
-                                    setState(() {
-                                      //typesOfBedsAndCount
-                                      //  .add("${numOfBeds} - ${bedType}");
-                                    });
-                                  },
-                                  icon: Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                  label: Text(
-                                    "Add Table",
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 450.0,
-                              width: MediaQuery.of(context).size.width / 1.6,
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: Color(0xFFdb9e1f))),
-                              /*child: ListView.builder(
-                                  itemCount: typesOfBedsAndCount.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return new ListTile(
-                                      title: Text(
-                                        typesOfBedsAndCount[index],
-                                        style: TextStyle(color: Colors.white70),
-                                      ),
-                                      trailing: IconButton(
-                                          icon: Icon(
-                                            Icons.delete,
-                                            color: Color(0xFFdb9e1f),
-                                          ),
-                                          onPressed: () {
-                                            setState(() {
-                                              typesOfBedsAndCount.remove(
-                                                  typesOfBedsAndCount[index]);
-                                            });
-                                          }),
-                                    );
-                                  }),*/
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      const Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Restaurent Cover Photo",
+                          "Restaurant Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -981,7 +873,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Restaurent Cover Photo",
+                              "Restaurant Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -1026,7 +918,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other Restaurent Photos",
+                          "Other restaurant Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -1059,7 +951,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other Restaurent Photos",
+                              "Other restaurant Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -1101,354 +993,6 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           : SizedBox(
                               height: 10,
                             ),
-                      /*SizedBox(
-                        height: 20,
-                      ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Features",
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Car Gear",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Gear',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: gear,
-                                          items: gearType
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.gear = value as String?;
-                                              }))),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Car Engine",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Engine',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: engine,
-                                          items: engineType
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.engine = value as String?;
-                                              }))),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Car Color",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Color',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: color,
-                                          items: carColor
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.color = value as String?;
-                                              }))),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Number of Seats",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Seats',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: seats,
-                                          items: seatsDoorsLuggageCount
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.seats = value as String?;
-                                              }))),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Number of Doors",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Doors',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: doors,
-                                          items: seatsDoorsLuggageCount
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.doors = value as String?;
-                                              }))),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Number of Luggage",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Luggage',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: luggage,
-                                          items: seatsDoorsLuggageCount
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.luggage = value as String?;
-                                              }))),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.0),
-                            Wrap(
-                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  width: device == "mobile"
-                                      ? MediaQuery.of(context).size.width * 0.5
-                                      : device == "tab"
-                                          ? MediaQuery.of(context).size.width *
-                                              0.25
-                                          : device == "desktop"
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                  child: OtherCarFeatures(
-                                    featureText: 'Sensors',
-                                    featureValue: featureBoolValue,
-                                    featureList: otherFeatures,
-                                  ),
-                                ),
-                                Container(
-                                  width: device == "mobile"
-                                      ? MediaQuery.of(context).size.width * 0.5
-                                      : device == "tab"
-                                          ? MediaQuery.of(context).size.width *
-                                              0.25
-                                          : device == "desktop"
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                  child: OtherCarFeatures(
-                                      featureText: 'Bluetooth',
-                                      featureValue: featureBoolValue,
-                                      featureList: otherFeatures),
-                                ),
-                                Container(
-                                  width: device == "mobile"
-                                      ? MediaQuery.of(context).size.width * 0.5
-                                      : device == "tab"
-                                          ? MediaQuery.of(context).size.width *
-                                              0.25
-                                          : device == "desktop"
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                  child: OtherCarFeatures(
-                                      featureText: 'Camera',
-                                      featureValue: featureBoolValue,
-                                      featureList: otherFeatures),
-                                ),
-                                Container(
-                                  width: device == "mobile"
-                                      ? MediaQuery.of(context).size.width * 0.5
-                                      : device == "tab"
-                                          ? MediaQuery.of(context).size.width *
-                                              0.25
-                                          : device == "desktop"
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                  child: OtherCarFeatures(
-                                      featureText: 'Safety',
-                                      featureValue: featureBoolValue,
-                                      featureList: otherFeatures),
-                                ),
-                                Container(
-                                  width: device == "mobile"
-                                      ? MediaQuery.of(context).size.width * 0.5
-                                      : device == "tab"
-                                          ? MediaQuery.of(context).size.width *
-                                              0.25
-                                          : device == "desktop"
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                  child: OtherCarFeatures(
-                                      featureText: 'Mp3/CD',
-                                      featureValue: featureBoolValue,
-                                      featureList: otherFeatures),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      ),*/
                       SizedBox(
                         height: 40,
                       ),
@@ -1480,12 +1024,10 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                     ),
                                     textStyle: const TextStyle(fontSize: 16)),
                                 onPressed: () {
-                                  //uploadMainFunction(_selectedFile);
-                                  //uploadFile();
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          DeoManageCars(widget.uid)));
+                                          AddRestaurantDetails(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',
