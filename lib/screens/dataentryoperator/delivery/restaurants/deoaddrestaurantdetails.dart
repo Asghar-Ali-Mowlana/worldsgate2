@@ -11,17 +11,16 @@ import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
-import '../../../widgets/deonavigationdrawer.dart';
-import '../../../widgets/header.dart';
-import '../../../widgets/usernavigationdrawer.dart';
+import '../../../../widgets/deonavigationdrawer.dart';
+import '../../../../widgets/header.dart';
+
 
 class AddRestaurantDetails extends StatefulWidget {
   //const AddRestaurantDetails({Key? key}) : super(key: key);
 
   String? uid;
+
   AddRestaurantDetails(this.uid);
 
   @override
@@ -32,14 +31,15 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController restaurantNameController = TextEditingController();
+  final TextEditingController restaurantNameController =
+      TextEditingController();
   final TextEditingController distanceController = TextEditingController();
-  final TextEditingController minimumOrderprepTimeController = TextEditingController();
+  final TextEditingController minimumOrderprepTimeController =
+      TextEditingController();
   final TextEditingController prepTimeController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController deliverychargeController = TextEditingController();
-
-
+  final TextEditingController deliverychargeController =
+      TextEditingController();
 
   String? deliverytypechosen;
   final deliveryType = [
@@ -221,13 +221,18 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   bool? deliverychargeavailable;
 
   _uploadHotelData() async {
-    String newrestaurantid = FirebaseFirestore.instance.collection('restaurants').doc().id;
+    String newrestaurantid =
+        FirebaseFirestore.instance.collection('restaurants').doc().id;
 
     try {
-      if(deliverychargeavailable==true){
-        await FirebaseFirestore.instance.collection('restaurants').doc(newrestaurantid).set({
+      if (deliverychargeavailable == true) {
+        await FirebaseFirestore.instance
+            .collection('restaurants')
+            .doc(newrestaurantid)
+            .set({
           'name': restaurantNameController.text,
-          'minimumorderprice': double.parse(minimumOrderprepTimeController.text),
+          'minimumorderprice':
+              double.parse(minimumOrderprepTimeController.text),
           'preparationtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
           'datecreated': DateTime.now(),
@@ -239,11 +244,14 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           'livetracking': livetrackingbool,
           'deliverycharge': descriptionController.text,
         });
-
-      }else{
-        await FirebaseFirestore.instance.collection('restaurants').doc(newrestaurantid).set({
+      } else {
+        await FirebaseFirestore.instance
+            .collection('restaurants')
+            .doc(newrestaurantid)
+            .set({
           'name': restaurantNameController.text,
-          'minimumorderprice': double.parse(minimumOrderprepTimeController.text),
+          'minimumorderprice':
+              double.parse(minimumOrderprepTimeController.text),
           'preparationtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
           'datecreated': DateTime.now(),
@@ -255,14 +263,11 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           'livetracking': livetrackingbool,
           'deliverycharge': 0,
         });
-
       }
-
     } catch (e) {
       print(e);
     }
   }
-
 
   String? cusname;
   String? role;
@@ -305,7 +310,8 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                     child: ResponsiveWidget(
                       mobile: addRestaurantDetailsContainer(context, "mobile"),
                       tab: addRestaurantDetailsContainer(context, "tab"),
-                      desktop: addRestaurantDetailsContainer(context, "desktop"),
+                      desktop:
+                          addRestaurantDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -314,11 +320,11 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                       right: 0.0,
                       child: Container(
                           child: VendomeHeader(
-                            drawer: _scaffoldState,
-                            cusname: cusname,
-                            cusaddress: "",
-                            role: role,
-                          ))),
+                        drawer: _scaffoldState,
+                        cusname: cusname,
+                        cusaddress: "",
+                        role: role,
+                      ))),
                 ],
               ),
       ),
@@ -378,7 +384,9 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                         keyboardType: TextInputType.text,
                       ),
 
-                      SizedBox(height: 20.0,),
+                      SizedBox(
+                        height: 20.0,
+                      ),
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: minimumOrderprepTimeController,
@@ -386,7 +394,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
                         style: TextStyle(color: Colors.white),
-                       // controller: restaurantNameController,
+                        // controller: restaurantNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -394,20 +402,20 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                              //  restaurantNameController..text = "";
+                                //  restaurantNameController..text = "";
                               }),
                           hintText: "Minimum Order Price",
                           labelText: "Minimum Order Price",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
-                          new TextStyle(color: Colors.white70, height: 0.1),
+                              new TextStyle(color: Colors.white70, height: 0.1),
                           enabled: true,
                           enabledBorder: UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.white70),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                            new BorderSide(color: Color(0xFFdb9e1f)),
+                                new BorderSide(color: Color(0xFFdb9e1f)),
                           ),
                         ),
                         validator: (value) {
@@ -416,9 +424,8 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           }
                         },
                         onSaved: (value) {
-                       //   restaurantNameController.text = value!;
+                          //   restaurantNameController.text = value!;
                         },
-
                       ),
                       SizedBox(
                         height: 20,
@@ -444,14 +451,14 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           labelText: "Preparation Time",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
-                          new TextStyle(color: Colors.white70, height: 0.1),
+                              new TextStyle(color: Colors.white70, height: 0.1),
                           enabled: true,
                           enabledBorder: UnderlineInputBorder(
                             borderSide: new BorderSide(color: Colors.white70),
                           ),
                           focusedBorder: UnderlineInputBorder(
                             borderSide:
-                            new BorderSide(color: Color(0xFFdb9e1f)),
+                                new BorderSide(color: Color(0xFFdb9e1f)),
                           ),
                         ),
                         validator: (value) {
@@ -462,7 +469,6 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                         onSaved: (value) {
                           prepTimeController.text = value!;
                         },
-
                       ),
                       SizedBox(
                         height: 20,
@@ -470,19 +476,17 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                       DropdownButtonFormField(
                           decoration: InputDecoration(
                             hintText: "Delivery Type",
-                            hintStyle:
-                            TextStyle(color: Colors.white70),
+                            hintStyle: TextStyle(color: Colors.white70),
                             labelText: 'Delivery Type',
-                            labelStyle: TextStyle(
-                                color: Colors.white70, height: 0.1),
+                            labelStyle:
+                                TextStyle(color: Colors.white70, height: 0.1),
                             enabled: true,
                             enabledBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: Colors.white70),
+                              borderSide: new BorderSide(color: Colors.white70),
                             ),
                             focusedBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: Color(0xFFdb9e1f)),
+                              borderSide:
+                                  new BorderSide(color: Color(0xFFdb9e1f)),
                             ),
                           ),
                           dropdownColor: Color(0xFF000000),
@@ -492,85 +496,81 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           value: deliverytypechosen,
                           items: deliveryType.map(buildMenuItem).toList(),
                           onChanged: (value) => setState(() {
-                            deliverytypechosen = value as String?;
-                            if(value=="Paid"){
-                              setState(() {
-                                deliverychargeavailable = true;
-                              });
-
-
-                            }else{
-                              setState(() {
-                                deliverychargeavailable = false;
-                              });
-
-
-                            }
-                          })),
+                                deliverytypechosen = value as String?;
+                                if (value == "Paid") {
+                                  setState(() {
+                                    deliverychargeavailable = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    deliverychargeavailable = false;
+                                  });
+                                }
+                              })),
                       SizedBox(
                         height: 20,
                       ),
-                      (deliverychargeavailable==true)
-                      ? Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                          ],
-                          controller: deliverychargeController,
-                          style: TextStyle(color: Colors.white),
-                          // controller: restaurantNameController,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                                icon: Icon(
-                                  Icons.cancel,
-                                  color: Color(0xFFdb9e1f),
+                      (deliverychargeavailable == true)
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 20.0),
+                              child: TextFormField(
+                                keyboardType: TextInputType.number,
+                                inputFormatters: <TextInputFormatter>[
+                                  FilteringTextInputFormatter.allow(
+                                      RegExp(r'[0-9]')),
+                                ],
+                                controller: deliverychargeController,
+                                style: TextStyle(color: Colors.white),
+                                // controller: restaurantNameController,
+                                decoration: InputDecoration(
+                                  suffixIcon: IconButton(
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        color: Color(0xFFdb9e1f),
+                                      ),
+                                      onPressed: () {
+                                        deliverychargeController..text = "";
+                                      }),
+                                  hintText: "Delivery Charge",
+                                  labelText: "Delivery Charge",
+                                  hintStyle: TextStyle(color: Colors.white70),
+                                  labelStyle: new TextStyle(
+                                      color: Colors.white70, height: 0.1),
+                                  enabled: true,
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        new BorderSide(color: Colors.white70),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide: new BorderSide(
+                                        color: Color(0xFFdb9e1f)),
+                                  ),
                                 ),
-                                onPressed: () {
-                                  deliverychargeController..text = "";
-                                }),
-                            hintText: "Delivery Charge",
-                            labelText: "Delivery Charge",
+                                validator: (value) {
+                                  if (value!.length == 0) {
+                                    return "Delivery Charge cannot be empty";
+                                  }
+                                },
+                                onSaved: (value) {
+                                  deliverychargeController.text = value!;
+                                },
+                              ),
+                            )
+                          : Container(),
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Live Tracking",
                             hintStyle: TextStyle(color: Colors.white70),
+                            labelText: 'Live Tracking',
                             labelStyle:
-                            new TextStyle(color: Colors.white70, height: 0.1),
+                                TextStyle(color: Colors.white70, height: 0.1),
                             enabled: true,
                             enabledBorder: UnderlineInputBorder(
                               borderSide: new BorderSide(color: Colors.white70),
                             ),
                             focusedBorder: UnderlineInputBorder(
                               borderSide:
-                              new BorderSide(color: Color(0xFFdb9e1f)),
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value!.length == 0) {
-                              return "Delivery Charge cannot be empty";
-                            }
-                          },
-                          onSaved: (value) {
-                            deliverychargeController.text = value!;
-                          },
-
-                        ),
-                      ): Container(),
-                      DropdownButtonFormField(
-                          decoration: InputDecoration(
-                            hintText: "Live Tracking",
-                            hintStyle:
-                            TextStyle(color: Colors.white70),
-                            labelText: 'Live Tracking',
-                            labelStyle: TextStyle(
-                                color: Colors.white70, height: 0.1),
-                            enabled: true,
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: Colors.white70),
-                            ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: new BorderSide(
-                                  color: Color(0xFFdb9e1f)),
+                                  new BorderSide(color: Color(0xFFdb9e1f)),
                             ),
                           ),
                           dropdownColor: Color(0xFF000000),
@@ -580,21 +580,17 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           value: livetrackingchosen,
                           items: livetracking.map(buildMenuItem).toList(),
                           onChanged: (value) => setState(() {
-                            livetrackingchosen = value as String?;
-                            if(value=="Yes"){
-                              setState(() {
-                                livetrackingbool = true;
-                              });
-
-
-                            }else{
-                              setState(() {
-                                livetrackingbool = false;
-                              });
-
-
-                            }
-                          })),
+                                livetrackingchosen = value as String?;
+                                if (value == "Yes") {
+                                  setState(() {
+                                    livetrackingbool = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    livetrackingbool = false;
+                                  });
+                                }
+                              })),
                       SizedBox(
                         height: 20,
                       ),
@@ -1066,7 +1062,9 @@ class _OtherCarFeaturesState extends State<OtherCarFeatures> {
   String featureText;
   bool featureValue;
   var featureList;
+
   _OtherCarFeaturesState(this.featureText, this.featureValue, this.featureList);
+
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(

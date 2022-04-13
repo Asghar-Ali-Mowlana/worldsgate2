@@ -13,136 +13,58 @@ import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
-import '../../../../widgets/deonavigationdrawer.dart';
-import '../../../../widgets/header.dart';
+import '../../../../../widgets/deonavigationdrawer.dart';
+import '../../../../../widgets/header.dart';
+import '../deoaddsupermarketdetails.dart';
 
-class AddFoodDetails extends StatefulWidget {
-  //const AddFoodDetails({Key? key}) : super(key: key);
+class AddgroceryDetails extends StatefulWidget {
+  //const AddgroceryDetails({Key? key}) : super(key: key);
 
   String? uid;
-  AddFoodDetails(this.uid);
+  String? supermarketid;
+  String? grocerycategorypassed;
+  AddgroceryDetails(this.uid, this.supermarketid, this.grocerycategorypassed);
 
   @override
-  State<AddFoodDetails> createState() => _AddFoodDetailsState();
+  State<AddgroceryDetails> createState() => _AddgroceryDetailsState();
 }
 
-class _AddFoodDetailsState extends State<AddFoodDetails> {
+class _AddgroceryDetailsState extends State<AddgroceryDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController carNameController = TextEditingController();
-  final TextEditingController distanceController = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
+  final TextEditingController groceryNameController = TextEditingController();
+  final TextEditingController grocerytagController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  String? foodcategory;
+  //String? grocerycategory;
   String? subcategory;
-  String? insurance;
-  String? brand;
-  String? gear;
-  String? engine;
-  String? color;
-  String? seats;
-  String? doors;
-  String? luggage;
+
+  var entryList;
 
 
-  // _uploadFoodData() async {
-  //   String newHotelId =
-  //       FirebaseFirestore.instance.collection('hotels').doc().id;
-  //
-  //   try {
-  //     await FirebaseFirestore.instance
-  //         .collection('hotels')
-  //         .doc(newHotelId)
-  //         .set({
-  //       'name': hotelNameController.text,
-  //       'city': city,
-  //       'address': hotelAddressController.text,
-  //       'price': null,
-  //       //'price': double.parse(startingPriceController.text),
-  //       'promotion': double.parse(discountController.text),
-  //       'description': descriptionController.text,
-  //       'mainfacilities': mainFacilities,
-  //       'subfacilities': subFacilities,
-  //       'rooms': roomDeatils,
-  //       'datecreated': DateTime.now(),
-  //       'dataentryuid': widget.uid,
-  //       'coverimage': coverImageLink,
-  //       'otherhotelimages': OtherHotelImagesUrl,
-  //       'cancellationfee': null,
-  //       'stars': stars,
-  //       'taxandcharges': null,
-  //       'hotelid': newHotelId,
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 
-  final foodcategories = [
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
-    "2014",
-    "2013",
-    "2012",
-    "2011",
-    "2010",
-  ];
+  List<String> tags = [];
+
+  // final grocerycategories = [
+  //   "Pizza",
+  //   "Burger",
+  //   "2019",
+  //   "2018",
+  //   "2017",
+  //   "2016",
+  //   "2015",
+  //   "2014",
+  //   "2013",
+  //   "2012",
+  //   "2011",
+  //   "2010",
+  // ];
 
   final subcategoryType = [
     "Free",
     "Paid",
-  ];
-
-  final insuranceType = [
-    "Full",
-    "Part",
-  ];
-
-  final carBrand = ["Lamborghini", "Ferrari", "Rolls Royce", "McLaren"];
-
-  final gearType = [
-    "Auto",
-    "Manual",
-  ];
-
-  final engineType = [
-    "V8",
-  ];
-
-  final carColor = [
-    "Red",
-    "White",
-    "Yellow",
-    "Blue",
-    "Grey",
-    "Black",
-    "Gold",
-    "Tricolor"
-  ];
-
-  final seatsDoorsLuggageCount = [
-    "2",
-    "4",
-    "6",
-  ];
-
-  bool featureBoolValue = true;
-
-  List<String> otherFeatures = [
-    'Sensors',
-    'Bluetooth',
-    'Camera',
-    'Safety',
-    'Mp3/CD',
   ];
 
   DropdownMenuItem<String> buildMenuItem(String place) => DropdownMenuItem(
@@ -187,7 +109,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/carimages/carmain/$filename';
+          final destination = '/groceryimages/grocerymain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -230,111 +152,27 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
 
   List<File>? files;
 
-  Future selectOtherFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
+  String? cusname;
+  String? role;
+  String? grocerycategoryid;
+
+
+  _uploadgroceryData() async {
+    String newgroceryId = FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(grocerycategoryid).collection('grocery').doc().id;
+
+
+    print(grocerycategoryid);
     try {
-      otherResult = await FilePicker.platform
-          .pickFiles(type: FileType.any, allowMultiple: true);
-      setState(() => otherResult = otherResult);
-
-      files = otherResult!.names.map((name) => File(name!)).toList();
-
-      //String filename = basename(otherResult!.files.single.name);
-      //setState(() => otherFile = filename);
-
-      for (int i = 0; i < files!.length; i++) {
-        Uint8List uploadOtherFile = otherResult!.files[i].bytes!;
-        setState(() {
-          otherImage.add(uploadOtherFile);
-        });
-      }
-
-      if (otherResult == null) {
-        print("Result is null!");
-      }
-
-      if (otherResult != null) {
-        try {
-          for (int i = 0; i < files!.length; i++) {
-            print("Start of upload file method");
-            Uint8List uploadfile = otherResult!.files[i].bytes!;
-            //setState(() {
-            //otherImage.add(uploadfile);
-            //});
-            String filename = basename(otherResult!.files[i].name);
-            final destination = '/carimages/carsub/$filename';
-            print("The destination is $destination");
-
-            final ref = FirebaseStorage.instance.ref(destination);
-            otherTask = ref.putData(uploadfile);
-            setState(() {
-              _isOtherUploading = true;
-            });
-            print("Total bytes $otherTask");
-            print("Total bytes ${otherTask!.snapshot.totalBytes}");
-
-            if (otherTask == null) return;
-            final snapshot = await otherTask!.whenComplete(() {
-              //setState(() {
-              //_isUploadingLoading = false;
-              //});
-            });
-            final urlDownload = await snapshot.ref.getDownloadURL();
-
-            print('Download-Link: $urlDownload');
-
-            otherImageLink = urlDownload;
-
-            setState(() => otherImageLink = urlDownload);
-            OtherHotelImagesUrl.add(otherImageLink);
-          }
-
-          setState(() {
-            _isOtherUploading = false;
-          });
-        } catch (e) {
-          print(e);
-        }
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _uploadHotelData() async {
-    String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
-
-    try {
-      await FirebaseFirestore.instance.collection('cars').doc(newCarId).set({
-        'name': carNameController.text,
-        'foodcategory': foodcategory,
-        'subcategory': subcategory,
-        'insurance': insurance,
-        'brand': brand,
-        'distance': distanceController.text,
-        'age': ageController.text,
+      await FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(grocerycategoryid).collection('grocery').doc(newgroceryId).set({
+        'name': groceryNameController.text,
+        //'grocerycategory': widget.grocerycategorypassed,
+        'tags': tags,
         'price': double.parse(priceController.text),
         'description': descriptionController.text,
-        //'mainfacilities': mainFacilities,
-        //'subfacilities': subFacilities,
-        //'rooms': roomDeatils,
         'datecreated': DateTime.now(),
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
-        'othercarimages': OtherHotelImagesUrl,
-        //'cancellationfee': null,
-        //'stars': stars,
-        //'taxandcharges': null,
-        'gear': gear,
-        'engine': engine,
-        'color': color,
-        'seats': seats,
-        'doors': doors,
-        'luggage': luggage,
-        'otherfeatures': otherFeatures,
-        'carid': newCarId,
-        //example added
-        'topspeed': 123,
+        'groceryid': newgroceryId,
       });
     } catch (e) {
       print(e);
@@ -342,8 +180,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
   }
 
 
-  String? cusname;
-  String? role;
+
 
   getname() async {
     FirebaseFirestore.instance
@@ -351,8 +188,31 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
         .doc(widget.uid)
         .get()
         .then((myDocuments) {
-      cusname = myDocuments.data()!['name'].toString();
-      role = myDocuments.data()!['role'].toString();
+          setState(() {
+            cusname = myDocuments.data()!['name'].toString();
+            role = myDocuments.data()!['role'].toString();
+
+          });
+
+    });
+  }
+
+
+
+  getyoo() async {
+    await FirebaseFirestore.instance
+        .collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory')
+        .where('name', isEqualTo: widget.grocerycategorypassed)
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+      querySnapshot.docs.forEach((doc) {
+
+        setState(() {
+          grocerycategoryid = doc['grocerycategoryid'].toString();
+
+        });
+
+      })
     });
   }
 
@@ -365,6 +225,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
         _isLoading = false;
       });
     });
+    getyoo();
   }
 
   @override
@@ -381,9 +242,9 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: addCarDetailsContainer(context, "mobile"),
-                      tab: addCarDetailsContainer(context, "tab"),
-                      desktop: addCarDetailsContainer(context, "desktop"),
+                      mobile: addgroceryDetailsContainer(context, "mobile"),
+                      tab: addgroceryDetailsContainer(context, "tab"),
+                      desktop: addgroceryDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -403,7 +264,63 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
     );
   }
 
-  Container addCarDetailsContainer(BuildContext context, String device) {
+  List<Widget> newbuilder() {
+    List<Widget> m = [];
+    for (int i = 0; i < tags.length; i++) {
+
+
+      m.add(Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child:
+
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: RichText(
+              maxLines: 5,
+              text: TextSpan(children: [
+
+                TextSpan(
+                  text: "${tags[i].toString()}",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.black87,
+                  ),
+
+                ),
+                WidgetSpan(
+                  alignment: PlaceholderAlignment.bottom,
+                  child: InkWell(
+                    onTap: (){
+                         setState(() {
+                        tags.remove(
+                            tags[i]);
+                      });
+                    },
+                    child: Icon(
+                        Icons.close,
+
+                        color: Colors.red,
+                        size: 17
+                    ),
+                  ),
+                ),
+              ]),
+            ),
+          ),
+
+        ),
+      ));
+
+    }
+    return m;
+}
+
+  Container addgroceryDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -421,7 +338,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: carNameController,
+                        controller: groceryNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -429,10 +346,10 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                carNameController..text = "";
+                                groceryNameController..text = "";
                               }),
-                          hintText: "Enter food name",
-                          labelText: "Food Name",
+                          hintText: "Enter grocery name",
+                          labelText: "grocery Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -447,93 +364,97 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Food name cannot be empty";
+                            return "grocery name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          carNameController.text = value!;
+                          groceryNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Food Category",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Food Category',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: foodcategory,
-                                      items: foodcategories.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            foodcategory = value as String?;
-                                          }))),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0),
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Type of sub category",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelText: 'Sub Category',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: subcategory,
-                                      items: subcategoryType
-                                          .map(buildMenuItem)
-                                          .toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.subcategory = value as String?;
-                                          }))),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
+
+
+
+
+
+                      //
+                      // Container(
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //     children: [
+                      //       Expanded(
+                      //         child: DropdownButtonFormField(
+                      //             decoration: InputDecoration(
+                      //               hintText: "grocery Category",
+                      //               hintStyle:
+                      //                   TextStyle(color: Colors.white70),
+                      //               labelText: 'grocery Category',
+                      //               labelStyle: TextStyle(
+                      //                   color: Colors.white70, height: 0.1),
+                      //               enabled: true,
+                      //               enabledBorder: UnderlineInputBorder(
+                      //                 borderSide: new BorderSide(
+                      //                     color: Colors.white70),
+                      //               ),
+                      //               focusedBorder: UnderlineInputBorder(
+                      //                 borderSide: new BorderSide(
+                      //                     color: Color(0xFFdb9e1f)),
+                      //               ),
+                      //             ),
+                      //             dropdownColor: Color(0xFF000000),
+                      //             //focusColor: Color(0xFFdb9e1f),
+                      //             style: TextStyle(color: Colors.white),
+                      //             isExpanded: true,
+                      //             value: grocerycategory,
+                      //             items: grocerycategories.map(buildMenuItem).toList(),
+                      //             onChanged: (value) => setState(() {
+                      //                   grocerycategory = value as String?;
+                      //                 })),
+                      //       ),
+                      //
+                      //       // Expanded(
+                      //       //   child: Padding(
+                      //       //       padding: const EdgeInsets.only(
+                      //       //           left: 8.0),
+                      //       //       child: DropdownButtonFormField(
+                      //       //           decoration: InputDecoration(
+                      //       //             hintText: "Type of sub category",
+                      //       //             hintStyle:
+                      //       //                 TextStyle(color: Colors.white70),
+                      //       //             labelText: 'Sub Category',
+                      //       //             labelStyle: TextStyle(
+                      //       //                 color: Colors.white70, height: 0.1),
+                      //       //             enabled: true,
+                      //       //             enabledBorder: UnderlineInputBorder(
+                      //       //               borderSide: new BorderSide(
+                      //       //                   color: Colors.white70),
+                      //       //             ),
+                      //       //             focusedBorder: UnderlineInputBorder(
+                      //       //               borderSide: new BorderSide(
+                      //       //                   color: Color(0xFFdb9e1f)),
+                      //       //             ),
+                      //       //           ),
+                      //       //           dropdownColor: Color(0xFF000000),
+                      //       //           //focusColor: Color(0xFFdb9e1f),
+                      //       //           style: TextStyle(color: Colors.white),
+                      //       //           isExpanded: true,
+                      //       //           value: subcategory,
+                      //       //           items: subcategoryType
+                      //       //               .map(buildMenuItem)
+                      //       //               .toList(),
+                      //       //           onChanged: (value) => setState(() {
+                      //       //                 this.subcategory = value as String?;
+                      //       //               }))),
+                      //       // ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // SizedBox(
+                      //   height: 20,
+                      // ),
 
                       TextFormField(
                         style: TextStyle(color: Colors.white),
@@ -574,6 +495,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                       SizedBox(
                         height: 20,
                       ),
+
                       TextFormField(
                         style: TextStyle(color: Colors.white),
                         maxLines: null,
@@ -587,48 +509,8 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Preparation time",
-                          labelText: "Preparation TIme",
-                          hintStyle: TextStyle(color: Colors.white70),
-                          labelStyle:
-                              new TextStyle(color: Colors.white70, height: 0.1),
-                          enabled: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.white70),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                new BorderSide(color: Color(0xFFdb9e1f)),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value!.length == 0) {
-                            return "Restaurent description cannot be empty";
-                          }
-                        },
-                        onSaved: (value) {
-                          descriptionController.text = value!;
-                        },
-                        keyboardType: TextInputType.multiline,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        maxLines: null,
-                        controller: descriptionController,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Color(0xFFdb9e1f),
-                              ),
-                              onPressed: () {
-                                descriptionController..text = "";
-                              }),
-                          hintText: "Enter restaurent description",
-                          labelText: "Restaurent Description",
+                          hintText: "Enter grocery description",
+                          labelText: "grocery Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -643,7 +525,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Restaurent description cannot be empty";
+                            return "grocery description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -652,13 +534,70 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                         keyboardType: TextInputType.multiline,
                       ),
                       SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
 
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        controller: grocerytagController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              onPressed: () {
+                                grocerytagController..text = "";
+                              }),
+                          hintText: "Enter grocery tag",
+                          labelText: "grocery Tag",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "grocery tag cannot be empty";
+                          }
+                        },
+                        // onSaved: (value) {
+                        //   grocerytagController.text = value!;
+                        // },
+                        onFieldSubmitted: (value){
+                          //  grocerytagController.text = value!;
+                          setState(() {
+                            tags.add(
+                                value);
+
+                          });
+
+                        },
+                        keyboardType: TextInputType.text,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      Wrap(
+                        direction: Axis.horizontal,
+                        children: newbuilder(),
+                      ),
+
+                      SizedBox(
+                        height: 10,
+                      ),
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Restaurent Cover Photo",
+                          "grocery Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -691,7 +630,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Restaurent Cover Photo",
+                              "grocery Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -1094,7 +1033,7 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                                   )),
                             )
                           : Container(
-                              width: 300.0,
+                              width: 100.0,
                               height: 50.0,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -1112,10 +1051,10 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
                                 onPressed: () {
                                   //uploadMainFunction(_selectedFile);
                                   //uploadFile();
-                                  _uploadHotelData();
+                                  _uploadgroceryData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          DeoManageCars(widget.uid)));
+                                          AddSupermarketDetails(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',
@@ -1133,58 +1072,3 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
   }
 }
 
-class OtherCarFeatures extends StatefulWidget {
-  OtherCarFeatures({
-    Key? key,
-    required this.featureText,
-    required this.featureValue,
-    required this.featureList,
-  }) : super(key: key);
-
-  String featureText;
-  bool featureValue;
-  var featureList;
-
-  @override
-  State<OtherCarFeatures> createState() =>
-      _OtherCarFeaturesState(featureText, featureValue, featureList);
-}
-
-class _OtherCarFeaturesState extends State<OtherCarFeatures> {
-  String featureText;
-  bool featureValue;
-  var featureList;
-  _OtherCarFeaturesState(this.featureText, this.featureValue, this.featureList);
-  @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(
-        featureText,
-        style: TextStyle(color: Colors.white70),
-      ),
-      //secondary: Icon(
-      //Icons.person,
-      //color: Colors.white70,
-      //),
-      controlAffinity: ListTileControlAffinity.leading,
-      value: featureValue,
-      onChanged: (value) {
-        setState(() {
-          this.featureValue = value!;
-        });
-        if (featureValue) {
-          featureList.add(featureText);
-        } else {
-          featureList.removeAt(featureList.indexOf(featureText));
-        }
-        print(featureList);
-      },
-      activeColor: Color(0xFFdb9e1f),
-      checkColor: Colors.white,
-      side: BorderSide(
-        color: Colors.white70,
-        width: 1.5,
-      ),
-    );
-  }
-}

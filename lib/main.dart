@@ -4,12 +4,9 @@ import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoupdatecardetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/food/deoaddfooddetails.dart';
+
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoaddfoodcategorydetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoaddhoteldetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
-import 'package:worldsgate/screens/dataentryoperator/restaurants/deoaddrestaurantdetails.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/usercarbooking.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
