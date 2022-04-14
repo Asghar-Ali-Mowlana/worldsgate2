@@ -65,43 +65,6 @@ class _UserOrderFoodState extends State<UserOrderFood> {
 
   String? city;
 
-  final places = [
-    'Deira',
-    'Bur Dubai',
-    'Beach & Coast',
-    'Garhoud',
-    'Palm Jumeirah',
-    'Barsha Heights (Tecom)',
-    'Sheikh Zayed Road',
-    'Al Barsha',
-    'Dubai Creek',
-    'Jumeirah Beach Residence',
-    'Dubai Marina',
-    'Trade Centre',
-    'Old Dubai',
-    'Downtown Dubai',
-    'Business Bay',
-    "Guests' favourite area",
-    'Jadaf',
-    'Al Qusais',
-    'Oud Metha',
-    'Dubai Investment Park',
-    'Dubai Festival City',
-    'Dubai World Central',
-    'Umm Suqeim',
-    'Discovery Gardens',
-    'Dubai Production City',
-    'Jumeirah Lakes Towers',
-  ];
-
-  DropdownMenuItem<String> buildMenuItem(String place) => DropdownMenuItem(
-        value: place,
-        child: Text(
-          place,
-          style: const TextStyle(fontSize: 16.0),
-        ),
-      );
-
   bool _isLocationSelected = false;
 
   @override
@@ -253,19 +216,41 @@ class _UserOrderFoodState extends State<UserOrderFood> {
               alignment: Alignment.center,
               child: Container(
                 height: height * 0.15,
-                child: ListView(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('restaurants')
+                      .doc("yz67sZi2CB61LwloNojw")
+                      .collection('foodcategory')
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else {
+                      return ListView(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          primary: false,
+                          children: snapshot.data!.docs.map((doc) {
+                            return favouriteChoiceMethod(
+                                height, width, doc['name'], 19, device);
+                          }).toList());
+                    }
+                  },
+                ), /*ListView(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   primary: false,
                   children: <Widget>[
                     favouriteChoiceMethod(height, width, "Pizza", 19, device),
-                    favouriteChoiceMethod(
+                    /*favouriteChoiceMethod(
                         height, width, "Biriyani", 19, device),
                     favouriteChoiceMethod(height, width, "Burger", 19, device),
                     favouriteChoiceMethod(height, width, "Pizza", 19, device),
-                    favouriteChoiceMethod(height, width, "Pizza", 19, device),
+                    favouriteChoiceMethod(height, width, "Pizza", 19, device),*/
                   ],
-                ),
+                ),*/
               ),
             ),
           ),
@@ -299,105 +284,8 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                     //physics: NeverScrollableScrollPhysics(),
                     direction: Axis.horizontal,
                     children: snapshot.data!.docs.map((doc) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => UserViewHotelDetails(
-                                  widget.uid, doc.id, widget.city)));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 16.0),
-                          child: Container(
-                              width: device == "mobile"
-                                  ? width
-                                  : device == "tab"
-                                      ? width * 0.1
-                                      : device == "desktop"
-                                          ? width * 0.2
-                                          : width * 0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Color(0xFFBA780F)),
-                              ),
-                              child: device == "mobile"
-                                  ? Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        children: [
-                                          Stack(
-                                            children: [
-                                              nearByRestaurantsImageMethod(
-                                                  context, doc),
-                                              nearByRestaurantsPromotionMethod(
-                                                  width, doc),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.03,
-                                          ),
-                                          nearByRestaurantsOtherDetailsMethod(
-                                              context, height, width, device),
-                                        ],
-                                      ),
-                                    )
-                                  : device == "tab"
-                                      ? Row(
-                                          children: [
-                                            Stack(
-                                              children: [
-                                                nearByRestaurantsImageMethod(
-                                                    context, doc),
-                                                nearByRestaurantsPromotionMethod(
-                                                    width, doc),
-                                              ],
-                                            ),
-                                            nearByRestaurantsOtherDetailsMethod(
-                                                context, height, width, device),
-                                          ],
-                                        )
-                                      : device == "desktop"
-                                          ? Column(
-                                              children: [
-                                                Stack(
-                                                  children: [
-                                                    nearByRestaurantsImageMethod(
-                                                        context, doc),
-                                                    nearByRestaurantsPromotionMethod(
-                                                        width, doc),
-                                                  ],
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      12.0),
-                                                  child:
-                                                      nearByRestaurantsOtherDetailsMethod(
-                                                          context,
-                                                          height,
-                                                          width,
-                                                          device),
-                                                ),
-                                              ],
-                                            )
-                                          : Row(
-                                              children: [
-                                                Stack(
-                                                  children: [
-                                                    nearByRestaurantsImageMethod(
-                                                        context, doc),
-                                                    nearByRestaurantsPromotionMethod(
-                                                        width, doc),
-                                                  ],
-                                                ),
-                                                nearByRestaurantsOtherDetailsMethod(
-                                                    context,
-                                                    height,
-                                                    width,
-                                                    device),
-                                              ],
-                                            )),
-                        ),
-                      );
+                      return nearByRestaurantMethod(
+                          context, doc, device, width, height);
                     }).toList(),
                   );
                 }
@@ -405,6 +293,96 @@ class _UserOrderFoodState extends State<UserOrderFood> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  InkWell nearByRestaurantMethod(
+      BuildContext context,
+      QueryDocumentSnapshot<Object?> doc,
+      String device,
+      double width,
+      double height) {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) =>
+                UserViewHotelDetails(widget.uid, doc.id, widget.city)));
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
+        child: Container(
+            width: device == "mobile"
+                ? width
+                : device == "tab"
+                    ? width * 0.1
+                    : device == "desktop"
+                        ? width * 0.2
+                        : width * 0,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Color(0xFFBA780F)),
+            ),
+            child: device == "mobile"
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            nearByRestaurantsImageMethod(context, doc),
+                            nearByRestaurantsPromotionMethod(width, doc),
+                          ],
+                        ),
+                        SizedBox(
+                          width: width * 0.03,
+                        ),
+                        nearByRestaurantsOtherDetailsMethod(
+                            context, height, width, device),
+                      ],
+                    ),
+                  )
+                : device == "tab"
+                    ? Row(
+                        children: [
+                          Stack(
+                            children: [
+                              nearByRestaurantsImageMethod(context, doc),
+                              nearByRestaurantsPromotionMethod(width, doc),
+                            ],
+                          ),
+                          nearByRestaurantsOtherDetailsMethod(
+                              context, height, width, device),
+                        ],
+                      )
+                    : device == "desktop"
+                        ? Column(
+                            children: [
+                              Stack(
+                                children: [
+                                  nearByRestaurantsImageMethod(context, doc),
+                                  nearByRestaurantsPromotionMethod(width, doc),
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: nearByRestaurantsOtherDetailsMethod(
+                                    context, height, width, device),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            children: [
+                              Stack(
+                                children: [
+                                  nearByRestaurantsImageMethod(context, doc),
+                                  nearByRestaurantsPromotionMethod(width, doc),
+                                ],
+                              ),
+                              nearByRestaurantsOtherDetailsMethod(
+                                  context, height, width, device),
+                            ],
+                          )),
       ),
     );
   }

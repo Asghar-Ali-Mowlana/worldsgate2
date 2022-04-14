@@ -6,6 +6,7 @@ import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoupdatecardetails.dart';
 
 import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoaddfoodcategorydetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoorderfood.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deoaddhoteldetails.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/usercarbooking.dart';
