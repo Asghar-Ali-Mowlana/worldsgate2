@@ -298,18 +298,24 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
                           : device == "tab"
                               ? height * 0.1
                               : device == "desktop"
-                                  ? height * 0.01
+                                  ? height * 0.02
                                   : height * 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Image.asset(
                         "assets/images/restaurentimages/DeliveryBike.png",
-                        height: height * 0.06,
+                        height: device == "mobile"
+                            ? height * 0.06
+                            : device == "tab"
+                                ? height * 0.1
+                                : device == "desktop"
+                                    ? height * 0.03
+                                    : height * 0,
                         width: width * 0.06,
                       ),
                       Text(
-                        "  Live Tracking ",
+                        "  Live Tracking  ",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.white,
@@ -421,14 +427,20 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            otherDetailsHeading,
-            textAlign: TextAlign.center,
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              otherDetailsHeading,
+              textAlign: TextAlign.center,
+            ),
           ),
           Divider(
             color: Color(0xFFBA780F),
           ),
-          Text(otherDetail)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(otherDetail),
+          )
         ],
       ),
     );
