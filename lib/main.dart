@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: DeoOrderFood("WpzPfHN360dyUtmpSo2a3yhXVak2"),
     );
   }
 }
