@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoorderfood.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
 import '../screens/dataentryoperator/apartments/deomanageapartments.dart';
@@ -106,10 +107,8 @@ class DeoNavigationDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => AddRestaurantDetails(uid),
+                  builder: (context) => AddRestaurantDetails(uid),
                 ));
-
-
               },
             ),
             Text(
@@ -123,12 +122,9 @@ class DeoNavigationDrawer extends StatelessWidget {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-
-
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DeoManageCars(uid),
+                  builder: (context) => DeoOrderFood(uid),
                 ));
-
               },
             ),
             Text(
