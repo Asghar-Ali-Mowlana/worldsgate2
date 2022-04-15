@@ -1,11 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
-import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 
 import '../../widgets/cusheader.dart';
@@ -25,8 +21,6 @@ class UserOrderFood extends StatefulWidget {
 class _UserOrderFoodState extends State<UserOrderFood> {
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  var _controller = TextEditingController();
-
   String? cusname;
   String? role;
 
@@ -41,28 +35,6 @@ class _UserOrderFoodState extends State<UserOrderFood> {
     });
   }
 
-  DateTimeRange dateRange = DateTimeRange(
-      start: DateTime.now(),
-      end: (DateTime.now()).add(const Duration(days: 1)));
-
-  Future pickDateRange() async {
-    DateTimeRange? newDateRange = await showDateRangePicker(
-        context: context,
-        initialDateRange: dateRange,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2100));
-    builder:
-    (context, child) => Theme(
-        data: ThemeData.dark().copyWith(
-            colorScheme:
-                ColorScheme.dark().copyWith(primary: Color(0xFF000000))),
-        child: child);
-
-    if (newDateRange == null) return;
-
-    setState(() => dateRange = newDateRange);
-  }
-
   String? city;
 
   bool _isLocationSelected = false;
@@ -70,12 +42,10 @@ class _UserOrderFoodState extends State<UserOrderFood> {
   @override
   Widget build(BuildContext context) {
     final CollectionReference packageCollection =
-        FirebaseFirestore.instance.collection('hotels');
+        FirebaseFirestore.instance.collection('restaurants');
     final Query unpicked = packageCollection.where('city',
         isEqualTo: city != null ? city : widget.city);
 
-    final start = dateRange.start;
-    final end = dateRange.end;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return SafeArea(
@@ -88,11 +58,10 @@ class _UserOrderFoodState extends State<UserOrderFood> {
           SingleChildScrollView(
             child: ResponsiveWidget(
               mobile: buildColumnContent(
-                  start, end, context, unpicked, height, width, "mobile"),
-              tab: buildColumnContent(
-                  start, end, context, unpicked, height, width, "tab"),
+                  context, unpicked, height, width, "mobile"),
+              tab: buildColumnContent(context, unpicked, height, width, "tab"),
               desktop: buildColumnContent(
-                  start, end, context, unpicked, height, width, "desktop"),
+                  context, unpicked, height, width, "desktop"),
             ),
           ),
           Positioned(
@@ -111,8 +80,8 @@ class _UserOrderFoodState extends State<UserOrderFood> {
     ));
   }
 
-  Padding buildColumnContent(DateTime start, DateTime end, BuildContext context,
-      Query<Object?> unpicked, double height, double width, String device) {
+  Padding buildColumnContent(BuildContext context, Query<Object?> unpicked,
+      double height, double width, String device) {
     return Padding(
       padding: EdgeInsets.symmetric(
           horizontal: device == "mobile"
@@ -338,7 +307,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                           width: width * 0.03,
                         ),
                         nearByRestaurantsOtherDetailsMethod(
-                            context, height, width, device),
+                            context, height, width, device, doc),
                       ],
                     ),
                   )
@@ -352,7 +321,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                             ],
                           ),
                           nearByRestaurantsOtherDetailsMethod(
-                              context, height, width, device),
+                              context, height, width, device, doc),
                         ],
                       )
                     : device == "desktop"
@@ -367,7 +336,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                               Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: nearByRestaurantsOtherDetailsMethod(
-                                    context, height, width, device),
+                                    context, height, width, device, doc),
                               ),
                             ],
                           )
@@ -380,7 +349,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                                 ],
                               ),
                               nearByRestaurantsOtherDetailsMethod(
-                                  context, height, width, device),
+                                  context, height, width, device, doc),
                             ],
                           )),
       ),
@@ -388,7 +357,11 @@ class _UserOrderFoodState extends State<UserOrderFood> {
   }
 
   Container nearByRestaurantsOtherDetailsMethod(
-      BuildContext context, double height, double width, String device) {
+      BuildContext context,
+      double height,
+      double width,
+      String device,
+      QueryDocumentSnapshot<Object?> doc) {
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -403,7 +376,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "Fern El Balad",
+                      "${doc['name']}",
                       style: TextStyle(
                           fontSize: 14,
                           color: Colors.white,
@@ -423,7 +396,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                                   ? height * 0.01
                                   : height * 0),
                   child: Text(
-                    "Marina Dubai",
+                    "${doc['city']}",
                     style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFFBA780F),
@@ -442,7 +415,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                   child: Container(
                     width: device == "mobile" ? width * 0.46 : null,
                     child: Text(
-                      "Healthy food, Lebanese, Sandwhiches, Pasta",
+                      "${doc['mainfoodcategories'].join(", ")}",
                       style: TextStyle(
                           fontSize: 12,
                           color: Color(0xFFBA780F),
@@ -457,14 +430,20 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                           : device == "tab"
                               ? height * 0.1
                               : device == "desktop"
-                                  ? height * 0.01
+                                  ? height * 0.02
                                   : height * 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Image.asset(
                         "assets/images/restaurentimages/DeliveryBike.png",
-                        height: height * 0.06,
+                        height: device == "mobile"
+                            ? height * 0.06
+                            : device == "tab"
+                                ? height * 0.1
+                                : device == "desktop"
+                                    ? height * 0.03
+                                    : height * 0,
                         width: width * 0.06,
                       ),
                       Text(
@@ -475,7 +454,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                         ),
                       ),
                       Text(
-                        "Yes",
+                        "${doc['livetracking']}",
                         style:
                             TextStyle(fontSize: 12, color: Color(0xFFBA780F)),
                       )
@@ -486,15 +465,15 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      otherDetailsMethod(
-                          height, width, "Deal Time", "30 Min", device),
+                      otherDetailsMethod(height, width, "Deal Time",
+                          "${doc['preparationtime']}", device),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                        child: otherDetailsMethod(
-                            height, width, "Delivery Fee", "Free", device),
+                        child: otherDetailsMethod(height, width, "Delivery Fee",
+                            "${doc['delivery']}", device),
                       ),
-                      otherDetailsMethod(
-                          height, width, "Min Order", "15 AED", device)
+                      otherDetailsMethod(height, width, "Min Order",
+                          "${doc['minimumorderprice']} AED", device)
                     ],
                   ),
                 )
@@ -521,7 +500,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
         ),
         child: Center(
           child: Text(
-            "${doc['promotion']}% off",
+            "10% off",
             style: TextStyle(
               fontSize: 24,
               color: Colors.white,
@@ -566,14 +545,20 @@ class _UserOrderFoodState extends State<UserOrderFood> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            otherDetailsHeading,
-            textAlign: TextAlign.center,
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Text(
+              otherDetailsHeading,
+              textAlign: TextAlign.center,
+            ),
           ),
           Divider(
             color: Color(0xFFBA780F),
           ),
-          Text(otherDetail)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(otherDetail),
+          )
         ],
       ),
     );
