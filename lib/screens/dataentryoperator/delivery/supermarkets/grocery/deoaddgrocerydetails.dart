@@ -349,7 +349,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                                 groceryNameController..text = "";
                               }),
                           hintText: "Enter grocery name",
-                          labelText: "grocery Name",
+                          labelText: "Grocery Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -364,7 +364,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "grocery name cannot be empty";
+                            return "Grocery name cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -510,7 +510,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                                 descriptionController..text = "";
                               }),
                           hintText: "Enter grocery description",
-                          labelText: "grocery Description",
+                          labelText: "Grocery Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -525,7 +525,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "grocery description cannot be empty";
+                            return "Grocery description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -550,7 +550,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                                 grocerytagController..text = "";
                               }),
                           hintText: "Enter grocery tag",
-                          labelText: "grocery Tag",
+                          labelText: "Grocery Tag",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -597,7 +597,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "grocery Cover Photo",
+                          "Grocery Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -630,7 +630,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "grocery Cover Photo",
+                              "Grocery Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(

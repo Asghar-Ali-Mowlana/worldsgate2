@@ -56,12 +56,20 @@ class _VendomeHeaderState extends State<VendomeHeader> {
               children: [
                 Align(
                   alignment: Alignment.topLeft,
-                  child: CircleAvatar(
-                    backgroundColor: Colors.black,
-                    radius: logoradius,
-                    backgroundImage: AssetImage(
-                      'assets/images/logo.jpeg',
+                  child: Container(
+                    // backgroundColor: Colors.black,
+                    // radius: logoradius,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                          'assets/images/logo.jpeg',
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
+                    // backgroundImage: AssetImage(
+                    //   'assets/images/logo.jpeg',
+                    // ),
                   ),
                 ),
                 Align(

@@ -16,22 +16,22 @@ import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
 
 
-class AddSupermarketDetails extends StatefulWidget {
-  //const AddSupermarketDetails({Key? key}) : super(key: key);
+class AddPharmacyDetails extends StatefulWidget {
+  //const AddPharmacyDetails({Key? key}) : super(key: key);
 
   String? uid;
 
-  AddSupermarketDetails(this.uid);
+  AddPharmacyDetails(this.uid);
 
   @override
-  State<AddSupermarketDetails> createState() => _AddSupermarketDetailsState();
+  State<AddPharmacyDetails> createState() => _AddPharmacyDetailsState();
 }
 
-class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
+class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController supermarketNameController =
+  final TextEditingController pharmacyNameController =
       TextEditingController();
   final TextEditingController distanceController = TextEditingController();
   final TextEditingController minimumOrderprepTimeController =
@@ -103,7 +103,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/supermarketimages/supermarketmain/$filename';
+          final destination = '/pharmacyimages/pharmacymain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -142,7 +142,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
   UploadTask? otherTask;
   var otherImageLink;
   List<Uint8List> otherImage = [];
-  List<String> OthersupermarketImagesUrl = [];
+  List<String> OtherpharmacyImagesUrl = [];
 
   List<File>? files;
 
@@ -178,7 +178,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
             //otherImage.add(uploadfile);
             //});
             String filename = basename(otherResult!.files[i].name);
-            final destination = '/supermarketimages/supermarketsub/$filename';
+            final destination = '/pharmacyimages/pharmacysub/$filename';
             print("The destination is $destination");
 
             final ref = FirebaseStorage.instance.ref(destination);
@@ -202,7 +202,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
             otherImageLink = urlDownload;
 
             setState(() => otherImageLink = urlDownload);
-            OthersupermarketImagesUrl.add(otherImageLink);
+            OtherpharmacyImagesUrl.add(otherImageLink);
           }
 
           setState(() {
@@ -221,44 +221,44 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
   bool? deliverychargeavailable;
 
   _uploadHotelData() async {
-    String newsupermarketid =
-        FirebaseFirestore.instance.collection('supermarkets').doc().id;
+    String newpharmacyid =
+        FirebaseFirestore.instance.collection('pharmacys').doc().id;
 
     try {
       if (deliverychargeavailable == true) {
         await FirebaseFirestore.instance
-            .collection('supermarkets')
-            .doc(newsupermarketid)
+            .collection('pharmacys')
+            .doc(newpharmacyid)
             .set({
-          'name': supermarketNameController.text,
+          'name': pharmacyNameController.text,
           'minimumorderprice':
               double.parse(minimumOrderprepTimeController.text),
-          'dealingtime': double.parse(prepTimeController.text),
+          'preparationtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
           'coverimage': coverImageLink,
-          'othersupermarketimages': OthersupermarketImagesUrl,
-          'supermarketid': newsupermarketid,
+          'otherpharmacyimages': OtherpharmacyImagesUrl,
+          'pharmacyid': newpharmacyid,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingbool,
           'deliverycharge': descriptionController.text,
         });
       } else {
         await FirebaseFirestore.instance
-            .collection('supermarkets')
-            .doc(newsupermarketid)
+            .collection('pharmacys')
+            .doc(newpharmacyid)
             .set({
-          'name': supermarketNameController.text,
+          'name': pharmacyNameController.text,
           'minimumorderprice':
               double.parse(minimumOrderprepTimeController.text),
-          'dealingtime': double.parse(prepTimeController.text),
+          'preparationtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
           'coverimage': coverImageLink,
-          'othersupermarketimages': OthersupermarketImagesUrl,
-          'supermarketid': newsupermarketid,
+          'otherpharmacyimages': OtherpharmacyImagesUrl,
+          'pharmacyid': newpharmacyid,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingbool,
           'deliverycharge': 0,
@@ -308,10 +308,10 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: AddSupermarketDetailsContainer(context, "mobile"),
-                      tab: AddSupermarketDetailsContainer(context, "tab"),
+                      mobile: AddPharmacyDetailsContainer(context, "mobile"),
+                      tab: AddPharmacyDetailsContainer(context, "tab"),
                       desktop:
-                          AddSupermarketDetailsContainer(context, "desktop"),
+                          AddPharmacyDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -331,7 +331,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
     );
   }
 
-  Container AddSupermarketDetailsContainer(BuildContext context, String device) {
+  Container AddPharmacyDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -349,7 +349,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: supermarketNameController,
+                        controller: pharmacyNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -357,10 +357,10 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                supermarketNameController..text = "";
+                                pharmacyNameController..text = "";
                               }),
-                          hintText: "Enter Supermarket name",
-                          labelText: "Supermarket Name",
+                          hintText: "Enter pharmacy name",
+                          labelText: "Pharmacy Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -375,11 +375,11 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "supermarket name cannot be empty";
+                            return "pharmacy name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          supermarketNameController.text = value!;
+                          pharmacyNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
@@ -394,7 +394,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
                         style: TextStyle(color: Colors.white),
-                        // controller: supermarketNameController,
+                        // controller: pharmacyNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -402,7 +402,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                //  supermarketNameController..text = "";
+                                //  pharmacyNameController..text = "";
                               }),
                           hintText: "Minimum Order Price",
                           labelText: "Minimum Order Price",
@@ -420,11 +420,11 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "supermarket name cannot be empty";
+                            return "pharmacy name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          //   supermarketNameController.text = value!;
+                          //   pharmacyNameController.text = value!;
                         },
                       ),
                       SizedBox(
@@ -437,7 +437,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
                         style: TextStyle(color: Colors.white),
-                        // controller: supermarketNameController,
+                        // controller: pharmacyNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -447,8 +447,8 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                               onPressed: () {
                                 prepTimeController..text = "";
                               }),
-                          hintText: "Dealing Time",
-                          labelText: "Dealing Time",
+                          hintText: "Preparation Time",
+                          labelText: "Preparation Time",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -463,7 +463,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "dealing time cannot be empty";
+                            return "preparation time cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -521,7 +521,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                                 ],
                                 controller: deliverychargeController,
                                 style: TextStyle(color: Colors.white),
-                                // controller: supermarketNameController,
+                                // controller: pharmacyNameController,
                                 decoration: InputDecoration(
                                   suffixIcon: IconButton(
                                       icon: Icon(
@@ -608,8 +608,8 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter supermarket description",
-                          labelText: "Supermarket Description",
+                          hintText: "Enter pharmacy description",
+                          labelText: "Pharmacy Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -624,7 +624,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "supermarket description cannot be empty";
+                            return "pharmacy description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -638,7 +638,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                       // // const Align(
                       // //   alignment: Alignment.centerLeft,
                       // //   child: Text(
-                      // //     "supermarket Tables",
+                      // //     "pharmacy Tables",
                       // //     style: TextStyle(color: Colors.white70, fontSize: 16),
                       // //   ),
                       // // ),
@@ -671,7 +671,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                       // //         size: 20,
                       // //       ), //icon data for elevated button
                       // //       label: Text(
-                      // //         "Add supermarket Tables",
+                      // //         "Add pharmacy Tables",
                       // //         style: TextStyle(color: Colors.white),
                       // //       ),
                       // //       /*child: const Text(
@@ -836,7 +836,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Supermarket Cover Photo",
+                          "Pharmacy Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -869,7 +869,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Supermarket Cover Photo",
+                              "Pharmacy Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -914,7 +914,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other supermarket Photos",
+                          "Other pharmacy Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -947,7 +947,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other supermarket Photos",
+                              "Other pharmacy Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -1023,7 +1023,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          AddSupermarketDetails(widget.uid)));
+                                          AddPharmacyDetails(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',

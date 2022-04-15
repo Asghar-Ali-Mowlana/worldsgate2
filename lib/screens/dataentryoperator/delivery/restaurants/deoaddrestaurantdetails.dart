@@ -1004,7 +1004,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                   )),
                             )
                           : Container(
-                              width: 300.0,
+                              width: 100.0,
                               height: 50.0,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(

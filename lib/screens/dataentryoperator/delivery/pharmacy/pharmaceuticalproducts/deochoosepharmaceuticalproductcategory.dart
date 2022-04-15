@@ -10,33 +10,34 @@ import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/grocery/deoaddgrocerydetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
 
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
+import 'deoaddpharmaceuticalproductdetails.dart';
 
-class SelectGroceryCategory extends StatefulWidget {
-  //const SelectGroceryCategory({Key? key}) : super(key: key);
+class SelectPharmaceuticalProductCategory extends StatefulWidget {
+  //const SelectPharmaceuticalProductCategory({Key? key}) : super(key: key);
 
   String? uid;
-  String? supermarketid;
+  String? pharmacyid;
 
-  SelectGroceryCategory(this.uid, this.supermarketid);
+  SelectPharmaceuticalProductCategory(this.uid, this.pharmacyid);
 
   @override
-  State<SelectGroceryCategory> createState() => _SelectGroceryCategoryState();
+  State<SelectPharmaceuticalProductCategory> createState() => _SelectPharmaceuticalProductCategoryState();
 }
 
-class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
+class _SelectPharmaceuticalProductCategoryState extends State<SelectPharmaceuticalProductCategory> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController groceryCategoryNameController =
+  final TextEditingController pharmaceuticalproductCategoryNameController =
       TextEditingController();
 
-  String? grocerycategory;
+  String? pharmaceuticalproductcategory;
   String? subcategory;
-  String? grocerycategorydropdownvalue;
+  String? pharmaceuticalproductcategorydropdownvalue;
 
   var entryList;
 
@@ -78,30 +79,30 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
 
   String? name;
 
-  getgrocerycategories() async {
+  getpharmaceuticalproductcategories() async {
     await FirebaseFirestore.instance
-        .collection('supermarkets')
-        .doc(widget.supermarketid)
-        .collection('grocerycategory')
+        .collection('pharmacys')
+        .doc(widget.pharmacyid)
+        .collection('pharmaceuticalproductcategory')
         .get()
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((doc) {
                 setState(() {
                   name = doc['name'];
-                  grocerycategorydropdown!.add(name!);
+                  pharmaceuticalproductcategorydropdown!.add(name!);
                 });
-                print(grocerycategorydropdown);
+                print(pharmaceuticalproductcategorydropdown);
               })
             });
   }
 
-  List<String>? grocerycategorydropdown = [];
+  List<String>? pharmaceuticalproductcategorydropdown = [];
 
   @override
   void initState() {
     super.initState();
     getname();
-    getgrocerycategories();
+    getpharmaceuticalproductcategories();
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
@@ -123,9 +124,9 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: SelectGroceryCategoryContainer(context, "mobile"),
-                      tab: SelectGroceryCategoryContainer(context, "tab"),
-                      desktop: SelectGroceryCategoryContainer(context, "desktop"),
+                      mobile: SelectPharmaceuticalProductCategoryContainer(context, "mobile"),
+                      tab: SelectPharmaceuticalProductCategoryContainer(context, "tab"),
+                      desktop: SelectPharmaceuticalProductCategoryContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -145,7 +146,7 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
     );
   }
 
-  Container SelectGroceryCategoryContainer(BuildContext context, String device) {
+  Container SelectPharmaceuticalProductCategoryContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -166,7 +167,7 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
                         child: Align(
                           alignment: Alignment.topLeft,
                           child: Text(
-                            "Grocery Category",
+                            "Pharmaceutical product Category",
                             style:
                                 TextStyle(color: Colors.white, fontSize: 16.0),
                           ),
@@ -178,9 +179,9 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
                               validator: (value) =>
                                   value == null ? 'field required' : null,
                               decoration: InputDecoration(
-                                hintText: "Grocery Category",
+                                hintText: "Pharmaceutical product Category",
                                 hintStyle: TextStyle(color: Colors.white70),
-                                labelText: 'Grocery Catgeory',
+                                labelText: 'Catgeory',
                                 labelStyle: TextStyle(
                                     color: Colors.white70, height: 0.1),
                                 enabled: true,
@@ -197,12 +198,12 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
                               //focusColor: Color(0xFFdb9e1f),
                               style: TextStyle(color: Colors.white),
                               isExpanded: true,
-                              value: grocerycategorydropdownvalue,
-                              items: grocerycategorydropdown!
+                              value: pharmaceuticalproductcategorydropdownvalue,
+                              items: pharmaceuticalproductcategorydropdown!
                                   .map(buildMenuItem)
                                   .toList(),
                               onChanged: (value) => setState(() {
-                                    this.grocerycategorydropdownvalue =
+                                    this.pharmaceuticalproductcategorydropdownvalue =
                                         value as String?;
                                   }))),
                       Container(
@@ -224,10 +225,10 @@ class _SelectGroceryCategoryState extends State<SelectGroceryCategory> {
                           onPressed: () {
                             if (_formkey.currentState!.validate()) {
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AddgroceryDetails(
+                                  builder: (context) => AddPharmaceuticalProductDetails(
                                       widget.uid,
-                                      widget.supermarketid,
-                                      grocerycategorydropdownvalue)));
+                                      widget.pharmacyid,
+                                      pharmaceuticalproductcategorydropdownvalue)));
                             }
                           },
                           child: const Text(

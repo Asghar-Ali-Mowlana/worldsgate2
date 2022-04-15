@@ -1,38 +1,34 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
-import '../deoaddsupermarketdetails.dart';
 
-class AddGroceryCategoryDetails extends StatefulWidget {
-  //const AddGroceryCategoryDetails({Key? key}) : super(key: key);
+
+
+class AddPharmaceuticalProductCategoryDetails extends StatefulWidget {
+  //const AddpharmaceuticalproductcategoryCategoryDetails({Key? key}) : super(key: key);
 
   String? uid;
-  String? supermarketid;
-  AddGroceryCategoryDetails(this.uid, this.supermarketid);
+  String? pharmacyid;
+  AddPharmaceuticalProductCategoryDetails(this.uid, this.pharmacyid);
 
   @override
-  State<AddGroceryCategoryDetails> createState() => _AddGroceryCategoryDetailsState();
+  State<AddPharmaceuticalProductCategoryDetails> createState() => _AddPharmaceuticalProductCategoryDetailsState();
 }
 
-class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
+class _AddPharmaceuticalProductCategoryDetailsState extends State<AddPharmaceuticalProductCategoryDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController groceryCategoryNameController = TextEditingController();
+  final TextEditingController pharmaceuticalproductcategoryNameController = TextEditingController();
 
-  String? grocerycategory;
+  String? pharmaceuticalproductcategory;
   String? subcategory;
 
   var entryList;
@@ -67,7 +63,6 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -89,7 +84,7 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/grocerycategoryimages/grocerycategorymain/$filename';
+          final destination = '/pharmaceuticalproductcategoryimages/pharmaceuticalproductcategorymain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -133,17 +128,17 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
   List<File>? files;
 
 
-  _uploadgroceryData() async {
-    String newgrocerycategoryid = FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc().id;
+  _uploadpharmaceuticalproductcategoryData() async {
+    String newpharmaceuticalproductcategoryid = FirebaseFirestore.instance.collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(newgrocerycategoryid).set({
-        'name': groceryCategoryNameController.text,
+      await FirebaseFirestore.instance.collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(newpharmaceuticalproductcategoryid).set({
+        'name': pharmaceuticalproductcategoryNameController.text,
      
         'datecreated': DateTime.now(),
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
-        'grocerycategoryid': newgrocerycategoryid,
+        'pharmaceuticalproductcategoryid': newpharmaceuticalproductcategoryid,
       });
     } catch (e) {
       print(e);
@@ -194,9 +189,9 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: AddGroceryCategoryDetailsContainer(context, "mobile"),
-                      tab: AddGroceryCategoryDetailsContainer(context, "tab"),
-                      desktop: AddGroceryCategoryDetailsContainer(context, "desktop"),
+                      mobile: AddPharmaceuticalProductCategoryDetailsContainer(context, "mobile"),
+                      tab: AddPharmaceuticalProductCategoryDetailsContainer(context, "tab"),
+                      desktop: AddPharmaceuticalProductCategoryDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -217,7 +212,7 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
   }
 
 
-  Container AddGroceryCategoryDetailsContainer(BuildContext context, String device) {
+  Container AddPharmaceuticalProductCategoryDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -235,7 +230,7 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: groceryCategoryNameController,
+                        controller: pharmaceuticalproductcategoryNameController,
 
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
@@ -244,10 +239,10 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                groceryCategoryNameController..text = "";
+                                pharmaceuticalproductcategoryNameController..text = "";
                               }),
-                          hintText: "Enter grocery category name",
-                          labelText: "Grocery Category Name",
+                          hintText: "Enter pharmaceuticalproductcategory category name",
+                          labelText: "pharmaceuticalproductcategory Category Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -262,11 +257,11 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Grocery category name cannot be empty";
+                            return "pharmaceuticalproductcategory category name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          groceryCategoryNameController.text = value!;
+                          pharmaceuticalproductcategoryNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
@@ -284,7 +279,7 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Grocery Category Cover Photo",
+                          "pharmaceuticalproductcategory Category Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -294,7 +289,7 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Container(
-                          width: 300.0,
+                          width: 270.0,
                           height: 50.0,
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
@@ -317,7 +312,7 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Grocery Category Cover Photo",
+                              "pharmaceuticalproductcategory Category Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -739,10 +734,10 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
                                   //uploadMainFunction(_selectedFile);
                                   //uploadFile();
                                   if (_formkey.currentState!.validate()) {
-                                    _uploadgroceryData();
-                                    Navigator.of(context).push(MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddSupermarketDetails(widget.uid)));
+                                    _uploadpharmaceuticalproductcategoryData();
+                                    // Navigator.of(context).push(MaterialPageRoute(
+                                    //     builder: (context) =>
+                                    //         AddpharmaceuticalproductcategoryCategoryDetails(widget.uid)));
 
                                   }
 
