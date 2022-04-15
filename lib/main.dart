@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
+import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
 import 'package:worldsgate/screens/loginpage.dart';
+import 'package:worldsgate/screens/user/userorderfood.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (u.Platform.operatingSystem == "android" ||
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: LoginPage(),
+      home: AddPharmacyDetails("WpzPfHN360dyUtmpSo2a3yhXVak2"),
     );
   }
 }

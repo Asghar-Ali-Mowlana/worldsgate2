@@ -5,6 +5,7 @@ import 'package:worldsgate/helper/extended_responsive_helper.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deoaddrestaurantdetails.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
@@ -738,7 +739,7 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) =>
                                             // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                            AddCarDetails(widget.uid)));
+                                            AddRestaurantDetails(widget.uid)));
                                   },
                                   child: Text(
                                     "+ Add new",

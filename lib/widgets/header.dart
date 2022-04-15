@@ -30,9 +30,9 @@ class _VendomeHeaderState extends State<VendomeHeader> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveWidget(
-      mobile: buildContainerHeaderContent("mobile", 65, 200, 20, 10, 13),
-      tab: buildContainerHeaderContent("tab", 90, 350, 30, 20, 14),
-      desktop: buildContainerHeaderContent("desktop",110, 470, 40, 30, 15),
+      mobile: buildContainerHeaderContent("mobile", 65, 200, 40, 10, 13),
+      tab: buildContainerHeaderContent("tab", 90, 350, 60, 20, 14),
+      desktop: buildContainerHeaderContent("desktop",110, 470, 80, 30, 15),
     );
   }
 
@@ -56,17 +56,14 @@ class _VendomeHeaderState extends State<VendomeHeader> {
               children: [
                 Align(
                   alignment: Alignment.topLeft,
-                  child: Container(
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/logo.jpeg',
+                    ),
                     // backgroundColor: Colors.black,
                     // radius: logoradius,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                          'assets/images/logo.jpeg',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    width: logoradius,
+
                     // backgroundImage: AssetImage(
                     //   'assets/images/logo.jpeg',
                     // ),
@@ -75,7 +72,7 @@ class _VendomeHeaderState extends State<VendomeHeader> {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Image.asset(
-                    "assets/images/headerimages/worldgate.png",
+                    "assets/images/headerimages/vendomesheader.png",
                     // height: 100,
                     width: worldsgatewidth,
                   ),

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoorderfood.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deoaddsupermarketdetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
 import '../screens/dataentryoperator/apartments/deomanageapartments.dart';
@@ -118,7 +120,7 @@ class DeoNavigationDrawer extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.home_outlined),
               title: const Text(
-                'Food',
+                'Restaurants',
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
@@ -127,6 +129,42 @@ class DeoNavigationDrawer extends StatelessWidget {
                 ));
               },
             ),
+            ListTile(
+              leading: const Icon(Icons.home_outlined),
+              title: const Text(
+                'Supermarkets',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddSupermarketDetails(uid),
+                ));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.home_outlined),
+              title: const Text(
+                'Pharmacies',
+                style: TextStyle(color: Colors.white),
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => AddPharmacyDetails(uid),
+                ));
+              },
+            ),
+            // ListTile(
+            //   leading: const Icon(Icons.home_outlined),
+            //   title: const Text(
+            //     'Food',
+            //     style: TextStyle(color: Colors.white),
+            //   ),
+            //   onTap: () {
+            //     Navigator.of(context).push(MaterialPageRoute(
+            //       builder: (context) => DeoOrderFood(uid),
+            //     ));
+            //   },
+            // ),
             Text(
               "Online Shopping",
               style: TextStyle(color: Colors.white),

@@ -58,7 +58,7 @@ class _VendomeHeaderCustomerState extends State<VendomeHeaderCustomer> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Image.asset(
-                  "assets/images/headerimages/worldgate.png",
+                  "assets/images/headerimages/vendomesheader.png",
                   // height: 100,
                   width: worldsgatewidth,
                 ),
