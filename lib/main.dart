@@ -5,6 +5,7 @@ import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpha
 import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoorderfood.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userorderfood.dart';
+
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (u.Platform.operatingSystem == "android" ||
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
             onSurface: const Color(0xFFBA780F)),
         primarySwatch: Colors.blue,
       ),
-      home: DeoOrderFood("WpzPfHN360dyUtmpSo2a3yhXVak2"),
+      home: UserOrderFood("WpzPfHN360dyUtmpSo2a3yhXVak2", "Palm Jumeirah"),
     );
   }
 }
