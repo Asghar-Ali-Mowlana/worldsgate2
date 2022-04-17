@@ -36,6 +36,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
   }
 
   String? city;
+  String? mainFoodCategory;
 
   bool _isLocationSelected = false;
 
@@ -43,8 +44,11 @@ class _UserOrderFoodState extends State<UserOrderFood> {
   Widget build(BuildContext context) {
     final CollectionReference packageCollection =
         FirebaseFirestore.instance.collection('restaurants');
-    final Query unpicked = packageCollection.where('city',
-        isEqualTo: city != null ? city : widget.city);
+    final Query unpicked = mainFoodCategory != null
+        ? packageCollection
+            .where('city', isEqualTo: widget.city)
+            .where('mainfoodcategories', arrayContainsAny: [mainFoodCategory])
+        : packageCollection.where('city', isEqualTo: widget.city);
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
@@ -202,8 +206,15 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                           scrollDirection: Axis.horizontal,
                           primary: false,
                           children: snapshot.data!.docs.map((doc) {
-                            return favouriteChoiceMethod(
-                                height, width, doc['name'], 19, device);
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  this.mainFoodCategory = doc['name'];
+                                });
+                              },
+                              child: favouriteChoiceMethod(
+                                  height, width, doc['name'], 19, device),
+                            );
                           }).toList());
                     }
                   },
