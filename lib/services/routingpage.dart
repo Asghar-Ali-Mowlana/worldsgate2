@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/models/usermodel.dart';
+import 'package:worldsgate/screens/dataentryoperator/booking/apartments/deomanageapartments.dart';
 import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 
 import '../screens/dataentryoperator/booking/hotels/deomanagehotels.dart';
@@ -68,10 +69,11 @@ class _controState extends State<contro> {
             loggedInUser.uid.toString(),
           )
         : (role == "dataentryoperator")
-            ? DeoManageHotels(
+            ? DeoManageApartments(
                 loggedInUser.uid.toString(),
               )
             : Scaffold(
+        backgroundColor: Color(0xFF000000),
                 body: Center(
                 child: CircularProgressIndicator(),
               ));
