@@ -42,8 +42,10 @@ class _UserOrderFoodState extends State<UserOrderFood> {
 
   @override
   Widget build(BuildContext context) {
-    final CollectionReference packageCollection =
-        FirebaseFirestore.instance.collection('restaurants');
+    final CollectionReference packageCollection = FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('restaurants');
     final Query unpicked = mainFoodCategory != null
         ? packageCollection
             .where('city', isEqualTo: widget.city)
@@ -191,6 +193,8 @@ class _UserOrderFoodState extends State<UserOrderFood> {
                 height: height * 0.15,
                 child: StreamBuilder<QuerySnapshot>(
                   stream: FirebaseFirestore.instance
+                      .collection('delivery')
+                      .doc("9WRNvPkoftSw4o2rHGUI")
                       .collection('restaurants')
                       .doc("yz67sZi2CB61LwloNojw")
                       .collection('foodcategory')
