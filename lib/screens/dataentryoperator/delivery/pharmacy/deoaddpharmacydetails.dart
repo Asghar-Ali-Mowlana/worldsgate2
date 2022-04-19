@@ -14,6 +14,7 @@ import 'package:worldsgate/helper/responsive_helper.dart';
 
 import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
+import 'deomanagepharmacy.dart';
 
 
 class AddPharmacyDetails extends StatefulWidget {
@@ -34,12 +35,46 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
   final TextEditingController pharmacyNameController =
       TextEditingController();
   final TextEditingController distanceController = TextEditingController();
+  final TextEditingController pharmacyAddressController = TextEditingController();
   final TextEditingController minimumOrderprepTimeController =
       TextEditingController();
   final TextEditingController prepTimeController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController deliverychargeController =
       TextEditingController();
+
+
+
+  String? city;
+
+  final places = [
+    'Deira',
+    'Bur Dubai',
+    'Beach & Coast',
+    'Garhoud',
+    'Palm Jumeirah',
+    'Barsha Heights (Tecom)',
+    'Sheikh Zayed Road',
+    'Al Barsha',
+    'Dubai Creek',
+    'Jumeirah Beach Residence',
+    'Dubai Marina',
+    'Trade Centre',
+    'Old Dubai',
+    'Downtown Dubai',
+    'Business Bay',
+    "Guests' favourite area",
+    'Jadaf',
+    'Al Qusais',
+    'Oud Metha',
+    'Dubai Investment Park',
+    'Dubai Festival City',
+    'Dubai World Central',
+    'Umm Suqeim',
+    'Discovery Gardens',
+    'Dubai Production City',
+    'Jumeirah Lakes Towers',
+  ];
 
   String? deliverytypechosen;
   final deliveryType = [
@@ -222,11 +257,16 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
 
   _uploadHotelData() async {
     String newpharmacyid =
-        FirebaseFirestore.instance.collection('pharmacys').doc().id;
+        FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
+            .collection('pharmacys').doc().id;
 
     try {
       if (deliverychargeavailable == true) {
         await FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
             .collection('pharmacys')
             .doc(newpharmacyid)
             .set({
@@ -235,6 +275,7 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
               double.parse(minimumOrderprepTimeController.text),
           'preparationtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
+          'city': city,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
           'coverimage': coverImageLink,
@@ -242,10 +283,12 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
           'pharmacyid': newpharmacyid,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingbool,
-          'deliverycharge': descriptionController.text,
+          'deliverycharge': deliverychargeController.text,
         });
       } else {
         await FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
             .collection('pharmacys')
             .doc(newpharmacyid)
             .set({
@@ -254,6 +297,7 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
               double.parse(minimumOrderprepTimeController.text),
           'preparationtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
+          'city': city,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
           'coverimage': coverImageLink,
@@ -591,9 +635,98 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
                                   });
                                 }
                               })),
+
+
                       SizedBox(
                         height: 20,
                       ),
+
+
+
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Select place in UAE",
+                            hintStyle: TextStyle(
+                                color: Colors.white70),
+                            labelText: 'Pharmacy City',
+                            labelStyle: TextStyle(
+                                color: Colors.white70,
+                                height: 0.1),
+                            enabled: true,
+                            enabledBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Colors.white70),
+                            ),
+                            focusedBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style:
+                          TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: city,
+                          items: places
+                              .map(buildMenuItem)
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            this.city = value as String?;
+                          })),
+
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        maxLines: null,
+                        controller: pharmacyAddressController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              onPressed: () {
+                                pharmacyAddressController..text = "";
+                              }),
+                          hintText: "Enter pharmacy address",
+                          labelText: "Pharmacy Address",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "Pharmacy cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
+                          pharmacyAddressController.text = value!;
+                        },
+                        keyboardType: TextInputType.multiline,
+                      ),
+
+
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+
 
                       TextFormField(
                         style: TextStyle(color: Colors.white),
@@ -632,6 +765,11 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
                         },
                         keyboardType: TextInputType.multiline,
                       ),
+
+
+
+
+
                       SizedBox(
                         height: 30,
                       ),
@@ -1023,7 +1161,7 @@ class _AddPharmacyDetailsState extends State<AddPharmacyDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          AddPharmacyDetails(widget.uid)));
+                                          DeoManagePharmacy(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',

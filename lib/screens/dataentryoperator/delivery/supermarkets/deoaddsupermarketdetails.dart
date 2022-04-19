@@ -34,12 +34,47 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
   final TextEditingController supermarketNameController =
       TextEditingController();
   final TextEditingController distanceController = TextEditingController();
+  final TextEditingController supermarketAddressController = TextEditingController();
   final TextEditingController minimumOrderprepTimeController =
       TextEditingController();
   final TextEditingController prepTimeController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController deliverychargeController =
       TextEditingController();
+
+
+
+  String? city;
+
+  final places = [
+    'Deira',
+    'Bur Dubai',
+    'Beach & Coast',
+    'Garhoud',
+    'Palm Jumeirah',
+    'Barsha Heights (Tecom)',
+    'Sheikh Zayed Road',
+    'Al Barsha',
+    'Dubai Creek',
+    'Jumeirah Beach Residence',
+    'Dubai Marina',
+    'Trade Centre',
+    'Old Dubai',
+    'Downtown Dubai',
+    'Business Bay',
+    "Guests' favourite area",
+    'Jadaf',
+    'Al Qusais',
+    'Oud Metha',
+    'Dubai Investment Park',
+    'Dubai Festival City',
+    'Dubai World Central',
+    'Umm Suqeim',
+    'Discovery Gardens',
+    'Dubai Production City',
+    'Jumeirah Lakes Towers',
+  ];
+
 
   String? deliverytypechosen;
   final deliveryType = [
@@ -222,11 +257,16 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
 
   _uploadHotelData() async {
     String newsupermarketid =
-        FirebaseFirestore.instance.collection('supermarkets').doc().id;
+        FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
+            .collection('supermarkets').doc().id;
 
     try {
       if (deliverychargeavailable == true) {
         await FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
             .collection('supermarkets')
             .doc(newsupermarketid)
             .set({
@@ -235,6 +275,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
               double.parse(minimumOrderprepTimeController.text),
           'dealingtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
+          'city': city,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
           'coverimage': coverImageLink,
@@ -246,6 +287,8 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
         });
       } else {
         await FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
             .collection('supermarkets')
             .doc(newsupermarketid)
             .set({
@@ -254,6 +297,7 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
               double.parse(minimumOrderprepTimeController.text),
           'dealingtime': double.parse(prepTimeController.text),
           'description': descriptionController.text,
+          'city': city,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
           'coverimage': coverImageLink,
@@ -594,6 +638,99 @@ class _AddSupermarketDetailsState extends State<AddSupermarketDetails> {
                       SizedBox(
                         height: 20,
                       ),
+
+
+
+
+
+
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Select place in UAE",
+                            hintStyle: TextStyle(
+                                color: Colors.white70),
+                            labelText: 'Supermarket City',
+                            labelStyle: TextStyle(
+                                color: Colors.white70,
+                                height: 0.1),
+                            enabled: true,
+                            enabledBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Colors.white70),
+                            ),
+                            focusedBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style:
+                          TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: city,
+                          items: places
+                              .map(buildMenuItem)
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            this.city = value as String?;
+                          })),
+
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        maxLines: null,
+                        controller: supermarketAddressController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              onPressed: () {
+                                supermarketAddressController..text = "";
+                              }),
+                          hintText: "Enter supermarket address",
+                          labelText: "Supermarket Address",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "supermarket cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
+                          supermarketAddressController.text = value!;
+                        },
+                        keyboardType: TextInputType.multiline,
+                      ),
+
+
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+
+
+
+
 
                       TextFormField(
                         style: TextStyle(color: Colors.white),

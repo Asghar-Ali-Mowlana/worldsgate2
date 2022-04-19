@@ -5,17 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deomanagesupermarket.dart';
 
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
-import '../deoaddsupermarketdetails.dart';
 
 class AddgroceryDetails extends StatefulWidget {
   //const AddgroceryDetails({Key? key}) : super(key: key);
@@ -87,7 +82,6 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -158,12 +152,18 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
 
 
   _uploadgroceryData() async {
-    String newgroceryId = FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(grocerycategoryid).collection('grocery').doc().id;
+    String newgroceryId = FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(grocerycategoryid).collection('grocery').doc().id;
 
 
     print(grocerycategoryid);
     try {
-      await FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(grocerycategoryid).collection('grocery').doc(newgroceryId).set({
+      await FirebaseFirestore.instance
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI")
+          .collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(grocerycategoryid).collection('grocery').doc(newgroceryId).set({
         'name': groceryNameController.text,
         //'grocerycategory': widget.grocerycategorypassed,
         'tags': tags,
@@ -201,6 +201,9 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
 
   getyoo() async {
     await FirebaseFirestore.instance
+
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory')
         .where('name', isEqualTo: widget.grocerycategorypassed)
         .get()
@@ -1054,7 +1057,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
                                   _uploadgroceryData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          AddSupermarketDetails(widget.uid)));
+                                          DeoManageSupermarket(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',

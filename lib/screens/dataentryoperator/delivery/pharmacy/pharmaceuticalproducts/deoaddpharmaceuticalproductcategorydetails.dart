@@ -129,10 +129,16 @@ class _AddPharmaceuticalProductCategoryDetailsState extends State<AddPharmaceuti
 
 
   _uploadpharmaceuticalproductcategoryData() async {
-    String newpharmaceuticalproductcategoryid = FirebaseFirestore.instance.collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc().id;
+    String newpharmaceuticalproductcategoryid = FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(newpharmaceuticalproductcategoryid).set({
+      await FirebaseFirestore.instance
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI")
+          .collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(newpharmaceuticalproductcategoryid).set({
         'name': pharmaceuticalproductcategoryNameController.text,
      
         'datecreated': DateTime.now(),

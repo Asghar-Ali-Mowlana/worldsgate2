@@ -2,25 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deoaddrestaurantdetails.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
 import 'package:worldsgate/widgets/sidelayout.dart';
 
-class DeoManageGrocery extends StatefulWidget {
-  //DeoManageGrocery({Key? key}) : super(key: key);
+import '../../booking/cars/deoviewcars.dart';
+
+//import 'deoaddcardetails.dart';
+
+class DeoManageRestaurant extends StatefulWidget {
+  //const DeoManageRestaurant({Key? key}) : super(key: key);
 
   String? uid;
 
-  DeoManageGrocery(this.uid);
+  DeoManageRestaurant(this.uid);
 
   @override
-  State<DeoManageGrocery> createState() => _DeoManageGroceryState();
+  State<DeoManageRestaurant> createState() => _DeoManageRestaurantState();
 }
 
-class _DeoManageGroceryState extends State<DeoManageGrocery> {
+class _DeoManageRestaurantState extends State<DeoManageRestaurant> {
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
@@ -53,7 +56,10 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
 
   getyo() async {
     FirebaseFirestore.instance
-        .collection('supermarkets')
+
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('restaurants')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((myDocuments) {
@@ -61,7 +67,10 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
       totaladded = myDocuments.docs.length;
     });
     await FirebaseFirestore.instance
-        .collection('supermarkets')
+
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('restaurants')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((QuerySnapshot querySnapshot) => {
@@ -69,17 +78,17 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
                 DateTime dt = (doc['datecreated'] as Timestamp).toDate();
                 String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
                 dategroupbylist.add({
-                  "supermarketid": doc.id,
+                  "restaurantid": doc.id,
                   "name": '${doc['name']}',
                   "minimumorderprice": '${doc['minimumorderprice']}',
-                  "dealingtime": '${doc['dealingtime']}',
+                  "preparationtime": '${doc['preparationtime']}',
                   "description": '${doc['description']}',
                   "coverimage": '${doc['coverimage']}',
-                  "othersupermarketimages": '${doc['othersupermarketimages']}',
+                  "otherrestaurantimages": '${doc['otherrestaurantimages']}',
                   "delivery": '${doc['delivery']}',
                   "livetracking": '${doc['livetracking']}',
                   "deliverycharge": '${doc['deliverycharge']}',
-                  "city": '${doc['city']}',
+                  "address": '${doc['address']}',
                   "added_date": '${formattedDate}',
                 });
               })
@@ -261,7 +270,7 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
                                   ? height * 0.01
                                   : height * 0),
                   child: Text(
-                    "${entryList[i].value[j]["city"]}",
+                    "${entryList[i].value[j]["address"]}",
                     style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFFBA780F),
@@ -334,7 +343,7 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
                           height,
                           width,
                           "Deal Time",
-                          "${entryList[i].value[j]["dealingtime"]} Min",
+                          "${entryList[i].value[j]["preparationtime"]} Min",
                           device),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5.0),
@@ -711,7 +720,7 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 14.0),
                                 child: Text(
-                                  "Delivery > Grocery (${totaladded.toString()})  $tex",
+                                  "Delivery > Food (${totaladded.toString()})  $tex",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
@@ -735,7 +744,7 @@ class _DeoManageGroceryState extends State<DeoManageGrocery> {
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) =>
                                             // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                            AddCarDetails(widget.uid)));
+                                            AddRestaurantDetails(widget.uid)));
                                   },
                                   child: Text(
                                     "+ Add new",

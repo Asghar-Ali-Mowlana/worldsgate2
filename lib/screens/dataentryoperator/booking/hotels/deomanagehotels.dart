@@ -1,19 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deoviewhotels.dart';
-import 'package:worldsgate/screens/user/userhotelbooking.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
-import '../../../widgets/sidelayout.dart';
+import '../../../../widgets/sidelayout.dart';
 import 'deoaddhoteldetails.dart';
+import 'deoviewhotels.dart';
 
 class DeoManageHotels extends StatefulWidget {
-  //const DeoManageHotels({Key? key}) : super(key: key);
 
   String? uid;
 

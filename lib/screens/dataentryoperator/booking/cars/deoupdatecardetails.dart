@@ -5,31 +5,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
+import '../../../../widgets/deonavigationdrawer.dart';
+import '../../../../widgets/header.dart';
+import 'deomanagecars.dart';
 
-import '../../../widgets/deonavigationdrawer.dart';
-import '../../../widgets/header.dart';
-import '../../../widgets/usernavigationdrawer.dart';
+class UpdateCarDetails extends StatefulWidget {
+  //const UpdateCarDetails({Key? key}) : super(key: key);
 
-class AddYachtDetails extends StatefulWidget {
   String? uid;
+  String? carid;
 
-  //const AddYachtDetails({ Key? key }) : super(key: key);
-  AddYachtDetails(this.uid);
+  UpdateCarDetails(this.uid, this.carid);
 
   @override
-  State<AddYachtDetails> createState() => _AddYachtDetailsState();
+  State<UpdateCarDetails> createState() => _UpdateCarDetailsState();
 }
 
-class _AddYachtDetailsState extends State<AddYachtDetails> {
-  final _formkey = GlobalKey<FormState>();
+class _UpdateCarDetailsState extends State<UpdateCarDetails> {
   var _scaffoldState = new GlobalKey<ScaffoldState>();
+  final _formkey = GlobalKey<FormState>();
 
   final TextEditingController carNameController = TextEditingController();
   final TextEditingController distanceController = TextEditingController();
@@ -48,77 +44,37 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
   String? doors;
   String? luggage;
 
-  final yachtBuild = [
-    "Von Dutch",
-    "Sunseeker",
-    "Azimut",
-    "Numarine",
-    "Rodriguez",
-    "Bennetti",
+  final models = [
+    "2022",
+    "2021",
+    "2020",
+    "2019",
+    "2018",
+    "2017",
+    "2016",
+    "2015",
+    "2014",
+    "2013",
+    "2012",
+    "2011",
+    "2010",
   ];
 
-  final capacity = [
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31",
-    "32",
-    "33",
-    "34",
-    "35",
-    "36",
-    "37",
-    "38",
-    "39",
-    "40",
-    "41",
-    "42",
-    "43",
-    "44",
-    "45",
-    "46",
-    "47",
-    "48",
-    "49",
-    "50",
+  final deliveryType = [
+    "Free",
+    "Paid",
   ];
 
-  final overNightGuests = [
-    "2",
-    "4",
-    "6",
-    "8",
-    "10",
-    "12",
+  final insuranceType = [
+    "Full",
+    "Part",
   ];
 
-  final cabinType = ["Master", "Double", "VIP", "Twin"];
+  final carBrand = ["Lamborghini", "Ferrari", "Rolls Royce", "McLaren"];
 
-  final crew = [
-    "Seychelles",
-    "British",
-    "Ukrainian",
-    "South African",
-    "French",
-    "Filipino",
-    "Australian",
-    "Turkish"
+  final gearType = [
+    "Auto",
+    "Manual",
   ];
 
   final engineType = [
@@ -144,7 +100,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
 
   bool featureBoolValue = true;
 
-  List<String> otherFeatures = [
+  List<String> allOtherFeatures = [
     'Sensors',
     'Bluetooth',
     'Camera',
@@ -172,7 +128,6 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -238,7 +193,6 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
   List<File>? files;
 
   Future selectOtherFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       otherResult = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: true);
@@ -308,11 +262,124 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
     }
   }
 
+  var otherFeatures;
+  List<String> carCoverImageList = [];
+
+  _getCarDetails() async {
+    await FirebaseFirestore.instance
+        .collection("cars")
+        .doc(widget.carid)
+        .get()
+        .then((documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('name')) {
+            carNameController.text = documentSnapshot['name'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('model')) {
+            model = documentSnapshot['model'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('delivery')) {
+            delivery = documentSnapshot['delivery'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('insurance')) {
+            insurance = documentSnapshot['insurance'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('brand')) {
+            brand = documentSnapshot['brand'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('distance')) {
+            distanceController.text = documentSnapshot['distance'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('age')) {
+            ageController.text = documentSnapshot['age'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('price')) {
+            priceController.text = documentSnapshot['price'].toString();
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('description')) {
+            descriptionController.text = documentSnapshot['description'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('coverimage')) {
+            coverImageLink = documentSnapshot['coverimage'];
+            carCoverImageList.add(coverImageLink);
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('othercarimages')) {
+            for (int i = 0;
+                i < documentSnapshot['othercarimages'].length;
+                i++) {
+              OtherHotelImagesUrl.add(documentSnapshot['othercarimages'][i]);
+            }
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('gear')) {
+            gear = documentSnapshot['gear'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('engine')) {
+            engine = documentSnapshot['engine'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('color')) {
+            color = documentSnapshot['color'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('seats')) {
+            seats = documentSnapshot['seats'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('doors')) {
+            doors = documentSnapshot['doors'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('luggage')) {
+            luggage = documentSnapshot['luggage'];
+          }
+          if ((documentSnapshot.data() as Map<String, dynamic>)
+              .containsKey('otherfeatures')) {
+            otherFeatures = documentSnapshot['otherfeatures'];
+          }
+        });
+      } else {
+        print("The document does not exist");
+      }
+    });
+  }
+
+  _removeCarCoverPhoto(url) async {
+    await FirebaseStorage.instance.refFromURL(url).delete();
+    setState(() {
+      carCoverImageList.removeAt(carCoverImageList.indexOf(url));
+      coverImageLink = "";
+    });
+  }
+
+  _removeOtherCarPhotos(url) async {
+    await FirebaseStorage.instance.refFromURL(url).delete();
+    setState(() {
+      OtherHotelImagesUrl.removeAt(OtherHotelImagesUrl.indexOf(url));
+    });
+  }
+
   _uploadHotelData() async {
-    String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
+    //String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('cars').doc(newCarId).set({
+      await FirebaseFirestore.instance
+          .collection('cars')
+          .doc(widget.carid)
+          .update({
         'name': carNameController.text,
         'model': model,
         'delivery': delivery,
@@ -325,8 +392,8 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
         //'mainfacilities': mainFacilities,
         //'subfacilities': subFacilities,
         //'rooms': roomDeatils,
-        'datecreated': DateTime.now(),
-        'dataentryuid': widget.uid,
+        //'datecreated': DateTime.now(),
+        //'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'othercarimages': OtherHotelImagesUrl,
         //'cancellationfee': null,
@@ -339,9 +406,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
         'doors': doors,
         'luggage': luggage,
         'otherfeatures': otherFeatures,
-        'carid': newCarId,
-        //example added
-        'topspeed': 123,
+        //'carid': newCarId,
       });
     } catch (e) {
       print(e);
@@ -367,6 +432,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
   void initState() {
     super.initState();
     getname();
+    _getCarDetails();
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
@@ -438,8 +504,8 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                               onPressed: () {
                                 carNameController..text = "";
                               }),
-                          hintText: "Enter yacht name",
-                          labelText: "Yacht Name",
+                          hintText: "Enter car name",
+                          labelText: "Car Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -454,7 +520,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Yacht name cannot be empty";
+                            return "Car name cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -462,7 +528,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                         },
                         keyboardType: TextInputType.text,
                       ),
-                      /*SizedBox(
+                      SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -704,102 +770,45 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                             )
                           ],
                         ),
-                      ),*/
+                      ),
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
-                                  controller: priceController,
-                                  decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                        icon: Icon(
-                                          Icons.cancel,
-                                          color: Color(0xFFdb9e1f),
-                                        ),
-                                        onPressed: () {
-                                          priceController..text = "";
-                                        }),
-                                    hintText: "Enter per hour price",
-                                    labelText: "Per Hour Price",
-                                    hintStyle: TextStyle(color: Colors.white70),
-                                    labelStyle: new TextStyle(
-                                        color: Colors.white70, height: 0.1),
-                                    enabled: true,
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.white70),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xFFdb9e1f)),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.length == 0) {
-                                      return "Per hour price cannot be empty";
-                                    }
-                                  },
-                                  onSaved: (value) {
-                                    priceController.text = value!;
-                                  },
-                                  keyboardType: TextInputType.number,
-                                ),
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        controller: priceController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
-                                  controller: priceController,
-                                  decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                        icon: Icon(
-                                          Icons.cancel,
-                                          color: Color(0xFFdb9e1f),
-                                        ),
-                                        onPressed: () {
-                                          priceController..text = "";
-                                        }),
-                                    hintText: "Enter daily price",
-                                    labelText: "Daily Price",
-                                    hintStyle: TextStyle(color: Colors.white70),
-                                    labelStyle: new TextStyle(
-                                        color: Colors.white70, height: 0.1),
-                                    enabled: true,
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.white70),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xFFdb9e1f)),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.length == 0) {
-                                      return "Daily price cannot be empty";
-                                    }
-                                  },
-                                  onSaved: (value) {
-                                    priceController.text = value!;
-                                  },
-                                  keyboardType: TextInputType.number,
-                                ),
-                              ),
-                            ),
-                          ],
+                              onPressed: () {
+                                priceController..text = "";
+                              }),
+                          hintText: "Enter price",
+                          labelText: "Price",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                              new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                                new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
                         ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "Price cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
+                          priceController.text = value!;
+                        },
+                        keyboardType: TextInputType.number,
                       ),
                       SizedBox(
                         height: 20,
@@ -817,8 +826,8 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter yacht description",
-                          labelText: "Yacht Description",
+                          hintText: "Enter car description",
+                          labelText: "Car Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -833,7 +842,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Yacht description cannot be empty";
+                            return "Car description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -847,7 +856,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Yacht Cover Photo",
+                          "Car Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -880,7 +889,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Yacht Cover Photo",
+                              "Car Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -891,12 +900,12 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                           ),
                         ),
                       ),
-                      coverImage.length != 0
+                      carCoverImageList.isNotEmpty
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
                               height: 160,
                               child: GridView.builder(
-                                  itemCount: coverImage.length,
+                                  itemCount: carCoverImageList.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 7),
@@ -909,23 +918,56 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           width: 100,
                                           decoration: BoxDecoration(
                                               image: DecorationImage(
-                                                  image: MemoryImage(
-                                                      coverImage[index]),
-                                                  fit: BoxFit.cover))),
+                                                  image: NetworkImage(
+                                                      carCoverImageList[index]),
+                                                  fit: BoxFit.cover)),
+                                          child: IconButton(
+                                            icon: Icon(
+                                              Icons.delete,
+                                              color: Color(0xFFdb9e1f),
+                                              size: 40.0,
+                                            ),
+                                            onPressed: () {
+                                              _removeCarCoverPhoto(
+                                                  carCoverImageList[index]);
+                                            },
+                                          )),
                                     );
                                     //Text('Image : ' + index.toString());
                                   }),
                             )
-                          : SizedBox(
-                              height: 10,
+                          : Container(
+                              width: MediaQuery.of(context).size.width / 1.6,
+                              height: 160,
+                              child: GridView.builder(
+                                  itemCount: coverImage.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 7),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Container(
+                                        height: 100,
+                                        width: 100,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: MemoryImage(
+                                                    coverImage[index]),
+                                                fit: BoxFit.cover)),
+                                      ),
+                                    );
+                                    //Text('Image : ' + index.toString());
+                                  }),
                             ),
                       SizedBox(
-                        height: 20,
+                        height: 30,
                       ),
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other Yacht Photos",
+                          "Other Car Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -958,7 +1000,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other Yacht Photos",
+                              "Other Car Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -969,6 +1011,52 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      OtherHotelImagesUrl.length != 0
+                          ? Container(
+                              width: MediaQuery.of(context).size.width / 1.6,
+                              height: 160,
+                              child: GridView.builder(
+                                  itemCount: OtherHotelImagesUrl.length,
+                                  gridDelegate:
+                                      SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 8),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                            height: 100,
+                                            width: 100,
+                                            decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        OtherHotelImagesUrl[
+                                                            index]),
+                                                    fit: BoxFit.cover)),
+                                            child: IconButton(
+                                              icon: Icon(
+                                                Icons.delete,
+                                                color: Color(0xFFdb9e1f),
+                                                size: 40.0,
+                                              ),
+                                              onPressed: () {
+                                                _removeOtherCarPhotos(
+                                                    OtherHotelImagesUrl[index]);
+                                              },
+                                            )),
+                                      ),
+                                    );
+                                    //Text('Image : ' + index.toString());
+                                  }),
+                            )
+                          : SizedBox(
+                              height: 10,
+                            ),
                       otherImage.length != 0
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
@@ -1027,10 +1115,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Build",
+                                            hintText: "Car Gear",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Build',
+                                            labelText: 'Gear',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1049,8 +1137,9 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           style: TextStyle(color: Colors.white),
                                           isExpanded: true,
                                           value: gear,
-                                          items:
-                                              crew.map(buildMenuItem).toList(),
+                                          items: gearType
+                                              .map(buildMenuItem)
+                                              .toList(),
                                           onChanged: (value) => setState(() {
                                                 this.gear = value as String?;
                                               }))),
@@ -1061,10 +1150,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Length",
+                                            hintText: "Car Engine",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Length',
+                                            labelText: 'Engine',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1096,10 +1185,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Capacity",
+                                            hintText: "Car Color",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Capacity',
+                                            labelText: 'Color',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1131,10 +1220,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Overnight Guests",
+                                            hintText: "Number of Seats",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Overnight Guests',
+                                            labelText: 'Seats',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1171,10 +1260,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Cabins",
+                                            hintText: "Number of Doors",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Cabins',
+                                            labelText: 'Doors',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1206,10 +1295,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Crew",
+                                            hintText: "Number of Luggage",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Crew',
+                                            labelText: 'Luggage',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1237,7 +1326,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                 ),
                               ],
                             ),
-                            /*SizedBox(height: 20.0),
+                            SizedBox(height: 20.0),
                             Wrap(
                               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -1258,7 +1347,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                     featureText: 'Sensors',
-                                    featureValue: featureBoolValue,
+                                    featureValue:
+                                        otherFeatures.contains('Sensors')
+                                            ? featureBoolValue == true
+                                            : featureBoolValue == false,
                                     featureList: otherFeatures,
                                   ),
                                 ),
@@ -1279,7 +1371,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Bluetooth',
-                                      featureValue: featureBoolValue,
+                                      featureValue:
+                                          otherFeatures.contains('Bluetooth')
+                                              ? featureBoolValue == true
+                                              : featureBoolValue == false,
                                       featureList: otherFeatures),
                                 ),
                                 Container(
@@ -1299,7 +1394,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Camera',
-                                      featureValue: featureBoolValue,
+                                      featureValue:
+                                          otherFeatures.contains('Camera')
+                                              ? featureBoolValue == true
+                                              : featureBoolValue == false,
                                       featureList: otherFeatures),
                                 ),
                                 Container(
@@ -1319,7 +1417,10 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Safety',
-                                      featureValue: featureBoolValue,
+                                      featureValue:
+                                          otherFeatures.contains('Safety')
+                                              ? featureBoolValue == true
+                                              : featureBoolValue == false,
                                       featureList: otherFeatures),
                                 ),
                                 Container(
@@ -1339,11 +1440,14 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Mp3/CD',
-                                      featureValue: featureBoolValue,
+                                      featureValue:
+                                          otherFeatures.contains('Mp3/CD')
+                                              ? featureBoolValue == true
+                                              : featureBoolValue == false,
                                       featureList: otherFeatures),
                                 ),
                               ],
-                            )*/
+                            )
                           ],
                         ),
                       ),
@@ -1386,7 +1490,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           DeoManageCars(widget.uid)));
                                 },
                                 child: const Text(
-                                  'Save',
+                                  'Update',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -1423,6 +1527,7 @@ class _OtherCarFeaturesState extends State<OtherCarFeatures> {
   bool featureValue;
   var featureList;
   _OtherCarFeaturesState(this.featureText, this.featureValue, this.featureList);
+
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(

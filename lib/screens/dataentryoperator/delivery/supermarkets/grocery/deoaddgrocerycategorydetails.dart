@@ -134,7 +134,10 @@ class _AddGroceryCategoryDetailsState extends State<AddGroceryCategoryDetails> {
 
 
   _uploadgroceryData() async {
-    String newgrocerycategoryid = FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc().id;
+    String newgrocerycategoryid = FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc().id;
 
     try {
       await FirebaseFirestore.instance.collection('supermarkets').doc(widget.supermarketid).collection('grocerycategory').doc(newgrocerycategoryid).set({

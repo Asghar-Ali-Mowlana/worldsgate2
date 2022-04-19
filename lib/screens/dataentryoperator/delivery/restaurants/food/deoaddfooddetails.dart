@@ -5,14 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
-
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
 import '../deoaddrestaurantdetails.dart';
@@ -87,7 +81,6 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -158,12 +151,18 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
 
 
   _uploadFoodData() async {
-    String newFoodId = FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc(foodcategoryid).collection('food').doc().id;
+    String newFoodId = FirebaseFirestore.instance
+
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI").collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc(foodcategoryid).collection('food').doc().id;
 
 
     print(foodcategoryid);
     try {
-      await FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc(foodcategoryid).collection('food').doc(newFoodId).set({
+      await FirebaseFirestore.instance
+
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI").collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc(foodcategoryid).collection('food').doc(newFoodId).set({
         'name': foodNameController.text,
         //'foodcategory': widget.foodcategorypassed,
         'tags': tags,
@@ -201,6 +200,9 @@ class _AddFoodDetailsState extends State<AddFoodDetails> {
 
   getyoo() async {
     await FirebaseFirestore.instance
+
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('restaurants').doc(widget.restaurantid).collection('foodcategory')
         .where('name', isEqualTo: widget.foodcategorypassed)
         .get()

@@ -1,11 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userorderfood.dart';
 Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+ // WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   if (u.Platform.operatingSystem == "android" ||
       u.Platform.operatingSystem == "ios") {
     await Firebase.initializeApp();
@@ -22,6 +25,8 @@ Future main() async {
     );
   }
   runApp(const MyApp());
+  // whenever your initialization is completed, remove the splash screen:
+  FlutterNativeSplash.remove();
 }
 
 class MyApp extends StatelessWidget {

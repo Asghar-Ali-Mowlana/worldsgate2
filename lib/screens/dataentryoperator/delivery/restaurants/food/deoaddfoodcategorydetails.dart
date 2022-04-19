@@ -5,14 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
-
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
 import '../deoaddrestaurantdetails.dart';
@@ -70,7 +64,6 @@ class _AddFoodCategoryDetailsState extends State<AddFoodCategoryDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -137,10 +130,14 @@ class _AddFoodCategoryDetailsState extends State<AddFoodCategoryDetails> {
 
 
   _uploadFoodData() async {
-    String newfoodcategoryid = FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc().id;
+    String newfoodcategoryid = FirebaseFirestore.instance.collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI").collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc(newfoodcategoryid).set({
+      await FirebaseFirestore.instance.
+
+        collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI").collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc(newfoodcategoryid).set({
         'name': foodCategoryNameController.text,
      
         'datecreated': DateTime.now(),

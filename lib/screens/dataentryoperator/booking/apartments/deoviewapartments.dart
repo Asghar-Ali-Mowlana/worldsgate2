@@ -3,12 +3,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:worldsgate/screens/dataentryoperator/apartments/deoupdateapartmentdetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/apartments/deomanageapartments.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
-import '../../../widgets/sidelayout.dart';
+import '../../../../widgets/sidelayout.dart';
 import 'deoaddapartmentdetails.dart';
+import 'deomanageapartments.dart';
+import 'deoupdateapartmentdetails.dart';
 
 class DeoViewApartments extends StatefulWidget {
   //const DeoViewApartments({Key? key}) : super(key: key);

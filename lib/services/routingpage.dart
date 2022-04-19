@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/models/usermodel.dart';
-import 'package:worldsgate/screens/user/userhomepage.dart';
 import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 
-import '../screens/dataentryoperator/hotels/deomanagehotels.dart';
+import '../screens/dataentryoperator/booking/hotels/deomanagehotels.dart';
+
 
 class RoutePage extends StatefulWidget {
   @override

@@ -1,30 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
-import 'package:worldsgate/helper/extended_responsive_helper.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deoaddrestaurantdetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
 import 'package:worldsgate/widgets/sidelayout.dart';
+import '../../booking/cars/deoviewcars.dart';
 
-//import 'deoaddcardetails.dart';
-
-class DeoOrderFood extends StatefulWidget {
-  //const DeoOrderFood({Key? key}) : super(key: key);
+class DeoManagePharmacy extends StatefulWidget {
+  //const DeoManagePharmacy({Key? key}) : super(key: key);
 
   String? uid;
 
-  DeoOrderFood(this.uid);
+  DeoManagePharmacy(this.uid);
 
   @override
-  State<DeoOrderFood> createState() => _DeoOrderFoodState();
+  State<DeoManagePharmacy> createState() => _DeoManagePharmacyState();
 }
 
-class _DeoOrderFoodState extends State<DeoOrderFood> {
+class _DeoManagePharmacyState extends State<DeoManagePharmacy> {
   bool _isLoading = true;
 
   var _scaffoldState = new GlobalKey<ScaffoldState>();
@@ -57,7 +53,9 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
 
   getyo() async {
     FirebaseFirestore.instance
-        .collection('restaurants')
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('pharmacys')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((myDocuments) {
@@ -65,7 +63,9 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
       totaladded = myDocuments.docs.length;
     });
     await FirebaseFirestore.instance
-        .collection('restaurants')
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('pharmacys')
         .where('dataentryuid', isEqualTo: widget.uid)
         .get()
         .then((QuerySnapshot querySnapshot) => {
@@ -73,17 +73,17 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
                 DateTime dt = (doc['datecreated'] as Timestamp).toDate();
                 String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
                 dategroupbylist.add({
-                  "restaurantid": doc.id,
+                  "pharmacyid": doc.id,
                   "name": '${doc['name']}',
                   "minimumorderprice": '${doc['minimumorderprice']}',
                   "preparationtime": '${doc['preparationtime']}',
                   "description": '${doc['description']}',
                   "coverimage": '${doc['coverimage']}',
-                  "otherrestaurantimages": '${doc['otherrestaurantimages']}',
+                  "otherpharmacyimages": '${doc['otherpharmacyimages']}',
                   "delivery": '${doc['delivery']}',
                   "livetracking": '${doc['livetracking']}',
                   "deliverycharge": '${doc['deliverycharge']}',
-                  "address": '${doc['address']}',
+                  "city": '${doc['city']}',
                   "added_date": '${formattedDate}',
                 });
               })
@@ -265,7 +265,7 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
                                   ? height * 0.01
                                   : height * 0),
                   child: Text(
-                    "${entryList[i].value[j]["address"]}",
+                    "${entryList[i].value[j]["city"]}",
                     style: TextStyle(
                       fontSize: 12,
                       color: Color(0xFFBA780F),
@@ -715,7 +715,7 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 14.0),
                                 child: Text(
-                                  "Delivery > Food (${totaladded.toString()})  $tex",
+                                  "Delivery > Pharmacy (${totaladded.toString()})  $tex",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
@@ -739,7 +739,7 @@ class _DeoOrderFoodState extends State<DeoOrderFood> {
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) =>
                                             // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                            AddRestaurantDetails(widget.uid)));
+                                            AddPharmacyDetails(widget.uid)));
                                   },
                                   child: Text(
                                     "+ Add new",

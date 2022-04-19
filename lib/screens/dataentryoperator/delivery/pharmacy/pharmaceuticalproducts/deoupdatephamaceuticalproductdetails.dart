@@ -50,6 +50,8 @@ class _UpdatepharmaceuticalproductDetailsState extends State<Updatepharmaceutica
 
 
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('pharmacys')
         .doc(widget.pharmacyid)
         .collection('pharmaceuticalproductcategory')
@@ -165,6 +167,8 @@ class _UpdatepharmaceuticalproductDetailsState extends State<Updatepharmaceutica
     print(pharmaceuticalproductcategoryid);
     try {
       await FirebaseFirestore.instance
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI")
           .collection('pharmacys')
           .doc(widget.pharmacyid)
           .collection('pharmaceuticalproductcategory')
@@ -205,6 +209,8 @@ class _UpdatepharmaceuticalproductDetailsState extends State<Updatepharmaceutica
 
   getyoo() async {
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('pharmacys')
         .doc(widget.pharmacyid)
         .collection('pharmaceuticalproductcategory')
@@ -217,6 +223,8 @@ class _UpdatepharmaceuticalproductDetailsState extends State<Updatepharmaceutica
                 });
 
                 FirebaseFirestore.instance
+                    .collection('delivery')
+                    .doc("9WRNvPkoftSw4o2rHGUI")
                     .collection('pharmacys')
                     .doc(widget.pharmacyid)
                     .collection('pharmaceuticalproductcategory')

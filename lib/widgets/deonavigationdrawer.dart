@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoorderfood.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deoaddsupermarketdetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
-
-import '../screens/dataentryoperator/apartments/deomanageapartments.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deomanagerestaurant.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deomanagesupermarket.dart';
+import '../screens/dataentryoperator/booking/apartments/deomanageapartments.dart';
+import '../screens/dataentryoperator/booking/cars/deomanagecars.dart';
+import '../screens/dataentryoperator/booking/hotels/deomanagehotels.dart';
+import '../screens/dataentryoperator/delivery/pharmacy/deomanagepharmacy.dart';
 import '../screens/dataentryoperator/delivery/restaurants/deoaddrestaurantdetails.dart';
 import '../screens/loginpage.dart';
 import 'package:firebase_auth/firebase_auth.dart' as u;
@@ -125,7 +124,7 @@ class DeoNavigationDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DeoOrderFood(uid),
+                  builder: (context) => DeoManageRestaurant(uid),
                 ));
               },
             ),
@@ -137,7 +136,7 @@ class DeoNavigationDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AddSupermarketDetails(uid),
+                  builder: (context) => DeoManageSupermarket(uid),
                 ));
               },
             ),
@@ -149,7 +148,7 @@ class DeoNavigationDrawer extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => AddPharmacyDetails(uid),
+                  builder: (context) => DeoManagePharmacy(uid),
                 ));
               },
             ),

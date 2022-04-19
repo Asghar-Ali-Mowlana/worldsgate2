@@ -150,12 +150,18 @@ class _AddPharmaceuticalProductDetailsState extends State<AddPharmaceuticalProdu
 
 
   _uploadpharmaceuticalproductData() async {
-    String newpharmaceuticalproductId = FirebaseFirestore.instance.collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(pharmaceuticalproductcategoryid).collection('pharmaceuticalproduct').doc().id;
+    String newpharmaceuticalproductId = FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(pharmaceuticalproductcategoryid).collection('pharmaceuticalproduct').doc().id;
 
 
     print(pharmaceuticalproductcategoryid);
     try {
-      await FirebaseFirestore.instance.collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(pharmaceuticalproductcategoryid).collection('pharmaceuticalproduct').doc(newpharmaceuticalproductId).set({
+      await FirebaseFirestore.instance
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI")
+          .collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory').doc(pharmaceuticalproductcategoryid).collection('pharmaceuticalproduct').doc(newpharmaceuticalproductId).set({
         'name': pharmaceuticalproductNameController.text,
         //'pharmaceuticalproductcategory': widget.pharmaceuticalproductcategorypassed,
         'tags': tags,
@@ -193,6 +199,8 @@ class _AddPharmaceuticalProductDetailsState extends State<AddPharmaceuticalProdu
 
   getyoo() async {
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('pharmacys').doc(widget.pharmacyid).collection('pharmaceuticalproductcategory')
         .where('name', isEqualTo: widget.pharmaceuticalproductcategorypassed)
         .get()

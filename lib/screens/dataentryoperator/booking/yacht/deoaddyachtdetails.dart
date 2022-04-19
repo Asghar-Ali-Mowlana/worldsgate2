@@ -5,30 +5,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
+import '../../../../widgets/deonavigationdrawer.dart';
+import '../../../../widgets/header.dart';
+import '../cars/deomanagecars.dart';
 
-import '../../../widgets/deonavigationdrawer.dart';
-import '../../../widgets/header.dart';
-import '../../../widgets/usernavigationdrawer.dart';
-
-class AddCarDetails extends StatefulWidget {
-  //const AddCarDetails({ Key? key }) : super(key: key);
-
+class AddYachtDetails extends StatefulWidget {
   String? uid;
 
-  AddCarDetails(this.uid);
+  //const AddYachtDetails({ Key? key }) : super(key: key);
+  AddYachtDetails(this.uid);
 
   @override
-  State<AddCarDetails> createState() => _AddCarDetailsState();
+  State<AddYachtDetails> createState() => _AddYachtDetailsState();
 }
 
-class _AddCarDetailsState extends State<AddCarDetails> {
+class _AddYachtDetailsState extends State<AddYachtDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
@@ -37,7 +30,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController carEngineController = TextEditingController();
 
   String? model;
   String? delivery;
@@ -50,37 +42,77 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   String? doors;
   String? luggage;
 
-  final models = [
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
-    "2014",
-    "2013",
-    "2012",
-    "2011",
-    "2010",
+  final yachtBuild = [
+    "Von Dutch",
+    "Sunseeker",
+    "Azimut",
+    "Numarine",
+    "Rodriguez",
+    "Bennetti",
   ];
 
-  final deliveryType = [
-    "Free",
-    "Paid",
+  final capacity = [
+    "12",
+    "13",
+    "14",
+    "15",
+    "16",
+    "17",
+    "18",
+    "19",
+    "20",
+    "21",
+    "22",
+    "23",
+    "24",
+    "25",
+    "26",
+    "27",
+    "28",
+    "29",
+    "30",
+    "31",
+    "32",
+    "33",
+    "34",
+    "35",
+    "36",
+    "37",
+    "38",
+    "39",
+    "40",
+    "41",
+    "42",
+    "43",
+    "44",
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
   ];
 
-  final insuranceType = [
-    "Full",
-    "Part",
+  final overNightGuests = [
+    "2",
+    "4",
+    "6",
+    "8",
+    "10",
+    "12",
   ];
 
-  final carBrand = ["Lamborghini", "Ferrari", "Rolls Royce", "McLaren"];
+  final cabinType = ["Master", "Double", "VIP", "Twin"];
 
-  final gearType = [
-    "Auto",
-    "Manual",
+  final crew = [
+    "Seychelles",
+    "British",
+    "Ukrainian",
+    "South African",
+    "French",
+    "Filipino",
+    "Australian",
+    "Turkish"
   ];
 
   final engineType = [
@@ -134,7 +166,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -200,7 +231,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   List<File>? files;
 
   Future selectOtherFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       otherResult = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: true);
@@ -295,7 +325,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         //'stars': stars,
         //'taxandcharges': null,
         'gear': gear,
-        'engine': carEngineController.text,
+        'engine': engine,
         'color': color,
         'seats': seats,
         'doors': doors,
@@ -400,8 +430,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               onPressed: () {
                                 carNameController..text = "";
                               }),
-                          hintText: "Enter car name",
-                          labelText: "Car Name",
+                          hintText: "Enter yacht name",
+                          labelText: "Yacht Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -416,7 +446,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Car name cannot be empty";
+                            return "Yacht name cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -424,7 +454,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         },
                         keyboardType: TextInputType.text,
                       ),
-                      SizedBox(
+                      /*SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -666,45 +696,102 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                             )
                           ],
                         ),
-                      ),
+                      ),*/
                       SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        controller: priceController,
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Color(0xFFdb9e1f),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.white),
+                                  controller: priceController,
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                        icon: Icon(
+                                          Icons.cancel,
+                                          color: Color(0xFFdb9e1f),
+                                        ),
+                                        onPressed: () {
+                                          priceController..text = "";
+                                        }),
+                                    hintText: "Enter per hour price",
+                                    labelText: "Per Hour Price",
+                                    hintStyle: TextStyle(color: Colors.white70),
+                                    labelStyle: new TextStyle(
+                                        color: Colors.white70, height: 0.1),
+                                    enabled: true,
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          new BorderSide(color: Colors.white70),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Color(0xFFdb9e1f)),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value!.length == 0) {
+                                      return "Per hour price cannot be empty";
+                                    }
+                                  },
+                                  onSaved: (value) {
+                                    priceController.text = value!;
+                                  },
+                                  keyboardType: TextInputType.number,
+                                ),
                               ),
-                              onPressed: () {
-                                priceController..text = "";
-                              }),
-                          hintText: "Enter price",
-                          labelText: "Price",
-                          hintStyle: TextStyle(color: Colors.white70),
-                          labelStyle:
-                              new TextStyle(color: Colors.white70, height: 0.1),
-                          enabled: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.white70),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                                new BorderSide(color: Color(0xFFdb9e1f)),
-                          ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 8.0),
+                                child: TextFormField(
+                                  style: TextStyle(color: Colors.white),
+                                  controller: priceController,
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                        icon: Icon(
+                                          Icons.cancel,
+                                          color: Color(0xFFdb9e1f),
+                                        ),
+                                        onPressed: () {
+                                          priceController..text = "";
+                                        }),
+                                    hintText: "Enter daily price",
+                                    labelText: "Daily Price",
+                                    hintStyle: TextStyle(color: Colors.white70),
+                                    labelStyle: new TextStyle(
+                                        color: Colors.white70, height: 0.1),
+                                    enabled: true,
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide:
+                                          new BorderSide(color: Colors.white70),
+                                    ),
+                                    focusedBorder: UnderlineInputBorder(
+                                      borderSide: new BorderSide(
+                                          color: Color(0xFFdb9e1f)),
+                                    ),
+                                  ),
+                                  validator: (value) {
+                                    if (value!.length == 0) {
+                                      return "Daily price cannot be empty";
+                                    }
+                                  },
+                                  onSaved: (value) {
+                                    priceController.text = value!;
+                                  },
+                                  keyboardType: TextInputType.number,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        validator: (value) {
-                          if (value!.length == 0) {
-                            return "Price cannot be empty";
-                          }
-                        },
-                        onSaved: (value) {
-                          priceController.text = value!;
-                        },
-                        keyboardType: TextInputType.number,
                       ),
                       SizedBox(
                         height: 20,
@@ -722,8 +809,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter car description",
-                          labelText: "Car Description",
+                          hintText: "Enter yacht description",
+                          labelText: "Yacht Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -738,7 +825,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Car description cannot be empty";
+                            return "Yacht description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -752,7 +839,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Car Cover Photo",
+                          "Yacht Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -785,7 +872,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Car Cover Photo",
+                              "Yacht Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -830,7 +917,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other Car Photos",
+                          "Other Yacht Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -863,7 +950,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other Hotel Photos",
+                              "Other Yacht Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -932,10 +1019,10 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Car Gear",
+                                            hintText: "Build",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Gear',
+                                            labelText: 'Build',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -954,56 +1041,11 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                           style: TextStyle(color: Colors.white),
                                           isExpanded: true,
                                           value: gear,
-                                          items: gearType
-                                              .map(buildMenuItem)
-                                              .toList(),
+                                          items:
+                                              crew.map(buildMenuItem).toList(),
                                           onChanged: (value) => setState(() {
                                                 this.gear = value as String?;
                                               }))),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8.0),
-                                    child: TextFormField(
-                                      style: TextStyle(color: Colors.white),
-                                      controller: carEngineController,
-                                      decoration: InputDecoration(
-                                        suffixIcon: IconButton(
-                                            icon: Icon(
-                                              Icons.cancel,
-                                              color: Color(0xFFdb9e1f),
-                                            ),
-                                            onPressed: () {
-                                              carEngineController..text = "";
-                                            }),
-                                        hintText: "Enter Car Engine",
-                                        labelText: "Car Engine",
-                                        hintStyle:
-                                            TextStyle(color: Colors.white70),
-                                        labelStyle: new TextStyle(
-                                            color: Colors.white70, height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value!.length == 0) {
-                                          return "Car engine cannot be empty";
-                                        }
-                                      },
-                                      onSaved: (value) {
-                                        carEngineController.text = value!;
-                                      },
-                                      keyboardType: TextInputType.text,
-                                    ),
-                                  ),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -1011,10 +1053,45 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Car Color",
+                                            hintText: "Length",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Color',
+                                            labelText: 'Length',
+                                            labelStyle: TextStyle(
+                                                color: Colors.white70,
+                                                height: 0.1),
+                                            enabled: true,
+                                            enabledBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Colors.white70),
+                                            ),
+                                            focusedBorder: UnderlineInputBorder(
+                                              borderSide: new BorderSide(
+                                                  color: Color(0xFFdb9e1f)),
+                                            ),
+                                          ),
+                                          dropdownColor: Color(0xFF000000),
+                                          //focusColor: Color(0xFFdb9e1f),
+                                          style: TextStyle(color: Colors.white),
+                                          isExpanded: true,
+                                          value: engine,
+                                          items: engineType
+                                              .map(buildMenuItem)
+                                              .toList(),
+                                          onChanged: (value) => setState(() {
+                                                this.engine = value as String?;
+                                              }))),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: DropdownButtonFormField(
+                                          decoration: InputDecoration(
+                                            hintText: "Capacity",
+                                            hintStyle: TextStyle(
+                                                color: Colors.white70),
+                                            labelText: 'Capacity',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1046,10 +1123,10 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Number of Seats",
+                                            hintText: "Overnight Guests",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Seats',
+                                            labelText: 'Overnight Guests',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1077,9 +1154,6 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                 ),
                               ],
                             ),
-                            SizedBox(
-                              height: 10.0,
-                            ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -1089,10 +1163,10 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Number of Doors",
+                                            hintText: "Cabins",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Doors',
+                                            labelText: 'Cabins',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1124,10 +1198,10 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                           horizontal: 8.0),
                                       child: DropdownButtonFormField(
                                           decoration: InputDecoration(
-                                            hintText: "Number of Luggage",
+                                            hintText: "Crew",
                                             hintStyle: TextStyle(
                                                 color: Colors.white70),
-                                            labelText: 'Luggage',
+                                            labelText: 'Crew',
                                             labelStyle: TextStyle(
                                                 color: Colors.white70,
                                                 height: 0.1),
@@ -1155,7 +1229,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20.0),
+                            /*SizedBox(height: 20.0),
                             Wrap(
                               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -1261,7 +1335,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                                       featureList: otherFeatures),
                                 ),
                               ],
-                            )
+                            )*/
                           ],
                         ),
                       ),

@@ -5,17 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
 
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
-import '../deoaddrestaurantdetails.dart';
 
 class UpdateFoodDetails extends StatefulWidget {
   //const UpdateFoodDetails({Key? key}) : super(key: key);
@@ -55,6 +49,9 @@ class _UpdateFoodDetailsState extends State<UpdateFoodDetails> {
 
 
     await FirebaseFirestore.instance
+
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('restaurants')
         .doc(widget.restaurantid)
         .collection('foodcategory')
@@ -96,7 +93,6 @@ class _UpdateFoodDetailsState extends State<UpdateFoodDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -170,6 +166,8 @@ class _UpdateFoodDetailsState extends State<UpdateFoodDetails> {
     print(foodcategoryid);
     try {
       await FirebaseFirestore.instance
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI")
           .collection('restaurants')
           .doc(widget.restaurantid)
           .collection('foodcategory')
@@ -210,6 +208,8 @@ class _UpdateFoodDetailsState extends State<UpdateFoodDetails> {
 
   getyoo() async {
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('restaurants')
         .doc(widget.restaurantid)
         .collection('foodcategory')
@@ -222,6 +222,8 @@ class _UpdateFoodDetailsState extends State<UpdateFoodDetails> {
                 });
 
                 FirebaseFirestore.instance
+                    .collection('delivery')
+                    .doc("9WRNvPkoftSw4o2rHGUI")
                     .collection('restaurants')
                     .doc(widget.restaurantid)
                     .collection('foodcategory')

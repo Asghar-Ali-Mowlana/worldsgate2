@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deomanagerestaurant.dart';
 
 import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
@@ -37,9 +38,52 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   final TextEditingController minimumOrderprepTimeController =
       TextEditingController();
   final TextEditingController prepTimeController = TextEditingController();
+  final TextEditingController restaurantAddressController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController deliverychargeController =
       TextEditingController();
+
+
+
+  String? city;
+
+  final places = [
+    'Deira',
+    'Bur Dubai',
+    'Beach & Coast',
+    'Garhoud',
+    'Palm Jumeirah',
+    'Barsha Heights (Tecom)',
+    'Sheikh Zayed Road',
+    'Al Barsha',
+    'Dubai Creek',
+    'Jumeirah Beach Residence',
+    'Dubai Marina',
+    'Trade Centre',
+    'Old Dubai',
+    'Downtown Dubai',
+    'Business Bay',
+    "Guests' favourite area",
+    'Jadaf',
+    'Al Qusais',
+    'Oud Metha',
+    'Dubai Investment Park',
+    'Dubai Festival City',
+    'Dubai World Central',
+    'Umm Suqeim',
+    'Discovery Gardens',
+    'Dubai Production City',
+    'Jumeirah Lakes Towers',
+  ];
+
+  DropdownMenuItem<String> buildMenuItem(String place) => DropdownMenuItem(
+    value: place,
+    child: Text(
+      place,
+      style: const TextStyle(fontSize: 16.0),
+    ),
+  );
+
 
   String? deliverytypechosen;
   final deliveryType = [
@@ -60,14 +104,6 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
     'Safety',
     'Mp3/CD',
   ];
-
-  DropdownMenuItem<String> buildMenuItem(String place) => DropdownMenuItem(
-        value: place,
-        child: Text(
-          place,
-          style: const TextStyle(fontSize: 16.0),
-        ),
-      );
 
   bool _isLoading = true;
 
@@ -227,6 +263,8 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
     try {
       if (deliverychargeavailable == true) {
         await FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
             .collection('restaurants')
             .doc(newrestaurantid)
             .set({
@@ -234,6 +272,9 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           'minimumorderprice':
               double.parse(minimumOrderprepTimeController.text),
           'preparationtime': double.parse(prepTimeController.text),
+          'city': city,
+          'address': restaurantAddressController.text,
+          'mainfoodcategories': [],
           'description': descriptionController.text,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
@@ -246,6 +287,8 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
         });
       } else {
         await FirebaseFirestore.instance
+            .collection('delivery')
+            .doc("9WRNvPkoftSw4o2rHGUI")
             .collection('restaurants')
             .doc(newrestaurantid)
             .set({
@@ -253,6 +296,9 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           'minimumorderprice':
               double.parse(minimumOrderprepTimeController.text),
           'preparationtime': double.parse(prepTimeController.text),
+          'city': city,
+          'address': restaurantAddressController.text,
+          'mainfoodcategories': [],
           'description': descriptionController.text,
           'datecreated': DateTime.now(),
           'dataentryuid': widget.uid,
@@ -595,10 +641,50 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                         height: 20,
                       ),
 
+
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Select place in UAE",
+                            hintStyle: TextStyle(
+                                color: Colors.white70),
+                            labelText: 'Restaurant City',
+                            labelStyle: TextStyle(
+                                color: Colors.white70,
+                                height: 0.1),
+                            enabled: true,
+                            enabledBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Colors.white70),
+                            ),
+                            focusedBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style:
+                          TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: city,
+                          items: places
+                              .map(buildMenuItem)
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            this.city = value as String?;
+                          })),
+
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
                       TextFormField(
                         style: TextStyle(color: Colors.white),
                         maxLines: null,
-                        controller: descriptionController,
+                        controller: restaurantAddressController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -606,10 +692,10 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                descriptionController..text = "";
+                                restaurantAddressController..text = "";
                               }),
-                          hintText: "Enter restaurant description",
-                          labelText: "Restaurant Description",
+                          hintText: "Enter restaurant address",
+                          labelText: "Restaurant Address",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -628,10 +714,63 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                           }
                         },
                         onSaved: (value) {
+                          restaurantAddressController.text = value!;
+                        },
+                        keyboardType: TextInputType.multiline,
+                      ),
+
+
+
+
+
+                      SizedBox(
+                        height: 20,
+                      ),
+
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        maxLines: null,
+                        controller: descriptionController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              onPressed: () {
+                                descriptionController..text = "";
+                              }),
+                          hintText: "Enter restaurant description",
+                          labelText: "Restaurant Description",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "restaurant description cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
                           descriptionController.text = value!;
                         },
                         keyboardType: TextInputType.multiline,
                       ),
+
+
+
+
+
+
+
                       SizedBox(
                         height: 30,
                       ),
@@ -1023,7 +1162,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          AddRestaurantDetails(widget.uid)));
+                                          DeoManageRestaurant(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',

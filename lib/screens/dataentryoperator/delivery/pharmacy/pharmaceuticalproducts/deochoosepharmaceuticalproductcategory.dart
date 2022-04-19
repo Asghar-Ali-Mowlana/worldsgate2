@@ -1,17 +1,6 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
-import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
 import 'deoaddpharmaceuticalproductdetails.dart';
@@ -81,6 +70,8 @@ class _SelectPharmaceuticalProductCategoryState extends State<SelectPharmaceutic
 
   getpharmaceuticalproductcategories() async {
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('pharmacys')
         .doc(widget.pharmacyid)
         .collection('pharmaceuticalproductcategory')

@@ -5,39 +5,33 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deomanagecars.dart';
-import 'package:worldsgate/screens/dataentryoperator/hotels/deomanagehotels.dart';
+import '../../../../widgets/deonavigationdrawer.dart';
+import '../../../../widgets/header.dart';
+import 'deomanagecars.dart';
 
-import '../../../widgets/deonavigationdrawer.dart';
-import '../../../widgets/header.dart';
-import '../../../widgets/usernavigationdrawer.dart';
-
-class UpdateCarDetails extends StatefulWidget {
-  //const UpdateCarDetails({Key? key}) : super(key: key);
+class AddCarDetails extends StatefulWidget {
+  //const AddCarDetails({ Key? key }) : super(key: key);
 
   String? uid;
-  String? carid;
 
-  UpdateCarDetails(this.uid, this.carid);
+  AddCarDetails(this.uid);
 
   @override
-  State<UpdateCarDetails> createState() => _UpdateCarDetailsState();
+  State<AddCarDetails> createState() => _AddCarDetailsState();
 }
 
-class _UpdateCarDetailsState extends State<UpdateCarDetails> {
-  var _scaffoldState = new GlobalKey<ScaffoldState>();
+class _AddCarDetailsState extends State<AddCarDetails> {
   final _formkey = GlobalKey<FormState>();
+  var _scaffoldState = new GlobalKey<ScaffoldState>();
 
   final TextEditingController carNameController = TextEditingController();
   final TextEditingController distanceController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  final TextEditingController carEngineController = TextEditingController();
 
   String? model;
   String? delivery;
@@ -106,7 +100,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
 
   bool featureBoolValue = true;
 
-  List<String> allOtherFeatures = [
+  List<String> otherFeatures = [
     'Sensors',
     'Bluetooth',
     'Camera',
@@ -134,7 +128,6 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
   List<Uint8List> coverImage = [];
 
   Future selectFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       result = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: false);
@@ -200,7 +193,6 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
   List<File>? files;
 
   Future selectOtherFileandUpload() async {
-    print('OS: ${u.Platform.operatingSystem}');
     try {
       otherResult = await FilePicker.platform
           .pickFiles(type: FileType.any, allowMultiple: true);
@@ -270,124 +262,11 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
     }
   }
 
-  var otherFeatures;
-  List<String> carCoverImageList = [];
-
-  _getCarDetails() async {
-    await FirebaseFirestore.instance
-        .collection("cars")
-        .doc(widget.carid)
-        .get()
-        .then((documentSnapshot) {
-      if (documentSnapshot.exists) {
-        setState(() {
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('name')) {
-            carNameController.text = documentSnapshot['name'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('model')) {
-            model = documentSnapshot['model'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('delivery')) {
-            delivery = documentSnapshot['delivery'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('insurance')) {
-            insurance = documentSnapshot['insurance'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('brand')) {
-            brand = documentSnapshot['brand'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('distance')) {
-            distanceController.text = documentSnapshot['distance'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('age')) {
-            ageController.text = documentSnapshot['age'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('price')) {
-            priceController.text = documentSnapshot['price'].toString();
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('description')) {
-            descriptionController.text = documentSnapshot['description'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('coverimage')) {
-            coverImageLink = documentSnapshot['coverimage'];
-            carCoverImageList.add(coverImageLink);
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('othercarimages')) {
-            for (int i = 0;
-                i < documentSnapshot['othercarimages'].length;
-                i++) {
-              OtherHotelImagesUrl.add(documentSnapshot['othercarimages'][i]);
-            }
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('gear')) {
-            gear = documentSnapshot['gear'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('engine')) {
-            engine = documentSnapshot['engine'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('color')) {
-            color = documentSnapshot['color'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('seats')) {
-            seats = documentSnapshot['seats'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('doors')) {
-            doors = documentSnapshot['doors'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('luggage')) {
-            luggage = documentSnapshot['luggage'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('otherfeatures')) {
-            otherFeatures = documentSnapshot['otherfeatures'];
-          }
-        });
-      } else {
-        print("The document does not exist");
-      }
-    });
-  }
-
-  _removeCarCoverPhoto(url) async {
-    await FirebaseStorage.instance.refFromURL(url).delete();
-    setState(() {
-      carCoverImageList.removeAt(carCoverImageList.indexOf(url));
-      coverImageLink = "";
-    });
-  }
-
-  _removeOtherCarPhotos(url) async {
-    await FirebaseStorage.instance.refFromURL(url).delete();
-    setState(() {
-      OtherHotelImagesUrl.removeAt(OtherHotelImagesUrl.indexOf(url));
-    });
-  }
-
   _uploadHotelData() async {
-    //String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
+    String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
 
     try {
-      await FirebaseFirestore.instance
-          .collection('cars')
-          .doc(widget.carid)
-          .update({
+      await FirebaseFirestore.instance.collection('cars').doc(newCarId).set({
         'name': carNameController.text,
         'model': model,
         'delivery': delivery,
@@ -400,21 +279,23 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
         //'mainfacilities': mainFacilities,
         //'subfacilities': subFacilities,
         //'rooms': roomDeatils,
-        //'datecreated': DateTime.now(),
-        //'dataentryuid': widget.uid,
+        'datecreated': DateTime.now(),
+        'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'othercarimages': OtherHotelImagesUrl,
         //'cancellationfee': null,
         //'stars': stars,
         //'taxandcharges': null,
         'gear': gear,
-        'engine': engine,
+        'engine': carEngineController.text,
         'color': color,
         'seats': seats,
         'doors': doors,
         'luggage': luggage,
         'otherfeatures': otherFeatures,
-        //'carid': newCarId,
+        'carid': newCarId,
+        //example added
+        'topspeed': 123,
       });
     } catch (e) {
       print(e);
@@ -440,7 +321,6 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
   void initState() {
     super.initState();
     getname();
-    _getCarDetails();
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         _isLoading = false;
@@ -908,43 +788,8 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                           ),
                         ),
                       ),
-                      carCoverImageList.isNotEmpty
+                      coverImage.length != 0
                           ? Container(
-                              width: MediaQuery.of(context).size.width / 1.6,
-                              height: 160,
-                              child: GridView.builder(
-                                  itemCount: carCoverImageList.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 7),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Container(
-                                          height: 100,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      carCoverImageList[index]),
-                                                  fit: BoxFit.cover)),
-                                          child: IconButton(
-                                            icon: Icon(
-                                              Icons.delete,
-                                              color: Color(0xFFdb9e1f),
-                                              size: 40.0,
-                                            ),
-                                            onPressed: () {
-                                              _removeCarCoverPhoto(
-                                                  carCoverImageList[index]);
-                                            },
-                                          )),
-                                    );
-                                    //Text('Image : ' + index.toString());
-                                  }),
-                            )
-                          : Container(
                               width: MediaQuery.of(context).size.width / 1.6,
                               height: 160,
                               child: GridView.builder(
@@ -957,20 +802,22 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                     return Padding(
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Container(
-                                        height: 100,
-                                        width: 100,
-                                        decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                                image: MemoryImage(
-                                                    coverImage[index]),
-                                                fit: BoxFit.cover)),
-                                      ),
+                                          height: 100,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: MemoryImage(
+                                                      coverImage[index]),
+                                                  fit: BoxFit.cover))),
                                     );
                                     //Text('Image : ' + index.toString());
                                   }),
+                            )
+                          : SizedBox(
+                              height: 10,
                             ),
                       SizedBox(
-                        height: 30,
+                        height: 20,
                       ),
                       const Align(
                         alignment: Alignment.centerLeft,
@@ -1008,7 +855,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other Car Photos",
+                              "Other Hotel Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -1019,52 +866,6 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      OtherHotelImagesUrl.length != 0
-                          ? Container(
-                              width: MediaQuery.of(context).size.width / 1.6,
-                              height: 160,
-                              child: GridView.builder(
-                                  itemCount: OtherHotelImagesUrl.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 8),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                            height: 100,
-                                            width: 100,
-                                            decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        OtherHotelImagesUrl[
-                                                            index]),
-                                                    fit: BoxFit.cover)),
-                                            child: IconButton(
-                                              icon: Icon(
-                                                Icons.delete,
-                                                color: Color(0xFFdb9e1f),
-                                                size: 40.0,
-                                              ),
-                                              onPressed: () {
-                                                _removeOtherCarPhotos(
-                                                    OtherHotelImagesUrl[index]);
-                                              },
-                                            )),
-                                      ),
-                                    );
-                                    //Text('Image : ' + index.toString());
-                                  }),
-                            )
-                          : SizedBox(
-                              height: 10,
-                            ),
                       otherImage.length != 0
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
@@ -1154,38 +955,47 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Car Engine",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Engine',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 8.0),
+                                    child: TextFormField(
+                                      style: TextStyle(color: Colors.white),
+                                      controller: carEngineController,
+                                      decoration: InputDecoration(
+                                        suffixIcon: IconButton(
+                                            icon: Icon(
+                                              Icons.cancel,
+                                              color: Color(0xFFdb9e1f),
                                             ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: engine,
-                                          items: engineType
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.engine = value as String?;
-                                              }))),
+                                            onPressed: () {
+                                              carEngineController..text = "";
+                                            }),
+                                        hintText: "Enter Car Engine",
+                                        labelText: "Car Engine",
+                                        hintStyle:
+                                            TextStyle(color: Colors.white70),
+                                        labelStyle: new TextStyle(
+                                            color: Colors.white70, height: 0.1),
+                                        enabled: true,
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Colors.white70),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: new BorderSide(
+                                              color: Color(0xFFdb9e1f)),
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value!.length == 0) {
+                                          return "Car engine cannot be empty";
+                                        }
+                                      },
+                                      onSaved: (value) {
+                                        carEngineController.text = value!;
+                                      },
+                                      keyboardType: TextInputType.text,
+                                    ),
+                                  ),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -1258,6 +1068,9 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                               }))),
                                 ),
                               ],
+                            ),
+                            SizedBox(
+                              height: 10.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -1355,10 +1168,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                     featureText: 'Sensors',
-                                    featureValue:
-                                        otherFeatures.contains('Sensors')
-                                            ? featureBoolValue == true
-                                            : featureBoolValue == false,
+                                    featureValue: featureBoolValue,
                                     featureList: otherFeatures,
                                   ),
                                 ),
@@ -1379,10 +1189,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Bluetooth',
-                                      featureValue:
-                                          otherFeatures.contains('Bluetooth')
-                                              ? featureBoolValue == true
-                                              : featureBoolValue == false,
+                                      featureValue: featureBoolValue,
                                       featureList: otherFeatures),
                                 ),
                                 Container(
@@ -1402,10 +1209,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Camera',
-                                      featureValue:
-                                          otherFeatures.contains('Camera')
-                                              ? featureBoolValue == true
-                                              : featureBoolValue == false,
+                                      featureValue: featureBoolValue,
                                       featureList: otherFeatures),
                                 ),
                                 Container(
@@ -1425,10 +1229,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Safety',
-                                      featureValue:
-                                          otherFeatures.contains('Safety')
-                                              ? featureBoolValue == true
-                                              : featureBoolValue == false,
+                                      featureValue: featureBoolValue,
                                       featureList: otherFeatures),
                                 ),
                                 Container(
@@ -1448,10 +1249,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                                   0.1,
                                   child: OtherCarFeatures(
                                       featureText: 'Mp3/CD',
-                                      featureValue:
-                                          otherFeatures.contains('Mp3/CD')
-                                              ? featureBoolValue == true
-                                              : featureBoolValue == false,
+                                      featureValue: featureBoolValue,
                                       featureList: otherFeatures),
                                 ),
                               ],
@@ -1498,7 +1296,7 @@ class _UpdateCarDetailsState extends State<UpdateCarDetails> {
                                           DeoManageCars(widget.uid)));
                                 },
                                 child: const Text(
-                                  'Update',
+                                  'Save',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
@@ -1535,7 +1333,6 @@ class _OtherCarFeaturesState extends State<OtherCarFeatures> {
   bool featureValue;
   var featureList;
   _OtherCarFeaturesState(this.featureText, this.featureValue, this.featureList);
-
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(

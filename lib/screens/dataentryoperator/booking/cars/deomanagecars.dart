@@ -1,19 +1,16 @@
 import 'dart:ui';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/extended_responsive_helper.dart';
-import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoaddcars.dart';
-import 'package:worldsgate/screens/dataentryoperator/cars/deoviewcars.dart';
-import 'package:worldsgate/screens/user/usercarbooking.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
-import '../../../widgets/sidelayout.dart';
+
+import '../../../../widgets/sidelayout.dart';
+import 'deoaddcars.dart';
+import 'deoviewcars.dart';
 //import 'deoaddcardetails.dart';
 
 class DeoManageCars extends StatefulWidget {

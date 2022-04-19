@@ -46,6 +46,8 @@ class _UpdateGroceryDetailsState extends State<UpdateGroceryDetails> {
 
 
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('supermarkets')
         .doc(widget.supermarketid)
         .collection('grocerycategory')
@@ -161,6 +163,8 @@ class _UpdateGroceryDetailsState extends State<UpdateGroceryDetails> {
     print(grocerycategoryid);
     try {
       await FirebaseFirestore.instance
+          .collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI")
           .collection('supermarkets')
           .doc(widget.supermarketid)
           .collection('grocerycategory')
@@ -201,6 +205,8 @@ class _UpdateGroceryDetailsState extends State<UpdateGroceryDetails> {
 
   getyoo() async {
     await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
         .collection('supermarkets')
         .doc(widget.supermarketid)
         .collection('grocerycategory')
@@ -213,6 +219,8 @@ class _UpdateGroceryDetailsState extends State<UpdateGroceryDetails> {
                 });
 
                 FirebaseFirestore.instance
+                    .collection('delivery')
+                    .doc("9WRNvPkoftSw4o2rHGUI")
                     .collection('supermarkets')
                     .doc(widget.supermarketid)
                     .collection('grocerycategory')
