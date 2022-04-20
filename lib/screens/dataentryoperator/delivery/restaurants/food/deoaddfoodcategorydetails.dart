@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
+import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import '../../../../../widgets/deonavigationdrawer.dart';
 import '../../../../../widgets/header.dart';
@@ -144,6 +145,14 @@ class _AddFoodCategoryDetailsState extends State<AddFoodCategoryDetails> {
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'foodcategoryid': newfoodcategoryid,
+      });
+      var list = [foodCategoryNameController.text];
+      await FirebaseFirestore.instance.
+
+      collection('delivery')
+          .doc("9WRNvPkoftSw4o2rHGUI").collection('restaurants').doc(widget.restaurantid).update({
+        //add the fod category inside the mainfoodcategories array
+        "mainfoodcategories": FieldValue.arrayUnion(list)
       });
     } catch (e) {
       print(e);

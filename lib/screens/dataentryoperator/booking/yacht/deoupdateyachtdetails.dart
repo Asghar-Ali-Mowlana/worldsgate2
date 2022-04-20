@@ -12,17 +12,18 @@ import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deomanageyach
 import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
 
-class AddYachtDetails extends StatefulWidget {
+class UpdateYachtDetails extends StatefulWidget {
   String? uid;
+  String? yachtid;
 
-  //const AddYachtDetails({ Key? key }) : super(key: key);
-  AddYachtDetails(this.uid);
+  //const UpdateYachtDetails({ Key? key }) : super(key: key);
+  UpdateYachtDetails(this.uid, this.yachtid);
 
   @override
-  State<AddYachtDetails> createState() => _AddYachtDetailsState();
+  State<UpdateYachtDetails> createState() => _UpdateYachtDetailsState();
 }
 
-class _AddYachtDetailsState extends State<AddYachtDetails> {
+class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
@@ -59,39 +60,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
     "N/A",
   ];
 
-  final cabinType = ["Master", "Double", "VIP", "Twin"];
 
-  final crew = [
-    "Seychelles",
-    "British",
-    "Ukrainian",
-    "South African",
-    "French",
-    "Filipino",
-    "Australian",
-    "Turkish"
-  ];
-
-  final engineType = [
-    "V8",
-  ];
-
-
-  final seatsDoorsLuggageCount = [
-    "2",
-    "4",
-    "6",
-  ];
-
-  bool featureBoolValue = true;
-
-  List<String> otherFeatures = [
-    'Sensors',
-    'Bluetooth',
-    'Camera',
-    'Safety',
-    'Mp3/CD',
-  ];
 
   DropdownMenuItem<String> buildMenuItem(String place) => DropdownMenuItem(
         value: place,
@@ -247,15 +216,47 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
     }
   }
 
+  String? builds;
+  String? overnightguests;
+
+  getyoo() async {
+        FirebaseFirestore.instance
+            .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
+            .collection('yachts').doc(widget.yachtid)
+            .get()
+            .then((myDocuments) {
+              print(myDocuments.data()!['description'].toString());
+          setState(() {
+            yachtNameController.text = myDocuments.data()!['name'].toString();
+            perhourpriceController.text = myDocuments.data()!['perhourprice'].toString();
+            dailypriceController.text = myDocuments.data()!['dailyprice'].toString();
+            capacityController.text = myDocuments.data()!['capacity'].toString();
+            yachtlengthController.text = myDocuments.data()!['length'].toString();
+            descriptionController.text = myDocuments.data()!['description'].toString();
+            speedController.text = myDocuments.data()!['speed'].toString();
+            coverImageLink = myDocuments.data()!['coverimage'];
+            for (int i = 0;
+            i < myDocuments.data()!['otheryachtimages'].length;
+            i++) {
+              print(OtherYachtImagesUrl.length);
+              OtherYachtImagesUrl.add(myDocuments.data()!['otheryachtimages'][i]);
+            }
+            builds = myDocuments.data()!['build'].toString();
+            yachtBuildvalue = builds;
+            overnightguests = myDocuments.data()!['overnightguests'].toString();
+            overNightGuestsvalue = overnightguests;
+          });
+        });
+
+
+  }
+
   _uploadHotelData() async {
-    String newYachtid = FirebaseFirestore.instance
-        .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
-        .collection('yachts').doc().id;
 
     try {
       await FirebaseFirestore.instance
           .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
-          .collection('yachts').doc(newYachtid).set({
+          .collection('yachts').doc(widget.yachtid).update({
         'name': yachtNameController.text,
         'perhourprice': double.parse(perhourpriceController.text),
         'dailyprice': double.parse(dailypriceController.text),
@@ -263,11 +264,8 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
         'description': descriptionController.text,
         'length': double.parse(yachtlengthController.text),
         'speed': double.parse(speedController.text),
-        'datecreated': DateTime.now(),
-        'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'otheryachtimages': OtherYachtImagesUrl,
-        'yachtid': newYachtid,
         'build': yachtBuildvalue,
         'overnightguests': overNightGuestsvalue,
       });
@@ -300,6 +298,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
         _isLoading = false;
       });
     });
+    getyoo();
   }
 
   @override
@@ -316,9 +315,9 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: addyachtDetailsContainer(context, "mobile"),
-                      tab: addyachtDetailsContainer(context, "tab"),
-                      desktop: addyachtDetailsContainer(context, "desktop"),
+                      mobile: UpdateYachtDetailsContainer(context, "mobile"),
+                      tab: UpdateYachtDetailsContainer(context, "tab"),
+                      desktop: UpdateYachtDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -338,7 +337,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
     );
   }
 
-  Container addyachtDetailsContainer(BuildContext context, String device) {
+  Container UpdateYachtDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -706,36 +705,45 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                           ),
                         ),
                       ),
-                      coverImage.length != 0
+                      (coverImageLink != "")
                           ? Container(
-                              width: MediaQuery.of(context).size.width / 1.6,
-                              height: 160,
-                              child: GridView.builder(
-                                  itemCount: coverImage.length,
-                                  gridDelegate:
-                                      SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 7),
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Container(
-                                          height: 100,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                  image: MemoryImage(
-                                                      coverImage[index]),
-                                                  fit: BoxFit.cover))),
-                                    );
-                                    //Text('Image : ' + index.toString());
-                                  }),
-                            )
-                          : SizedBox(
-                              height: 10,
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage('$coverImageLink'),
+                                fit: BoxFit.cover)),
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Align(
+                            alignment: Alignment.topRight,
+                            child: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: Colors.white,
+                              child: IconButton(
+                                onPressed: (){
+
+                                  _showMyDialog();
+
+
+
+
+                                },
+
+                                icon: Icon(Icons.close, color: Colors.red, size: 9, ),
+                              ),
                             ),
+                          ),
+                        ),
+
+
+                      )
+                          : SizedBox(
+                        height: 10,
+                      ),
+
                       SizedBox(
-                        height: 20,
+                        height: 40,
                       ),
                       const Align(
                         alignment: Alignment.centerLeft,
@@ -784,12 +792,12 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                           ),
                         ),
                       ),
-                      otherImage.length != 0
+                      OtherYachtImagesUrl.length != 0
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
                               height: 160,
                               child: GridView.builder(
-                                  itemCount: otherImage.length,
+                                  itemCount: OtherYachtImagesUrl.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 8),
@@ -804,9 +812,34 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                             width: 100,
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                    image: MemoryImage(
-                                                        otherImage[index]),
-                                                    fit: BoxFit.cover))),
+                                                    image: NetworkImage(
+                                                        OtherYachtImagesUrl[index]),
+                                                    fit: BoxFit.cover)),
+                                          child:  Padding(
+                                            padding: const EdgeInsets.all(4.0),
+                                            child: Align(
+                                              alignment: Alignment.topRight,
+                                              child: CircleAvatar(
+                                                radius: 12,
+                                                backgroundColor: Colors.white,
+                                                child: IconButton(
+                                                  onPressed: (){
+
+                                                    _showMyDialogOtherImage(OtherYachtImagesUrl[index], index);
+
+
+
+
+                                                  },
+
+                                                  icon: Icon(Icons.close, color: Colors.red, size: 9, ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+
+                                        ),
                                       ),
                                     );
                                     //Text('Image : ' + index.toString());
@@ -860,7 +893,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                       //focusColor: Color(0xFFdb9e1f),
                                       style: TextStyle(color: Colors.white),
                                       isExpanded: true,
-                                      value: yachtBuildvalue,
+                                      value: builds,
                                       items:
                                       yachtBuild.map(buildMenuItem).toList(),
                                       onChanged: (value) => setState(() {
@@ -894,7 +927,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
                                           //focusColor: Color(0xFFdb9e1f),
                                           style: TextStyle(color: Colors.white),
                                           isExpanded: true,
-                                          value: overNightGuestsvalue,
+                                          value: overnightguests,
                                           items: overNightGuests
                                               .map(buildMenuItem)
                                               .toList(),
@@ -959,60 +992,126 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
       ),
     );
   }
-}
 
-class OtheryachtFeatures extends StatefulWidget {
-  OtheryachtFeatures({
-    Key? key,
-    required this.featureText,
-    required this.featureValue,
-    required this.featureList,
-  }) : super(key: key);
 
-  String featureText;
-  bool featureValue;
-  var featureList;
+  _removefoodCoverPhoto(url) async {
+    await FirebaseStorage.instance.refFromURL(url).delete();
 
-  @override
-  State<OtheryachtFeatures> createState() =>
-      _OtheryachtFeaturesState(featureText, featureValue, featureList);
-}
 
-class _OtheryachtFeaturesState extends State<OtheryachtFeatures> {
-  String featureText;
-  bool featureValue;
-  var featureList;
-  _OtheryachtFeaturesState(this.featureText, this.featureValue, this.featureList);
-  @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(
-        featureText,
-        style: TextStyle(color: Colors.white70),
-      ),
-      //secondary: Icon(
-      //Icons.person,
-      //color: Colors.white70,
-      //),
-      controlAffinity: ListTileControlAffinity.leading,
-      value: featureValue,
-      onChanged: (value) {
-        setState(() {
-          this.featureValue = value!;
-        });
-        if (featureValue) {
-          featureList.add(featureText);
-        } else {
-          featureList.removeAt(featureList.indexOf(featureText));
-        }
-        print(featureList);
+    FirebaseFirestore.instance
+        .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
+        .collection('yachts').doc(widget.yachtid)
+        .update({
+      'coverimage': "",
+    });
+
+    setState(() {
+      //coverImageList.removeAt(coverImageList.indexOf(url));
+      coverImageLink = "";
+    });
+  }
+
+  _removeyachtOtherPhoto(url, theindex) async {
+  //await FirebaseStorage.instance.refFromURL(url).delete();
+
+    var list = [url];
+    FirebaseFirestore.instance
+        .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
+        .collection('yachts').doc(widget.yachtid)
+        .update({
+      'otheryachtimages': FieldValue.arrayRemove(list),
+    });
+  print(OtherYachtImagesUrl.elementAt(theindex));
+  print(theindex);
+ // var toremove = [OtherYachtImagesUrl.elementAt(theindex)];
+    setState(() {
+
+     OtherYachtImagesUrl.remove(OtherYachtImagesUrl.elementAt(theindex));
+      //FieldValue.arrayRemove(toremove);
+    });
+    //
+    // setState(() {
+    //   //coverImageList.removeAt(coverImageList.indexOf(url));
+    //   coverImageLink = "";
+    // });
+  }
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: this.context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text('You are about to delete this image.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                setState(() {
+                  _removefoodCoverPhoto(coverImageLink);
+                  coverImageLink = "";
+
+                });
+                print('Confirmed');
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
       },
-      activeColor: Color(0xFFdb9e1f),
-      checkColor: Colors.white,
-      side: BorderSide(
-        color: Colors.white70,
-        width: 1.5,
-      ),
+    );
+  }
+
+  Future<void> _showMyDialogOtherImage(String x, int theindex) async {
+    return showDialog<void>(
+      context: this.context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Delete'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text('You are about to delete this image.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Confirm'),
+              onPressed: () {
+                setState(() {
+                  _removeyachtOtherPhoto(x, theindex);
+
+                });
+                print('Confirmed');
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
+
+

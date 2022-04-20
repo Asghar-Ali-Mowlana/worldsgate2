@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/user/userviewhoteldetails.dart';
+import 'package:worldsgate/screens/user/userviewrestaurentdetails.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 
 import '../../widgets/cusheader.dart';
@@ -291,7 +292,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                UserViewHotelDetails(widget.uid, doc.id, widget.city)));
+                UserViewRestaurantDetails(widget.uid, widget.city)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:worldsgate/screens/user/usercarbooking.dart';
 import 'package:worldsgate/screens/user/userhotelbooking.dart';
+import 'package:worldsgate/screens/user/userorderfood.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:worldsgate/widgets/usernavigationdrawer.dart';
 
@@ -352,7 +353,7 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              top: 18.0,
+                              top: 17.0,
                             ),
                             child: Text(
                               "Yacht",
@@ -402,7 +403,7 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              top: 12.0,
+                              top: 11.0,
                             ),
                             child: Text(
                               "Restaurants",
@@ -452,7 +453,7 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              top: 18.0,
+                              top: 20.0,
                             ),
                             child: Text(
                               "Bars",
@@ -503,6 +504,10 @@ class _UserHomePageState extends State<UserHomePage> {
                       //
                       //
                       //     )));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                          // TaskCardWidget(id: user.id, name: user.ingredients,)
+                          UserOrderFood(widget.uid, widget.city)));
                     },
                     child: Container(
                       height: heig,
@@ -525,7 +530,7 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              top: 18.0,
+                              top: 15.0,
                             ),
                             child: Text(
                               "Food",
@@ -575,7 +580,7 @@ class _UserHomePageState extends State<UserHomePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(
-                              top: 15.0,
+                              top: 19.0,
                             ),
                             child: Text(
                               "Groceries",

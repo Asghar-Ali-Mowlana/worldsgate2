@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:supercharged/supercharged.dart';
+import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
 import 'package:worldsgate/widgets/header.dart';
 import 'package:intl/intl.dart';
@@ -370,102 +371,11 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
           : Stack(
               fit: StackFit.expand,
               children: <Widget>[
-                Column(
-                  children: [
-                    SizedBox(
-                      height: 160.0,
-                    ),
+                ResponsiveWidget(
+                    mobile: buildColumnContent(context, 60),
+                    tab: buildColumnContent(context, 90),
+                    desktop: buildColumnContent(context, 100),
 
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SideLayout(),
-                          Expanded(
-                            child: Container(
-                              child: Column(
-                                children: [
-                                  //row for button and booking apartment heading
-                                  Container(
-                                    margin: EdgeInsets.only(top: 10.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 14.0),
-                                            child: Text(
-                                              "Booking > Apartment (${totaladded.toString()})",
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 18.0),
-                                          child: Align(
-                                            alignment: Alignment.topRight,
-                                            child: MaterialButton(
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              10.0)),
-                                                  side: BorderSide(
-                                                      color:
-                                                          Color(0xFFdb9e1f))),
-                                              elevation: 5.0,
-                                              height: 40,
-                                              onPressed: () {
-                                                Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            // TaskCardWidget(id: user.id, name: user.ingredients,)
-                                                            AddApartmentDetails(
-                                                                widget.uid)));
-                                              },
-                                              child: Text(
-                                                "+ Add new",
-                                                style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Color(0xFFdb9e1f),
-                                                ),
-                                              ),
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: SingleChildScrollView(
-                                      scrollDirection: Axis.vertical,
-                                      child: Column(
-                                        children: newbuilder(),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Container(
-                    //   child: Column(
-                    //     children: newbuilder(),
-                    //   ),
-                    // ),
-                  ],
                 ),
                 Positioned(
                     left: 0.0,
@@ -481,5 +391,106 @@ class _DeoManageApartmentsState extends State<DeoManageApartments> {
               ],
             ),
     ));
+  }
+
+  Column buildColumnContent(BuildContext context, double headergap) {
+    return Column(
+                children: [
+                  SizedBox(
+                    height: headergap,
+                  ),
+
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SideLayout(),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(top: 30.0),
+                            child: Column(
+                              children: [
+                                //row for button and booking apartment heading
+                                Container(
+
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 14.0),
+                                          child: Text(
+                                            "Booking > Apartment (${totaladded.toString()})",
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                            right: 18.0),
+                                        child: Align(
+                                          alignment: Alignment.topRight,
+                                          child: MaterialButton(
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.all(
+                                                        Radius.circular(
+                                                            10.0)),
+                                                side: BorderSide(
+                                                    color:
+                                                        Color(0xFFdb9e1f))),
+                                            elevation: 5.0,
+                                            height: 40,
+                                            onPressed: () {
+                                              Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                                          AddApartmentDetails(
+                                                              widget.uid)));
+                                            },
+                                            child: Text(
+                                              "+ Add new",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                                color: Color(0xFFdb9e1f),
+                                              ),
+                                            ),
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.vertical,
+                                    child: Column(
+                                      children: newbuilder(),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Container(
+                  //   child: Column(
+                  //     children: newbuilder(),
+                  //   ),
+                  // ),
+                ],
+              );
   }
 }

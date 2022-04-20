@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deoaddyachtdetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deomanageyachts.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deomanagerestaurant.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deomanagesupermarket.dart';
 import '../screens/dataentryoperator/booking/apartments/deomanageapartments.dart';
@@ -90,7 +92,13 @@ class DeoNavigationDrawer extends StatelessWidget {
                 'Yachts',
                 style: TextStyle(color: Colors.white),
               ),
-              onTap: () {},
+              onTap: () {
+
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DeoManageYachts(uid),
+                ));
+
+              },
             ),
             ListTile(
               leading: const Icon(Icons.home_outlined),

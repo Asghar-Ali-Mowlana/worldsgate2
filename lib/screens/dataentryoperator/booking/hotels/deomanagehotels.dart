@@ -371,9 +371,9 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
               fit: StackFit.expand,
               children: <Widget>[
                 ResponsiveWidget(
-                    mobile: buildColumnContent(context, 14, 350.0),
-                    tab: buildColumnContent(context, 16, 800.0),
-                    desktop: buildColumnContent(context, 16, 800.0)
+                    mobile: buildColumnContent(context, "mobile", 14, 350.0, 60),
+                    tab: buildColumnContent(context, "tab", 16, 800.0, 90),
+                    desktop: buildColumnContent(context, "desktop" , 16, 800.0, 100)
 
                 ),
                 Positioned(
@@ -392,29 +392,27 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
     ));
   }
 
-  Column buildColumnContent(BuildContext context, double fontshize, double columntextwidth) {
+  Column buildColumnContent(BuildContext context, String device, double fontshize, double columntextwidth, double headergap) {
     return Column(
                 children: [
                   SizedBox(
-                    height: 160.0,
+                    height: headergap,
                   ),
 
                   Expanded(
-                    child: LayoutBuilder(
-
-                        builder: (context, constraints) {
-                        return Row(
+                    child:  Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            (constraints.maxWidth >= 1008)
+                            (device == "desktop")
                             ?SideLayout():Container(),
                             Expanded(
                               child: Container(
+                                margin: EdgeInsets.only(top: 30.0),
                                 child: Column(
                                   children: [
                                     //row for button and booking hotel heading
                                     Container(
-                                      margin: EdgeInsets.only(top: 10.0),
+
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -484,9 +482,8 @@ class _DeoManageHotelsState extends State<DeoManageHotels> {
                               ),
                             ),
                           ],
-                        );
-                      }
-                    ),
+                        ),
+
                   ),
 
                   // Container(
