@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/databaseupdatefile.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deomanagefood.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 import 'package:worldsgate/screens/user/userorderfood.dart';
+import 'package:worldsgate/screens/user/userviewrestaurentdetails.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
