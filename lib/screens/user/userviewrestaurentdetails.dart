@@ -78,7 +78,7 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
           horizontal: device == "mobile"
               ? width * 0.02
               : device == "tab"
-                  ? width * 0.1
+                  ? width * 0.02
                   : device == "desktop"
                       ? width * 0.25
                       : width * 0),
@@ -89,7 +89,7 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                 top: device == "mobile"
                     ? height * 0.09
                     : device == "tab"
-                        ? height * 0.1
+                        ? height * 0.09
                         : device == "desktop"
                             ? height * 0.13
                             : 0),
@@ -187,265 +187,270 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                           ),
                         )
                       : SizedBox(),
-                  Container(
-                    width: device == "mobile"
-                        ? width * 0.96
-                        : device == "tab"
-                            ? width * 0.24
-                            : device == "desktop"
-                                ? width * 0.24
-                                : width * 0.24,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            style: TextStyle(color: Colors.white),
-                            controller: _controller,
-                            decoration: InputDecoration(
-                              suffixIcon: IconButton(
-                                  icon: Icon(
-                                    Icons.cancel,
-                                    color: Color(0xFFdb9e1f),
-                                  ),
-                                  onPressed: () {
-                                    _controller..text = "";
-                                  }),
-                              hintText: "Enter menu item",
-                              labelText: "Search Menu Item",
-                              hintStyle: TextStyle(color: Colors.white70),
-                              labelStyle: new TextStyle(color: Colors.white70),
-                              enabled: true,
-                              enabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    new BorderSide(color: Colors.white70),
+                  SingleChildScrollView(
+                    child: Container(
+                      width: device == "mobile"
+                          ? width * 0.96
+                          : device == "tab"
+                              ? width * 0.96
+                              : device == "desktop"
+                                  ? width * 0.24
+                                  : width * 0.24,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            TextFormField(
+                              style: TextStyle(color: Colors.white),
+                              controller: _controller,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    icon: Icon(
+                                      Icons.cancel,
+                                      color: Color(0xFFdb9e1f),
+                                    ),
+                                    onPressed: () {
+                                      _controller..text = "";
+                                    }),
+                                hintText: "Enter menu item",
+                                labelText: "Search Menu Item",
+                                hintStyle: TextStyle(color: Colors.white70),
+                                labelStyle:
+                                    new TextStyle(color: Colors.white70),
+                                enabled: true,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Colors.white70),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide:
+                                      new BorderSide(color: Color(0xFFdb9e1f)),
+                                ),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide:
-                                    new BorderSide(color: Color(0xFFdb9e1f)),
-                              ),
+                              validator: (value) {
+                                if (value!.length == 0) {
+                                  return "Menu item cannot be empty";
+                                }
+                              },
+                              onSaved: (value) {
+                                _controller.text = value!;
+                              },
+                              keyboardType: TextInputType.text,
                             ),
-                            validator: (value) {
-                              if (value!.length == 0) {
-                                return "Menu item cannot be empty";
-                              }
-                            },
-                            onSaved: (value) {
-                              _controller.text = value!;
-                            },
-                            keyboardType: TextInputType.text,
-                          ),
-                          SizedBox(
-                            height: height * 0.01,
-                          ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: width * 0.215,
-                                    height: height * 0.05,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Most Selling",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Icon(Icons.arrow_drop_up)
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                              ListTile(
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  color: Colors.white,
-                                ),
-                                title: Text("Juje Masti"),
-                                subtitle: Text(
-                                    "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                trailing: Column(
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            Column(
+                              children: [
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("AED 60.00"),
-                                    Icon(Icons.add_circle),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: width * 0.215,
-                                    height: height * 0.05,
-                                    color: Colors.black,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Chef's Daily Special",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
+                                    Container(
+                                      width: width * 0.215,
+                                      height: height * 0.05,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Most Selling",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Icon(Icons.arrow_drop_up)
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                              ListTile(
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  color: Colors.white,
+                                    Icon(Icons.arrow_drop_up)
+                                  ],
                                 ),
-                                title: Text("Juje Masti"),
-                                subtitle: Text(
-                                    "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                trailing: Column(
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                ListTile(
+                                  leading: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: Colors.white,
+                                  ),
+                                  title: Text("Juje Masti"),
+                                  subtitle: Text(
+                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
+                                  trailing: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("AED 60.00"),
+                                      Icon(Icons.add_circle),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("AED 60.00"),
-                                    Icon(Icons.add_circle),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: width * 0.215,
-                                    height: height * 0.05,
-                                    color: Colors.black,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Starters",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
+                                    Container(
+                                      width: width * 0.215,
+                                      height: height * 0.05,
+                                      color: Colors.black,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Chef's Daily Special",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Icon(Icons.arrow_drop_up)
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                              ListTile(
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  color: Colors.white,
+                                    Icon(Icons.arrow_drop_up)
+                                  ],
                                 ),
-                                title: Text("Juje Masti"),
-                                subtitle: Text(
-                                    "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                trailing: Column(
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                ListTile(
+                                  leading: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: Colors.white,
+                                  ),
+                                  title: Text("Juje Masti"),
+                                  subtitle: Text(
+                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
+                                  trailing: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("AED 60.00"),
+                                      Icon(Icons.add_circle),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("AED 60.00"),
-                                    Icon(Icons.add_circle),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                    width: width * 0.215,
-                                    height: height * 0.05,
-                                    color: Colors.black,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          "Salads",
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
+                                    Container(
+                                      width: width * 0.215,
+                                      height: height * 0.05,
+                                      color: Colors.black,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Starters",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Icon(Icons.arrow_drop_up)
-                                ],
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                              ListTile(
-                                leading: Container(
-                                  height: 50,
-                                  width: 50,
-                                  color: Colors.white,
+                                    Icon(Icons.arrow_drop_up)
+                                  ],
                                 ),
-                                title: Text("Juje Masti"),
-                                subtitle: Text(
-                                    "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                trailing: Column(
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                ListTile(
+                                  leading: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: Colors.white,
+                                  ),
+                                  title: Text("Juje Masti"),
+                                  subtitle: Text(
+                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
+                                  trailing: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("AED 60.00"),
+                                      Icon(Icons.add_circle),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text("AED 60.00"),
-                                    Icon(Icons.add_circle),
+                                    Container(
+                                      width: width * 0.215,
+                                      height: height * 0.05,
+                                      color: Colors.black,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            "Salads",
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Icon(Icons.arrow_drop_up)
                                   ],
                                 ),
-                              ),
-                              SizedBox(
-                                height: height * 0.01,
-                              ),
-                            ],
-                          )
-                        ],
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                                ListTile(
+                                  leading: Container(
+                                    height: 50,
+                                    width: 50,
+                                    color: Colors.white,
+                                  ),
+                                  title: Text("Juje Masti"),
+                                  subtitle: Text(
+                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
+                                  trailing: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text("AED 60.00"),
+                                      Icon(Icons.add_circle),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: height * 0.01,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

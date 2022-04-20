@@ -7,12 +7,17 @@ import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deomanageyach
 import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deoupdateyachtdetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deoviewyachts.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
+<<<<<<< HEAD
 import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoaddfoodcategorydetails.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deoaddfooddetails.dart';
+=======
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deomanagefood.dart';
+>>>>>>> 4765b0d5a6e28284a79a508e6c842a8c1a266f50
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
 import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
 import 'package:worldsgate/screens/user/userorderfood.dart';
+import 'package:worldsgate/screens/user/userviewrestaurentdetails.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
