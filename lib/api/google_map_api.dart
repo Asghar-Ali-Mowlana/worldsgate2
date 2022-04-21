@@ -1,5 +1,5 @@
 class GoogleMapApi {
-  String _url = "AIzaSyAeHBTXB2FAQyamm02kA9KHtDcKvCHaljU";
+  String _url = "AIzaSyCwfekAPDMawdtFb80Ji2Z8xpgcPzXMgNg";
 
   String get url => _url;
 }
