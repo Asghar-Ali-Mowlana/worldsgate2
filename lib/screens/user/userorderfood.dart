@@ -290,9 +290,9 @@ class _UserOrderFoodState extends State<UserOrderFood> {
       double height) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+        /*Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                UserViewRestaurantDetails(widget.uid, widget.city)));
+                UserViewRestaurantDetails(widget.uid, widget.city)));*/
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),

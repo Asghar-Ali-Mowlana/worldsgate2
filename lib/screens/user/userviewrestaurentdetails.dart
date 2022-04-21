@@ -10,8 +10,9 @@ class UserViewRestaurantDetails extends StatefulWidget {
 
   String? uid;
   String? city;
+  String? restaurantid;
 
-  UserViewRestaurantDetails(this.uid, this.city);
+  UserViewRestaurantDetails(this.uid, this.city, this.restaurantid);
 
   @override
   State<UserViewRestaurantDetails> createState() =>
@@ -37,38 +38,86 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
     });
   }
 
+  var name = "";
+  var coverimage = "";
+  var city = "";
+  int minPriceOrder = 0;
+
+  bool _isLoading = true;
+
+  _getRestaurantDetails() async {
+    await FirebaseFirestore.instance
+        .collection('delivery')
+        .doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('restaurants')
+        .doc(widget.restaurantid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        setState(() {
+          name = documentSnapshot['name'];
+          coverimage = documentSnapshot['coverimage'];
+          city = documentSnapshot['city'];
+          minPriceOrder = documentSnapshot['minimumorderprice'];
+        });
+      } else {
+        print("Document does not exist");
+      }
+    });
+    setState(() {
+      this._isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    _getRestaurantDetails();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return SafeArea(
-        child: Scaffold(
-      key: _scaffoldState,
-      drawer: new UserNavigationDrawer(widget.uid, widget.city),
-      backgroundColor: Color(0xFF000000),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: ResponsiveWidget(
-              mobile: buildColumnContent(context, height, width, "mobile"),
-              tab: buildColumnContent(context, height, width, "tab"),
-              desktop: buildColumnContent(context, height, width, "desktop"),
+    return _isLoading
+        ? Center(child: CircularProgressIndicator())
+        : SafeArea(
+            child: Scaffold(
+            key: _scaffoldState,
+            drawer: new UserNavigationDrawer(widget.uid, widget.city),
+            backgroundColor: Color(0xFF000000),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {},
+              child: Icon(Icons.shopping_cart),
+              backgroundColor: Color(0xFFdb9e1f),
+              //mini: true,
             ),
-          ),
-          Positioned(
-              left: 0.0,
-              top: 0.0,
-              right: 0.0,
-              child: Container(
-                  child: VendomeHeaderCustomer(
-                drawer: _scaffoldState,
-                cusname: cusname,
-                cusaddress: widget.city,
-                role: role,
-              ))),
-        ],
-      ),
-    ));
+            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  child: ResponsiveWidget(
+                    mobile:
+                        buildColumnContent(context, height, width, "mobile"),
+                    tab: buildColumnContent(context, height, width, "tab"),
+                    desktop:
+                        buildColumnContent(context, height, width, "desktop"),
+                  ),
+                ),
+                Positioned(
+                    left: 0.0,
+                    top: 0.0,
+                    right: 0.0,
+                    child: Container(
+                        child: VendomeHeaderCustomer(
+                      drawer: _scaffoldState,
+                      cusname: cusname,
+                      cusaddress: widget.city,
+                      role: role,
+                    ))),
+              ],
+            ),
+          ));
   }
 
   Padding buildColumnContent(
@@ -94,49 +143,57 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                             ? height * 0.13
                             : 0),
           ),
-          Container(
-            height: height * 0.1,
-            child: Row(
-              children: [
-                AspectRatio(
-                    aspectRatio: 1 / 1,
-                    child: Container(
-                      color: Colors.greenAccent,
-                    )),
-                SizedBox(
-                  width: device == "mobile"
-                      ? width * 0.05
-                      : device == "tab"
-                          ? width * 0.05
-                          : device == "desktop"
-                              ? width * 0.05
-                              : width * 0,
-                ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Sofreh Kitchen & Grill",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
-                      ),
-                      Text(
-                        "in Dubai Marina, UAE   ",
-                        style: TextStyle(fontSize: 14),
-                      ),
-                      Text("Iranian, Kebab, Grills       ",
-                          style: TextStyle(fontSize: 13)),
-                      Text("Min. order: AED 10.00     ",
-                          style: TextStyle(fontSize: 13))
-                    ],
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: height * 0.1,
+              child: Row(
+                children: [
+                  AspectRatio(
+                      aspectRatio: 1 / 1,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: NetworkImage(coverimage),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      )),
+                  SizedBox(
+                    width: device == "mobile"
+                        ? width * 0.05
+                        : device == "tab"
+                            ? width * 0.05
+                            : device == "desktop"
+                                ? width * 0.05
+                                : width * 0,
                   ),
-                ),
-              ],
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          name + "             ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        Text(
+                          "in ${city}, UAE             ".toString(),
+                          style: TextStyle(fontSize: 14),
+                        ),
+                        Text("Iranian, Kebab, Grills  ".toString(),
+                            style: TextStyle(fontSize: 13)),
+                        Text("Min. order: AED ${minPriceOrder}.00".toString(),
+                            style: TextStyle(fontSize: 13))
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           SizedBox(
-            height: height * 0.05,
+            height: height * 0.03,
           ),
           Container(
             child: IntrinsicHeight(
@@ -146,44 +203,40 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                   device == "desktop"
                       ? Container(
                           width: width * 0.12,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: width * 0.11,
-                                  height: height * 0.4,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Categories",
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text("Most Selling"),
-                                      Text("Chef's Daily Special"),
-                                      Text("Starters"),
-                                      Text("Salads"),
-                                      Text("Kebab Wraps"),
-                                      Text("Speciality Wraps"),
-                                      Text(
-                                          "From The Char Grill - Kebab & Nan Duo"),
-                                      Text("Pizza"),
-                                      Text("Mana'eesh"),
-                                      Text("Saj"),
-                                      Text("Desserts"),
-                                      Text("Drinks"),
-                                      Text("Extras"),
-                                    ],
-                                  ),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: width * 0.11,
+                                height: height * 0.4,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Categories",
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    Text("Most Selling"),
+                                    Text("Chef's Daily Special"),
+                                    Text("Starters"),
+                                    Text("Salads"),
+                                    Text("Kebab Wraps"),
+                                    Text("Speciality Wraps"),
+                                    Text(
+                                        "From The Char Grill - Kebab & Nan Duo"),
+                                    Text("Pizza"),
+                                    Text("Mana'eesh"),
+                                    Text("Saj"),
+                                    Text("Desserts"),
+                                    Text("Drinks"),
+                                    Text("Extras"),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         )
                       : SizedBox(),
@@ -242,213 +295,134 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                             ),
                             Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: width * 0.215,
-                                      height: height * 0.05,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Most Selling",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(Icons.arrow_drop_up)
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                                ListTile(
-                                  leading: Container(
-                                    height: 50,
-                                    width: 50,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Juje Masti"),
-                                  subtitle: Text(
-                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                  trailing: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("AED 60.00"),
-                                      Icon(Icons.add_circle),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: width * 0.215,
-                                      height: height * 0.05,
-                                      color: Colors.black,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Chef's Daily Special",
-                                            overflow: TextOverflow.ellipsis,
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(Icons.arrow_drop_up)
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                                ListTile(
-                                  leading: Container(
-                                    height: 50,
-                                    width: 50,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Juje Masti"),
-                                  subtitle: Text(
-                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                  trailing: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("AED 60.00"),
-                                      Icon(Icons.add_circle),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: width * 0.215,
-                                      height: height * 0.05,
-                                      color: Colors.black,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Starters",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(Icons.arrow_drop_up)
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                                ListTile(
-                                  leading: Container(
-                                    height: 50,
-                                    width: 50,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Juje Masti"),
-                                  subtitle: Text(
-                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                  trailing: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("AED 60.00"),
-                                      Icon(Icons.add_circle),
-                                    ],
-                                  ),
-                                ),
+                                StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('delivery')
+                                        .doc("9WRNvPkoftSw4o2rHGUI")
+                                        .collection('restaurants')
+                                        .doc(widget.restaurantid)
+                                        .collection('foodcategory')
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData) {
+                                        return Center(
+                                          child: CircularProgressIndicator(),
+                                        );
+                                      } else {
+                                        return Wrap(
+                                          direction: Axis.vertical,
+                                          children:
+                                              snapshot.data!.docs.map((doc) {
+                                            return Column(
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      width: width * 0.215,
+                                                      height: height * 0.05,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            "${doc['name']}",
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Icon(Icons.arrow_drop_up)
+                                                  ],
+                                                ),
+                                                SizedBox(
+                                                  height: height * 0.01,
+                                                ),
+                                                StreamBuilder<QuerySnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection('delivery')
+                                                      .doc(
+                                                          "9WRNvPkoftSw4o2rHGUI")
+                                                      .collection('restaurants')
+                                                      .doc(widget.restaurantid)
+                                                      .collection(
+                                                          'foodcategory')
+                                                      .doc(
+                                                          doc['foodcategoryid'])
+                                                      .collection('food')
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    if (!snapshot.hasData) {
+                                                      return Center(
+                                                        child:
+                                                            CircularProgressIndicator(),
+                                                      );
+                                                    } else {
+                                                      return Container(
+                                                        height: 200,
+                                                        width: width,
+                                                        child: ListView(
+                                                            shrinkWrap: true,
+                                                            scrollDirection:
+                                                                Axis.vertical,
+                                                            primary: false,
+                                                            children: snapshot
+                                                                .data!.docs
+                                                                .map((doc) {
+                                                              return ListTile(
+                                                                leading:
+                                                                    Container(
+                                                                  height: 50,
+                                                                  width: 50,
+                                                                  color: Colors
+                                                                      .white,
+                                                                ),
+                                                                title: Text(
+                                                                    "${doc['name']}"),
+                                                                subtitle: Text(
+                                                                    "${doc['description']}"),
+                                                                trailing:
+                                                                    Column(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                        "AED ${doc['price']}.00"),
+                                                                    Icon(Icons
+                                                                        .add_circle),
+                                                                  ],
+                                                                ),
+                                                              );
+                                                            }).toList()),
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          }).toList(),
+                                        );
+                                      }
+                                    }),
                                 SizedBox(
                                   height: height * 0.01,
                                 ),
                               ],
                             ),
-                            Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      width: width * 0.215,
-                                      height: height * 0.05,
-                                      color: Colors.black,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Salads",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Icon(Icons.arrow_drop_up)
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                                ListTile(
-                                  leading: Container(
-                                    height: 50,
-                                    width: 50,
-                                    color: Colors.white,
-                                  ),
-                                  title: Text("Juje Masti"),
-                                  subtitle: Text(
-                                      "Beef tikka slider, koobideh slider, juje mastislider, 12 pieces"),
-                                  trailing: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("AED 60.00"),
-                                      Icon(Icons.add_circle),
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: height * 0.01,
-                                ),
-                              ],
-                            )
                           ],
                         ),
                       ),
