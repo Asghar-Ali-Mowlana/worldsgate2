@@ -36,7 +36,6 @@ class _UserHomePageState extends State<UserHomePage> {
     'assets/images/promo/promo3.jpeg',
   ];
 
-
   String? cusname;
   String? role;
 
@@ -83,11 +82,11 @@ class _UserHomePageState extends State<UserHomePage> {
               right: 0.0,
               child: Container(
                   child: VendomeHeaderCustomer(
-                    drawer: _scaffoldState,
-                    cusname: cusname,
-                    cusaddress: widget.city,
-                    role: role,
-                  ))),
+                drawer: _scaffoldState,
+                cusname: cusname,
+                cusaddress: widget.city,
+                role: role,
+              ))),
         ],
       ),
     ));
@@ -152,6 +151,7 @@ class _UserHomePageState extends State<UserHomePage> {
               "Booking $tex",
               style: TextStyle(
                 fontSize: 16,
+                fontFamily: 'crimson.italic',
                 color: Colors.white,
               ),
             ),
@@ -178,37 +178,8 @@ class _UserHomePageState extends State<UserHomePage> {
                               // TaskCardWidget(id: user.id, name: user.ingredients,)
                               UserHotelBooking(widget.uid, widget.city)));
                     },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Hotel.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                            ),
-                            child: Text(
-                              "Hotels",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: containerMethod(heig, wi, imagewi,
+                        "assets/images/homepageicons/Hotel.png", "Hotels"),
                   ),
                 ),
               ),
@@ -228,37 +199,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       //
                       //     )));
                     },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Appartment.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                            ),
-                            child: Text(
-                              "Apartments",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: containerMethod(
+                        heig,
+                        wi,
+                        imagewi,
+                        "assets/images/homepageicons/Appartment.png",
+                        "Apartments"),
                   ),
                 ),
               ),
@@ -282,37 +228,8 @@ class _UserHomePageState extends State<UserHomePage> {
                             UserCarBooking(widget.uid, widget.city),
                       ));
                     },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 35.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Car.png",
-                                width: imagewi - 10,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                            ),
-                            child: Text(
-                              "Cars",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: containerMethod(heig, wi, imagewi,
+                        "assets/images/homepageicons/Car.png", "Cars"),
                   ),
                 ),
               ),
@@ -332,37 +249,8 @@ class _UserHomePageState extends State<UserHomePage> {
                       //
                       //     )));
                     },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 35.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Yacht.png",
-                                width: imagewi - 10,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 17.0,
-                            ),
-                            child: Text(
-                              "Yacht",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: containerMethod(heig, wi, imagewi,
+                        "assets/images/homepageicons/Yacht.png", "Yacht"),
                   ),
                 ),
               ),
@@ -382,37 +270,12 @@ class _UserHomePageState extends State<UserHomePage> {
                       //
                       //     )));
                     },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/restaurant.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 11.0,
-                            ),
-                            child: Text(
-                              "Restaurants",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: containerMethod(
+                        heig,
+                        wi,
+                        imagewi,
+                        "assets/images/homepageicons/restaurant.png",
+                        "Restaurants"),
                   ),
                 ),
               ),
@@ -432,37 +295,8 @@ class _UserHomePageState extends State<UserHomePage> {
                       //
                       //     )));
                     },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Bar.png",
-                                width: imagewi - 10,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 20.0,
-                            ),
-                            child: Text(
-                              "Bars",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    child: containerMethod(heig, wi, imagewi,
+                        "assets/images/homepageicons/Bar.png", "Bars"),
                   ),
                 ),
               ),
@@ -496,51 +330,21 @@ class _UserHomePageState extends State<UserHomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                      //     UserHotelBooking(
-                      //
-                      //
-                      //     )));
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                          // TaskCardWidget(id: user.id, name: user.ingredients,)
-                          UserOrderFood(widget.uid, widget.city)));
-                    },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Food.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 15.0,
-                            ),
-                            child: Text(
-                              "Food",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) =>
+                        //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                        //     UserHotelBooking(
+                        //
+                        //
+                        //     )));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                // TaskCardWidget(id: user.id, name: user.ingredients,)
+                                UserOrderFood(widget.uid, widget.city)));
+                      },
+                      child: containerMethod(heig, wi, imagewi,
+                          "assets/images/homepageicons/Food.png", "Food")),
                 ),
               ),
               //Groceries
@@ -550,47 +354,21 @@ class _UserHomePageState extends State<UserHomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                      //     UserHotelBooking(
-                      //
-                      //
-                      //     )));
-                    },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Grocery.png",
-                                width: imagewi - 5,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 19.0,
-                            ),
-                            child: Text(
-                              "Groceries",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) =>
+                        //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                        //     UserHotelBooking(
+                        //
+                        //
+                        //     )));
+                      },
+                      child: containerMethod(
+                          heig,
+                          wi,
+                          imagewi,
+                          "assets/images/homepageicons/Grocery.png",
+                          "Groceries")),
                 ),
               ),
               //pharmaceuticals
@@ -600,47 +378,21 @@ class _UserHomePageState extends State<UserHomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                      //     UserHotelBooking(
-                      //
-                      //
-                      //     )));
-                    },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/pharmecy.png",
-                                width: imagewi - 5,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 19.0,
-                            ),
-                            child: Text(
-                              "Pharmaceuticals",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) =>
+                        //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                        //     UserHotelBooking(
+                        //
+                        //
+                        //     )));
+                      },
+                      child: containerMethod(
+                          heig,
+                          wi,
+                          imagewi,
+                          "assets/images/homepageicons/pharmecy.png",
+                          "Pharmaceuticals")),
                 ),
               ),
             ],
@@ -673,47 +425,21 @@ class _UserHomePageState extends State<UserHomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                      //     UserHotelBooking(
-                      //
-                      //
-                      //     )));
-                    },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Electronics.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                            ),
-                            child: Text(
-                              "Electronics",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) =>
+                        //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                        //     UserHotelBooking(
+                        //
+                        //
+                        //     )));
+                      },
+                      child: containerMethod(
+                          heig,
+                          wi,
+                          imagewi,
+                          "assets/images/homepageicons/Electronics.png",
+                          "Electronics")),
                 ),
               ),
               //clothes
@@ -723,47 +449,17 @@ class _UserHomePageState extends State<UserHomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                      //     UserHotelBooking(
-                      //
-                      //
-                      //     )));
-                    },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Dress.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                            ),
-                            child: Text(
-                              "Clothes",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) =>
+                        //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                        //     UserHotelBooking(
+                        //
+                        //
+                        //     )));
+                      },
+                      child: containerMethod(heig, wi, imagewi,
+                          "assets/images/homepageicons/Dress.png", "Clothes")),
                 ),
               ),
               //cosmetics
@@ -773,53 +469,84 @@ class _UserHomePageState extends State<UserHomePage> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(
-                      //     builder: (context) =>
-                      //     // TaskCardWidget(id: user.id, name: user.ingredients,)
-                      //     UserHotelBooking(
-                      //
-                      //
-                      //     )));
-                    },
-                    child: Container(
-                      height: heig,
-                      width: wi,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF262626),
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 25.0),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Image.asset(
-                                "assets/images/homepageicons/Cosmetics.png",
-                                width: imagewi,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                              top: 18.0,
-                            ),
-                            child: Text(
-                              "Cosmetics",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                      onTap: () {
+                        // Navigator.of(context).push(MaterialPageRoute(
+                        //     builder: (context) =>
+                        //     // TaskCardWidget(id: user.id, name: user.ingredients,)
+                        //     UserHotelBooking(
+                        //
+                        //
+                        //     )));
+                      },
+                      child: containerMethod(
+                          heig,
+                          wi,
+                          imagewi,
+                          "assets/images/homepageicons/Cosmetics.png",
+                          "Cosmetics")),
                 ),
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Container containerMethod(
+    double heig,
+    double wi,
+    double imagewi,
+    String image,
+    String name,
+  ) {
+    return Container(
+      height: heig,
+      width: wi,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        gradient: LinearGradient(colors: [
+          Color(0xFFd7a827),
+          Color(0xFFffe08c),
+          Color(0xFFefc65f),
+          Color(0xFFe7bd50),
+          Color(0xFFffe9ae),
+          Color(0xFFe2b13c),
+          Color(0xFFbe8b0d),
+        ]),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(1.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Color(0xFF000000),
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 25.0),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Image.asset(
+                    image,
+                    width: imagewi,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 18.0,
+                ),
+                child: Text(
+                  name,
+                  style: TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

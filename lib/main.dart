@@ -1,12 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
-import 'package:worldsgate/screens/databaseupdatefile.dart';
-import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deoaddyachtdetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deomanageyachts.dart';
-import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deoupdateyachtdetails.dart';
-import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deoviewyachts.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
+import 'package:worldsgate/screens/loginpage.dart';
+import 'package:worldsgate/screens/user/userhomepage.dart';
+import 'package:worldsgate/screens/user/userviewrestaurentdetails.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,15 +32,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'worldsgate',
-      theme: ThemeData(
-        colorScheme: ColorScheme.dark(
-            primary: const Color(0xFFBA780F),
-            onSurface: const Color(0xFFBA780F)),
-        primarySwatch: Colors.blue,
-      ),
-      home: DeoViewYachtDetails("WpzPfHN360dyUtmpSo2a3yhXVak2", "qSrqMGS8EcNHefXWwEBc"),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'worldsgate',
+        theme: ThemeData(
+          colorScheme: ColorScheme.dark(
+              primary: const Color(0xFFBA780F),
+              onSurface: const Color(0xFFBA780F)),
+          primarySwatch: Colors.blue,
+        ),
+        home: /*UserHomePage("WpzPfHN360dyUtmpSo2a3yhXVak2",
+            "Palm Jumeirah")*/ /*UserViewRestaurantDetails("WpzPfHN360dyUtmpSo2a3yhXVak2",
+          "Palm Jumeirah", "4SCpLsKsXscwmSZpyvXf")*/
+            LoginPage());
   }
 }

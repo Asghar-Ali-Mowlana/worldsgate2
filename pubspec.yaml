@@ -55,7 +55,6 @@ dev_dependencies:
 
   flutter_lints: ^1.0.0
 
-
 flutter_native_splash:
   image: assets/images/splash.png
   color: "#000000"
@@ -66,7 +65,6 @@ flutter_native_splash:
   android_12:
     image: assets/images/splash.png
     android: true
-
 
 flutter:
   uses-material-design: true
@@ -86,3 +84,12 @@ flutter_icons:
   ios: true
   image_path: "assets/images/logo.jpeg"
   adaptive_icon_background: "#000000"
+
+fonts:
+  - family: crimson
+    fonts:
+      - assets: assets/fonts/crimson.bold.ttf
+      - assets: assets/fonts/crimson.italic.ttf
+      - assets: assets/fonts/crimson.roman.ttf
+      - assets: assets/fonts/crimson.semibold.ttf
+      - assets: assets/fonts/crimson.semibolditalic.ttf
