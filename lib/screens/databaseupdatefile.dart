@@ -1,18 +1,6 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:universal_io/io.dart' as u;
-import 'package:path/path.dart';
-
-import '../../../widgets/deonavigationdrawer.dart';
-import '../../../widgets/header.dart';
-import '../../../widgets/usernavigationdrawer.dart';
+import 'package:intl/intl.dart';
 
 class UpdateDatabase extends StatefulWidget {
   const UpdateDatabase({Key? key}) : super(key: key);
@@ -21,132 +9,142 @@ class UpdateDatabase extends StatefulWidget {
   State<UpdateDatabase> createState() => _UpdateDatabaseState();
 }
 
-var address;
-var cancellationfee;
-var city;
-var coverimage;
-var dataentryuid;
-var datecreated;
-var description;
-var hotelid;
-var mainfacilities;
-var name;
-var otherHotelImages;
-var price;
-var promotion;
-var rooms;
-var stars;
-var subfacilities;
-var taxandcharges;
-
 class _UpdateDatabaseState extends State<UpdateDatabase> {
+  var address;
+  var cancellationfee;
+  var city;
+  var coverimage;
+  var dataentryuid;
+  var datecreated;
+  var description;
+  var hotelid;
+  var mainfacilities;
+  var name;
+  var otherHotelImages;
+  var price;
+  var promotion;
+  var rooms;
+  var stars;
+  var subfacilities;
+  var taxandcharges;
+
   _updateHotel() async {
     await FirebaseFirestore.instance
         .collection('hotels')
-        .doc("0C8GwpvgHLuguLd0ySnI")
+        .where('dataentryuid', isEqualTo: "Oqsxr0M6r5XfEDMOqqoXZAc3mgz1")
         .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        setState(() {
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('address')) {
-            address = documentSnapshot['address'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('cancellationfee')) {
-            cancellationfee = documentSnapshot['cancellationfee'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('city')) {
-            city = documentSnapshot['city'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('coverimage')) {
-            coverimage = documentSnapshot['coverimage'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('dataentryuid')) {
-            dataentryuid = documentSnapshot['dataentryuid'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('datecreated')) {
-            datecreated = documentSnapshot['datecreated'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('description')) {
-            description = documentSnapshot['description'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('hotelid')) {
-            hotelid = documentSnapshot['hotelid'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('mainfacilities')) {
-            mainfacilities = documentSnapshot['mainfacilities'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('name')) {
-            name = documentSnapshot['name'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('otherhotelimages')) {
-            otherHotelImages = documentSnapshot['otherhotelimages'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('price')) {
-            price = documentSnapshot['price'].toString();
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('promotion')) {
-            promotion = documentSnapshot['promotion'].toString();
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('rooms')) {
-            rooms = documentSnapshot['rooms'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('stars')) {
-            stars = documentSnapshot['stars'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('subfacilities')) {
-            subfacilities = documentSnapshot['subfacilities'];
-          }
-          if ((documentSnapshot.data() as Map<String, dynamic>)
-              .containsKey('taxandcharges')) {
-            taxandcharges = documentSnapshot['taxandcharges'];
-          }
-        });
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((documentSnapshot) {
+                if (documentSnapshot.exists) {
+                  DateTime dt =
+                      (documentSnapshot['datecreated'] as Timestamp).toDate();
+                  String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
 
-        FirebaseFirestore.instance
-            .collection('booking')
-            .doc('aGAm7T71ShOqGUhYphfc')
-            .collection('hotels')
-            .doc(hotelid)
-            .set({
-          'name': name,
-          'city': city,
-          'address': address,
-          'price': null,
-          //'price': double.parse(startingPriceController.text),
-          'promotion': double.parse(promotion),
-          'description': description,
-          'mainfacilities': mainfacilities,
-          'subfacilities': subfacilities,
-          'rooms': rooms,
-          'datecreated': datecreated,
-          'dataentryuid': dataentryuid,
-          'coverimage': coverimage,
-          'otherhotelimages': otherHotelImages,
-          'cancellationfee': null,
-          'stars': stars,
-          'taxandcharges': null,
-          'hotelid': hotelid,
-        });
-      } else {
-        print("Document does not exists");
-      }
-    });
+                  FirebaseFirestore.instance
+                      .collection('booking')
+                      .doc('aGAm7T71ShOqGUhYphfc')
+                      .collection('hotels')
+                      .doc(documentSnapshot.id)
+                      .set({
+                    'name': (documentSnapshot.data() as Map<String, dynamic>)
+                            .containsKey('name')
+                        ? documentSnapshot['name']
+                        : "",
+                    'city': (documentSnapshot.data() as Map<String, dynamic>)
+                            .containsKey('city')
+                        ? documentSnapshot['city']
+                        : "",
+                    'address': (documentSnapshot.data() as Map<String, dynamic>)
+                            .containsKey('address')
+                        ? documentSnapshot['address']
+                        : "",
+                    'price': null,
+                    //'price': double.parse(startingPriceController.text),
+                    'promotion': (documentSnapshot.data()
+                                as Map<String, dynamic>)
+                            .containsKey('promotion')
+                        ? double.parse(documentSnapshot['promotion'].toString())
+                        : 0,
+                    'description':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('description')
+                            ? documentSnapshot['description']
+                            : "",
+                    'mainfacilities':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('mainfacilities')
+                            ? documentSnapshot['mainfacilities']
+                            : [],
+                    'subfacilities':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('subfacilities')
+                            ? documentSnapshot['subfacilities']
+                            : {},
+                    'rooms': (documentSnapshot.data() as Map<String, dynamic>)
+                            .containsKey('rooms')
+                        ? documentSnapshot['rooms']
+                        : {},
+                    'datecreated':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('datecreated')
+                            ? documentSnapshot['datecreated']
+                            : "",
+                    'dataentryuid':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('dataentryuid')
+                            ? documentSnapshot['dataentryuid']
+                            : "",
+                    'coverimage':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('coverimage')
+                            ? documentSnapshot['coverimage']
+                            : "",
+                    'otherhotelimages':
+                        (documentSnapshot.data() as Map<String, dynamic>)
+                                .containsKey('otherhotelimages')
+                            ? documentSnapshot['otherhotelimages']
+                            : [],
+                    'cancellationfee': null,
+                    'stars': (documentSnapshot.data() as Map<String, dynamic>)
+                            .containsKey('stars')
+                        ? documentSnapshot['stars']
+                        : 0,
+                    'taxandcharges': null,
+                    'hotelid': (documentSnapshot.data() as Map<String, dynamic>)
+                            .containsKey('hotelid')
+                        ? documentSnapshot['hotelid']
+                        : "",
+                    'date': formattedDate
+                  });
+                  print("Document updated");
+                } else {
+                  print("Document does not exists");
+                }
+              })
+            });
+  }
+
+  int count = 0;
+
+  _updateHotelCount() async {
+    await FirebaseFirestore.instance
+        .collection('booking')
+        .doc('aGAm7T71ShOqGUhYphfc')
+        .collection('hotels')
+        .where('dataentryuid', isEqualTo: "Oqsxr0M6r5XfEDMOqqoXZAc3mgz1")
+        .get()
+        .then((QuerySnapshot querySnapshot) => {
+              querySnapshot.docs.forEach((documentSnapshot) {
+                if (documentSnapshot.exists) {
+                  setState(() {
+                    this.count = count + 1;
+                  });
+                  print("Number of document exists is : ${count}");
+                } else {
+                  print("Document does not exists");
+                }
+              })
+            });
   }
 
   @override
@@ -169,8 +167,7 @@ class _UpdateDatabaseState extends State<UpdateDatabase> {
                 ),
                 textStyle: const TextStyle(fontSize: 16)),
             onPressed: () {
-              _updateHotel();
-              print("Database Updated");
+              _updateHotelCount();
             },
             child: const Text(
               'Update Database',

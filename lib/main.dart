@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
+import 'package:worldsgate/screens/databaseupdatefile.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
+import 'package:worldsgate/screens/user/userorderfood.dart';
 import 'package:worldsgate/screens/user/userviewrestaurentdetails.dart';
 
 Future main() async {
@@ -41,8 +43,9 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
         ),
         home: /*UserHomePage("WpzPfHN360dyUtmpSo2a3yhXVak2",
-            "Palm Jumeirah")*/ /*UserViewRestaurantDetails("WpzPfHN360dyUtmpSo2a3yhXVak2",
-          "Palm Jumeirah", "4SCpLsKsXscwmSZpyvXf")*/
-            LoginPage());
+            "Palm Jumeirah")*/ UserViewRestaurantDetails("WpzPfHN360dyUtmpSo2a3yhXVak2",
+          "Palm Jumeirah", "4SCpLsKsXscwmSZpyvXf")
+            /*UpdateDatabase()*/ /*LoginPage()*/ /*UserOrderFood(
+                "WpzPfHN360dyUtmpSo2a3yhXVak2", "Deira")*/);
   }
 }
