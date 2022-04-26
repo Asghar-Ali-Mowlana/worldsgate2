@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
@@ -131,6 +132,11 @@ class _AddFoodCategoryDetailsState extends State<AddFoodCategoryDetails> {
 
 
   _uploadFoodData() async {
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
     String newfoodcategoryid = FirebaseFirestore.instance.collection('delivery')
         .doc("9WRNvPkoftSw4o2rHGUI").collection('restaurants').doc(widget.restaurantid).collection('foodcategory').doc().id;
 
@@ -145,6 +151,7 @@ class _AddFoodCategoryDetailsState extends State<AddFoodCategoryDetails> {
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'foodcategoryid': newfoodcategoryid,
+        'date': formattedDate
       });
       var list = [foodCategoryNameController.text];
       await FirebaseFirestore.instance.

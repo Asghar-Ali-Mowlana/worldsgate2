@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deomanagesupermarket.dart';
@@ -152,6 +153,11 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
 
 
   _uploadgroceryData() async {
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
     String newgroceryId = FirebaseFirestore.instance
         .collection('delivery')
         .doc("9WRNvPkoftSw4o2rHGUI")
@@ -173,6 +179,7 @@ class _AddgroceryDetailsState extends State<AddgroceryDetails> {
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'groceryid': newgroceryId,
+        'date': formattedDate
       });
     } catch (e) {
       print(e);

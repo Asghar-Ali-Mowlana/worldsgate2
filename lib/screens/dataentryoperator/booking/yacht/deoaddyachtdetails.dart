@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deomanageyachts.dart';
@@ -248,9 +249,15 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
   }
 
   _uploadHotelData() async {
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
     String newYachtid = FirebaseFirestore.instance
         .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
         .collection('yachts').doc().id;
+
 
     try {
       await FirebaseFirestore.instance
@@ -270,6 +277,7 @@ class _AddYachtDetailsState extends State<AddYachtDetails> {
         'yachtid': newYachtid,
         'build': yachtBuildvalue,
         'overnightguests': overNightGuestsvalue,
+        'date': formattedDate,
       });
     } catch (e) {
       print(e);

@@ -292,7 +292,7 @@ class _UserOrderFoodState extends State<UserOrderFood> {
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                UserViewRestaurantDetails(widget.uid, widget.city)));
+                UserViewRestaurantDetails(widget.uid, widget.city, doc.id)));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 16.0),
@@ -388,19 +388,23 @@ class _UserOrderFoodState extends State<UserOrderFood> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${doc['name']}",
-                      style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    Text(" 3.2 KM",
-                        style: TextStyle(fontSize: 12, color: Colors.white))
-                  ],
+                Container(
+                  width: width * 0.45,
+                  child: Wrap(
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    direction: Axis.horizontal,
+                    children: [
+                      Text(
+                        "${doc['name']}",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(" 3.2 KM",
+                          style: TextStyle(fontSize: 12, color: Colors.white))
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -536,8 +540,8 @@ class _UserOrderFoodState extends State<UserOrderFood> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Color(0xFFBA780F)),
         image: DecorationImage(
-          image: NetworkImage(
-              /*doc['coverimage'] == null ? "" : doc['coverimage']*/ "https://st.depositphotos.com/1005682/2476/i/600/depositphotos_24762569-stock-photo-fast-food-hamburger-hot-dog.jpg"),
+          image:
+              NetworkImage(doc['coverimage'] == null ? "" : doc['coverimage']),
           fit: BoxFit.fill,
         ),
       ),

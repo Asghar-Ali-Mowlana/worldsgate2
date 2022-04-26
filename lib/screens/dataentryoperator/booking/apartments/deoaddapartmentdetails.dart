@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 
 import '../../../../widgets/deonavigationdrawer.dart';
@@ -938,13 +939,17 @@ class _AddApartmentDetailsState extends State<AddApartmentDetails> {
       swimmingPoolCategory,
       spaCategory
     ];*/
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
 
-    String newapartmentId =
-        FirebaseFirestore.instance.collection('apartments').doc().id;
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
+    String newapartmentId = FirebaseFirestore.instance
+        .collection('booking').doc("aGAm7T71ShOqGUhYphfc").collection('apartments').doc().id;
 
     try {
       await FirebaseFirestore.instance
-          .collection('apartments')
+          .collection('booking').doc("aGAm7T71ShOqGUhYphfc").collection('apartments')
           .doc(newapartmentId)
           .set({
         'name': apartmentNameController.text,
@@ -965,6 +970,7 @@ class _AddApartmentDetailsState extends State<AddApartmentDetails> {
         'stars': stars,
         'taxandcharges': null,
         'apartmentid': newapartmentId,
+        'date': formattedDate
       });
     } catch (e) {
       print(e);

@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/firestore.dart';
 import 'package:supercharged/supercharged.dart';
 import 'package:worldsgate/helper/extended_responsive_helper.dart';
 import 'package:worldsgate/widgets/deonavigationdrawer.dart';
@@ -69,6 +70,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
         .get()
         .then((QuerySnapshot querySnapshot) => {
               querySnapshot.docs.forEach((doc) {
+                print("oiii ${doc['datecreated']}");
                 DateTime dt = (doc['datecreated'] as Timestamp).toDate();
                 String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
 
@@ -90,6 +92,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                   "carid": doc.id,
                   "name": '${doc['name']}',
                   "brand": '${doc['brand']}',
+                  "datecreated": '${doc['datecreated']}',
                   "coverimage": '${doc['coverimage']}',
                   "price": '${doc['price']}',
                   "delivery": '${doc['delivery']}',
@@ -128,6 +131,8 @@ class _DeoManageCarsState extends State<DeoManageCars> {
       print(e);
     }
   }
+  String a = "Hi";
+  String b ="Bye";
 
   List<Widget> newbuilder(double fontsize, double columntextwidth, String tex) {
     List<Widget> m = [];
@@ -148,31 +153,78 @@ class _DeoManageCarsState extends State<DeoManageCars> {
           ],
         ),
       ));
-      print("Number of cars added on a specific date : " +
-          entryList[i].value.length.toString());
+      // print("Date is" + entryList[i].key.toString());
+      // print("Date is" + entryList[i].value[i]["datecreated"].toString());
+      //
+      // Timestamp myTimeStamp = Timestamp.fromMicrosecondsSinceEpoch(entryList[i].value[i]["datecreated"]);
+      // print("My stamp is ${myTimeStamp}");
 
-      //entryList[i].value[j]["coverimage"]
-      for (int j = 0; j < entryList[i].value.length; j++) {
-        print(entryList[i].value[j]["distance"]);
-        print(entryList[i].value[j]["price"]);
-        m.add(
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CarContainer(i, j, context, tex)
-          ),
-        );
+
+      // print(entryList[i].key);
+      // String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
+
+
+      //print(entryList[i].value[j]["distance"]);
+      //  print(entryList[i].value[j]["price"]);
+           m.add(
+             FirestoreListView(
+                 shrinkWrap: true,
+                 query:    FirebaseFirestore.instance
+                     .collection('cars')
+                     .where('dataentryuid', isEqualTo: widget.uid)
+                     .where('date',
+
+                     isEqualTo: entryList[i].key),
+                 //reduce the height
+                 pageSize: 5,
+                 loadingBuilder: (context) => Center(child: CircularProgressIndicator()),
+                 //errorBuilder: (context, error, stackTrace) => MyCustomError(error, stackTrace),
+
+                 itemBuilder: (context, snapshot) {
+
+                   return Padding(
+                     padding: const EdgeInsets.all(8.0),
+                     child: CarContainer(
+                         context,tex,snapshot
+                     ),
+                   );
+
+                 }
+             ),
+           );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       }
-    }
+
 
     return m;
   }
 
-  InkWell CarContainer(int i, int j, BuildContext context, String tex) {
+  InkWell CarContainer(BuildContext context, String tex, QueryDocumentSnapshot snapshot) {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) =>
-                DeoViewCarDetails(widget.uid, entryList[i].value[j]["carid"])));
+                DeoViewCarDetails(widget.uid, snapshot.get('carid'))));
       },
       child: Container(
         constraints:
@@ -216,7 +268,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                   // border: Border.all(color: Color(0xFFBA780F)),
                   image: DecorationImage(
                       image:
-                          NetworkImage('${entryList[i].value[j]["coverimage"]}'),
+                          NetworkImage('${snapshot.get('coverimage')}'),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -228,7 +280,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        "${entryList[i].value[j]["name"]}".toUpperCase(),
+                        "${snapshot.get('name')}".toUpperCase(),
                         style: TextStyle(color: Colors.white, fontSize: 16.0),
                       ),
                     ),
@@ -238,7 +290,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Text(
-                        "${entryList[i].value[j]["model"]}",
+                        "${snapshot.get('model')}",
                         style: TextStyle(color: Colors.white, fontSize: 16.0),
                       ),
                     ),
@@ -258,7 +310,7 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                                   color: Colors.white, fontSize: 20.0),
                             ),
                             Text(
-                              "  ${entryList[i].value[j]["price"].toString()}",
+                              "  ${snapshot.get('price').toString()}",
                               style: TextStyle(
                                   color: Colors.black87, fontSize: 20.0),
                             ),
@@ -305,14 +357,14 @@ class _DeoManageCarsState extends State<DeoManageCars> {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                "Delivery - ${entryList[i].value[j]["delivery"]}",
+                                "Delivery - ${snapshot.get('delivery')}",
                                 style: TextStyle(
                                     color: Color(0xFFBA780F),
                                     fontSize: 16.0,
                                     fontWeight: FontWeight.w600),
                               ),
                               Text(
-                                "Included - ${entryList[i].value[j]["distance"].toString()} KM",
+                                "Included - ${snapshot.get('distance').toString()} KM",
                                 style: TextStyle(
                                     color: Color(0xFFBA780F),
                                     fontSize: 16.0,

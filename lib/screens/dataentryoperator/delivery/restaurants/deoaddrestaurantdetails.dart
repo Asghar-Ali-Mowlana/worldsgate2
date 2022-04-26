@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
@@ -257,6 +258,11 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
   bool? deliverychargeavailable;
 
   _uploadHotelData() async {
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
     String newrestaurantid =
         FirebaseFirestore.instance.collection('restaurants').doc().id;
 
@@ -284,6 +290,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           'delivery': deliverytypechosen,
           'livetracking': livetrackingbool,
           'deliverycharge': descriptionController.text,
+          'date': formattedDate
         });
       } else {
         await FirebaseFirestore.instance
@@ -308,6 +315,7 @@ class _AddRestaurantDetailsState extends State<AddRestaurantDetails> {
           'delivery': deliverytypechosen,
           'livetracking': livetrackingbool,
           'deliverycharge': 0,
+          'date': formattedDate
         });
       }
     } catch (e) {

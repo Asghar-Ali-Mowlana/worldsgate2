@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import '../../../../widgets/deonavigationdrawer.dart';
@@ -30,6 +31,7 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   final TextEditingController distanceController = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
+  final TextEditingController topspeedController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController carEngineController = TextEditingController();
 
@@ -263,10 +265,16 @@ class _AddCarDetailsState extends State<AddCarDetails> {
   }
 
   _uploadHotelData() async {
-    String newCarId = FirebaseFirestore.instance.collection('cars').doc().id;
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
+    String newCarId = FirebaseFirestore.instance
+        .collection('booking').doc("aGAm7T71ShOqGUhYphfc").collection('cars').doc().id;
 
     try {
-      await FirebaseFirestore.instance.collection('cars').doc(newCarId).set({
+      await FirebaseFirestore.instance.collection('booking').doc("aGAm7T71ShOqGUhYphfc").collection('cars').doc(newCarId).set({
         'name': carNameController.text,
         'model': model,
         'delivery': delivery,
@@ -295,7 +303,8 @@ class _AddCarDetailsState extends State<AddCarDetails> {
         'otherfeatures': otherFeatures,
         'carid': newCarId,
         //example added
-        'topspeed': 123,
+        'topspeed': double.parse(topspeedController.text),
+        'date': formattedDate
       });
     } catch (e) {
       print(e);
@@ -695,6 +704,45 @@ class _AddCarDetailsState extends State<AddCarDetails> {
                         },
                         onSaved: (value) {
                           priceController.text = value!;
+                        },
+                        keyboardType: TextInputType.number,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        controller: topspeedController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              onPressed: () {
+                                topspeedController..text = "";
+                              }),
+                          hintText: "Enter top speed",
+                          labelText: "Top speed",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "Top speed cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
+                          topspeedController.text = value!;
                         },
                         keyboardType: TextInputType.number,
                       ),

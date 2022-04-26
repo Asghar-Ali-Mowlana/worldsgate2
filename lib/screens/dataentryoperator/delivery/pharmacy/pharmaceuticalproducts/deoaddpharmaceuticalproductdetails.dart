@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
 import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deoaddpharmacydetails.dart';
@@ -150,6 +151,11 @@ class _AddPharmaceuticalProductDetailsState extends State<AddPharmaceuticalProdu
 
 
   _uploadpharmaceuticalproductData() async {
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
     String newpharmaceuticalproductId = FirebaseFirestore.instance
         .collection('delivery')
         .doc("9WRNvPkoftSw4o2rHGUI")
@@ -171,6 +177,7 @@ class _AddPharmaceuticalProductDetailsState extends State<AddPharmaceuticalProdu
         'dataentryuid': widget.uid,
         'coverimage': coverImageLink,
         'pharmaceuticalproductid': newpharmaceuticalproductId,
+        'date': formattedDate
       });
     } catch (e) {
       print(e);

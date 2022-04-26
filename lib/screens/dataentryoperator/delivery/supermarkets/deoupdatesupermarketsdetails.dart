@@ -8,26 +8,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deomanagerestaurant.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/supermarkets/deomanagesupermarket.dart';
 import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
 
-class UpdateRestaurantDetails extends StatefulWidget {
+class UpdateSupermarketDetails extends StatefulWidget {
   String? uid;
-  String? restaurantid;
+  String? supermarketid;
 
-  //const UpdateRestaurantDetails({ Key? key }) : super(key: key);
-  UpdateRestaurantDetails(this.uid, this.restaurantid);
+  //const UpdateSupermarketDetails({ Key? key }) : super(key: key);
+  UpdateSupermarketDetails(this.uid, this.supermarketid);
 
   @override
-  State<UpdateRestaurantDetails> createState() => _UpdateRestaurantDetailsState();
+  State<UpdateSupermarketDetails> createState() => _UpdateSupermarketDetailsState();
 }
 
-class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
+class _UpdateSupermarketDetailsState extends State<UpdateSupermarketDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController restaurantNameController =
+  final TextEditingController supermarketNameController =
   TextEditingController();
   final TextEditingController preptimeController = TextEditingController();
   final TextEditingController cityNameController = TextEditingController();
@@ -128,7 +128,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/delivery/restaurantimages/restaurantmain/$filename';
+          final destination = '/delivery/supermarketimages/supermarketmain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -167,7 +167,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
   UploadTask? otherTask;
   var otherImageLink;
   List<Uint8List> otherImage = [];
-  List<String> OtherrestaurantImagesUrl = [];
+  List<String> OthersupermarketImagesUrl = [];
 
   List<File>? files;
 
@@ -202,7 +202,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
             //otherImage.add(uploadfile);
             //});
             String filename = basename(otherResult!.files[i].name);
-            final destination = '/delivery/restaurantimages/restaurantsub/$filename';
+            final destination = '/delivery/supermarketimages/supermarketsub/$filename';
             print("The destination is $destination");
 
             final ref = FirebaseStorage.instance.ref(destination);
@@ -226,7 +226,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
             otherImageLink = urlDownload;
 
             setState(() => otherImageLink = urlDownload);
-            OtherrestaurantImagesUrl.add(otherImageLink);
+            OthersupermarketImagesUrl.add(otherImageLink);
           }
 
           setState(() {
@@ -245,14 +245,14 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
   getyoo() async {
         FirebaseFirestore.instance
             .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-            .collection('restaurants').doc(widget.restaurantid)
+            .collection('supermarkets').doc(widget.supermarketid)
             .get()
             .then((myDocuments) {
           setState(() {
-            restaurantNameController.text = myDocuments.data()!['name'].toString();
+            supermarketNameController.text = myDocuments.data()!['name'].toString();
             city = myDocuments.data()!['city'].toString();
             minimumorderpriceController.text = myDocuments.data()!['minimumorderprice'].toString();
-            preptimeController.text = myDocuments.data()!['preparationtime'].toString();
+            preptimeController.text = myDocuments.data()!['dealingtime'].toString();
             deliverychargeController.text = myDocuments.data()!['deliverycharge'].toString();
             descriptionController.text = myDocuments.data()!['description'].toString();
             addressController.text = myDocuments.data()!['address'].toString();
@@ -260,10 +260,10 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
             deliverytypechosen = myDocuments.data()!['delivery'].toString();
             livetrackingchosen = myDocuments.data()!['livetracking'].toString();
             for (int i = 0;
-            i < myDocuments.data()!['otherrestaurantimages'].length;
+            i < myDocuments.data()!['othersupermarketimages'].length;
             i++) {
-              print(OtherrestaurantImagesUrl.length);
-              OtherrestaurantImagesUrl.add(myDocuments.data()!['otherrestaurantimages'][i]);
+              print(OthersupermarketImagesUrl.length);
+              OthersupermarketImagesUrl.add(myDocuments.data()!['othersupermarketimages'][i]);
             }
           });
 
@@ -279,15 +279,15 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
 
         await FirebaseFirestore.instance
             .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-            .collection('restaurants').doc(widget.restaurantid).update({
-          'name': restaurantNameController.text,
+            .collection('supermarkets').doc(widget.supermarketid).update({
+          'name': supermarketNameController.text,
           'minimumorderprice':
           double.parse(minimumorderpriceController.text),
-          'preparationtime': double.parse(preptimeController.text),
+          'dealingtime': double.parse(preptimeController.text),
           'description': descriptionController.text,
           'city': city,
           'coverimage': coverImageLink,
-          'otherrestaurantimages': OtherrestaurantImagesUrl,
+          'othersupermarketimages': OthersupermarketImagesUrl,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingchosen,
           'deliverycharge': deliverychargeController.text,
@@ -298,15 +298,15 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
       }else{
         await FirebaseFirestore.instance
             .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-            .collection('restaurants').doc(widget.restaurantid).update({
-          'name': restaurantNameController.text,
+            .collection('supermarkets').doc(widget.supermarketid).update({
+          'name': supermarketNameController.text,
           'minimumorderprice':
           double.parse(minimumorderpriceController.text),
-          'preparationtime': double.parse(preptimeController.text),
+          'dealingtime': double.parse(preptimeController.text),
           'description': descriptionController.text,
           'city': city,
           'coverimage': coverImageLink,
-          'otherrestaurantimages': OtherrestaurantImagesUrl,
+          'othersupermarketimages': OthersupermarketImagesUrl,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingchosen,
           'deliverycharge': 0,
@@ -360,9 +360,9 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: UpdateRestaurantDetailsContainer(context, "mobile"),
-                      tab: UpdateRestaurantDetailsContainer(context, "tab"),
-                      desktop: UpdateRestaurantDetailsContainer(context, "desktop"),
+                      mobile: UpdateSupermarketDetailsContainer(context, "mobile"),
+                      tab: UpdateSupermarketDetailsContainer(context, "tab"),
+                      desktop: UpdateSupermarketDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -382,7 +382,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
     );
   }
 
-  Container UpdateRestaurantDetailsContainer(BuildContext context, String device) {
+  Container UpdateSupermarketDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -400,7 +400,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: restaurantNameController,
+                        controller: supermarketNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -408,10 +408,10 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                restaurantNameController..text = "";
+                                supermarketNameController..text = "";
                               }),
-                          hintText: "Enter restaurant name",
-                          labelText: "Restaurant Name",
+                          hintText: "Enter supermarket name",
+                          labelText: "supermarket Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -426,11 +426,11 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Restaurant name cannot be empty";
+                            return "supermarket name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          restaurantNameController.text = value!;
+                          supermarketNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
@@ -580,7 +580,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                           ],
                           controller: deliverychargeController,
                           style: TextStyle(color: Colors.white),
-                          // controller: restaurantNameController,
+                          // controller: supermarketNameController,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                                 icon: Icon(
@@ -663,7 +663,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                             hintText: "Select place in UAE",
                             hintStyle: TextStyle(
                                 color: Colors.white70),
-                            labelText: 'Restaurant City',
+                            labelText: 'supermarket City',
                             labelStyle: TextStyle(
                                 color: Colors.white70,
                                 height: 0.1),
@@ -707,8 +707,8 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                               onPressed: () {
                                 addressController..text = "";
                               }),
-                          hintText: "Enter restaurant address",
-                          labelText: "Restaurant address",
+                          hintText: "Enter supermarket address",
+                          labelText: "supermarket address",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -723,7 +723,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Restaurant address cannot be empty";
+                            return "supermarket address cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -747,8 +747,8 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter restaurant description",
-                          labelText: "Restaurant Description",
+                          hintText: "Enter supermarket description",
+                          labelText: "supermarket Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -763,7 +763,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Restaurant description cannot be empty";
+                            return "supermarket description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -777,7 +777,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Restaurant Cover Photo",
+                          "supermarket Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -810,7 +810,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Restaurant Cover Photo",
+                              "supermarket Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -864,7 +864,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other restaurant Photos",
+                          "Other supermarket Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -897,7 +897,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other restaurant Photos",
+                              "Other supermarket Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -908,12 +908,12 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                           ),
                         ),
                       ),
-                      OtherrestaurantImagesUrl.length != 0
+                      OthersupermarketImagesUrl.length != 0
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
                               height: 160,
                               child: GridView.builder(
-                                  itemCount: OtherrestaurantImagesUrl.length,
+                                  itemCount: OthersupermarketImagesUrl.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 8),
@@ -929,7 +929,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                     image: NetworkImage(
-                                                        OtherrestaurantImagesUrl[index]),
+                                                        OthersupermarketImagesUrl[index]),
                                                     fit: BoxFit.cover)),
                                           child:  Padding(
                                             padding: const EdgeInsets.all(4.0),
@@ -941,7 +941,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                                                 child: IconButton(
                                                   onPressed: (){
 
-                                                    _showMyDialogOtherImage(OtherrestaurantImagesUrl[index], index);
+                                                    _showMyDialogOtherImage(OthersupermarketImagesUrl[index], index);
 
 
 
@@ -1001,7 +1001,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          DeoManageRestaurant(widget.uid)));
+                                          DeoManageSupermarket(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',
@@ -1025,7 +1025,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
 
     FirebaseFirestore.instance
         .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-        .collection('restaurants').doc(widget.restaurantid)
+        .collection('supermarkets').doc(widget.supermarketid)
         .update({
       'coverimage': "",
     });
@@ -1036,22 +1036,22 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
     });
   }
 
-  _removerestaurantOtherPhoto(url, theindex) async {
+  _removesupermarketOtherPhoto(url, theindex) async {
   //await FirebaseStorage.instance.refFromURL(url).delete();
 
     var list = [url];
     FirebaseFirestore.instance
         .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-        .collection('restaurants').doc(widget.restaurantid)
+        .collection('supermarkets').doc(widget.supermarketid)
         .update({
-      'otherrestaurantimages': FieldValue.arrayRemove(list),
+      'othersupermarketimages': FieldValue.arrayRemove(list),
     });
-  print(OtherrestaurantImagesUrl.elementAt(theindex));
+  print(OthersupermarketImagesUrl.elementAt(theindex));
   print(theindex);
- // var toremove = [OtherrestaurantImagesUrl.elementAt(theindex)];
+ // var toremove = [OthersupermarketImagesUrl.elementAt(theindex)];
     setState(() {
 
-     OtherrestaurantImagesUrl.remove(OtherrestaurantImagesUrl.elementAt(theindex));
+     OthersupermarketImagesUrl.remove(OthersupermarketImagesUrl.elementAt(theindex));
       //FieldValue.arrayRemove(toremove);
     });
     //
@@ -1119,7 +1119,7 @@ class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
               child: Text('Confirm'),
               onPressed: () {
                 setState(() {
-                  _removerestaurantOtherPhoto(x, theindex);
+                  _removesupermarketOtherPhoto(x, theindex);
 
                 });
                 print('Confirmed');

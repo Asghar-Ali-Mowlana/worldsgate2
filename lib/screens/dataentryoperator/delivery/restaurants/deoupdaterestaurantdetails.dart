@@ -8,26 +8,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deomanagepharmacy.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deomanagerestaurant.dart';
 import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
 
-class UpdatePharmacyDetails extends StatefulWidget {
+class UpdateRestaurantDetails extends StatefulWidget {
   String? uid;
-  String? pharmacyid;
+  String? restaurantid;
 
-  //const UpdatePharmacyDetails({ Key? key }) : super(key: key);
-  UpdatePharmacyDetails(this.uid, this.pharmacyid);
+  //const UpdateRestaurantDetails({ Key? key }) : super(key: key);
+  UpdateRestaurantDetails(this.uid, this.restaurantid);
 
   @override
-  State<UpdatePharmacyDetails> createState() => _UpdatePharmacyDetailsState();
+  State<UpdateRestaurantDetails> createState() => _UpdateRestaurantDetailsState();
 }
 
-class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
+class _UpdateRestaurantDetailsState extends State<UpdateRestaurantDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController pharmacyNameController =
+  final TextEditingController restaurantNameController =
   TextEditingController();
   final TextEditingController preptimeController = TextEditingController();
   final TextEditingController cityNameController = TextEditingController();
@@ -35,6 +35,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
   TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController deliverychargeController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
 
   String? city;
@@ -127,7 +128,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/delivery/pharmacyimages/pharmacymain/$filename';
+          final destination = '/delivery/restaurantimages/restaurantmain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -166,7 +167,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
   UploadTask? otherTask;
   var otherImageLink;
   List<Uint8List> otherImage = [];
-  List<String> OtherpharmacyImagesUrl = [];
+  List<String> OtherrestaurantImagesUrl = [];
 
   List<File>? files;
 
@@ -201,7 +202,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
             //otherImage.add(uploadfile);
             //});
             String filename = basename(otherResult!.files[i].name);
-            final destination = '/delivery/pharmacyimages/pharmacysub/$filename';
+            final destination = '/delivery/restaurantimages/restaurantsub/$filename';
             print("The destination is $destination");
 
             final ref = FirebaseStorage.instance.ref(destination);
@@ -225,7 +226,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
             otherImageLink = urlDownload;
 
             setState(() => otherImageLink = urlDownload);
-            OtherpharmacyImagesUrl.add(otherImageLink);
+            OtherrestaurantImagesUrl.add(otherImageLink);
           }
 
           setState(() {
@@ -244,24 +245,25 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
   getyoo() async {
         FirebaseFirestore.instance
             .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-            .collection('pharmacys').doc(widget.pharmacyid)
+            .collection('restaurants').doc(widget.restaurantid)
             .get()
             .then((myDocuments) {
           setState(() {
-            pharmacyNameController.text = myDocuments.data()!['name'].toString();
+            restaurantNameController.text = myDocuments.data()!['name'].toString();
             city = myDocuments.data()!['city'].toString();
             minimumorderpriceController.text = myDocuments.data()!['minimumorderprice'].toString();
             preptimeController.text = myDocuments.data()!['preparationtime'].toString();
             deliverychargeController.text = myDocuments.data()!['deliverycharge'].toString();
             descriptionController.text = myDocuments.data()!['description'].toString();
+            addressController.text = myDocuments.data()!['address'].toString();
             coverImageLink = myDocuments.data()!['coverimage'].toString();
             deliverytypechosen = myDocuments.data()!['delivery'].toString();
             livetrackingchosen = myDocuments.data()!['livetracking'].toString();
             for (int i = 0;
-            i < myDocuments.data()!['otherpharmacyimages'].length;
+            i < myDocuments.data()!['otherrestaurantimages'].length;
             i++) {
-              print(OtherpharmacyImagesUrl.length);
-              OtherpharmacyImagesUrl.add(myDocuments.data()!['otherpharmacyimages'][i]);
+              print(OtherrestaurantImagesUrl.length);
+              OtherrestaurantImagesUrl.add(myDocuments.data()!['otherrestaurantimages'][i]);
             }
           });
 
@@ -277,36 +279,38 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
 
         await FirebaseFirestore.instance
             .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-            .collection('pharmacys').doc(widget.pharmacyid).update({
-          'name': pharmacyNameController.text,
+            .collection('restaurants').doc(widget.restaurantid).update({
+          'name': restaurantNameController.text,
           'minimumorderprice':
           double.parse(minimumorderpriceController.text),
           'preparationtime': double.parse(preptimeController.text),
           'description': descriptionController.text,
           'city': city,
           'coverimage': coverImageLink,
-          'otherpharmacyimages': OtherpharmacyImagesUrl,
+          'otherrestaurantimages': OtherrestaurantImagesUrl,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingchosen,
           'deliverycharge': deliverychargeController.text,
+          'address': addressController.text,
         });
 
 
       }else{
         await FirebaseFirestore.instance
             .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-            .collection('pharmacys').doc(widget.pharmacyid).update({
-          'name': pharmacyNameController.text,
+            .collection('restaurants').doc(widget.restaurantid).update({
+          'name': restaurantNameController.text,
           'minimumorderprice':
           double.parse(minimumorderpriceController.text),
           'preparationtime': double.parse(preptimeController.text),
           'description': descriptionController.text,
           'city': city,
           'coverimage': coverImageLink,
-          'otherpharmacyimages': OtherpharmacyImagesUrl,
+          'otherrestaurantimages': OtherrestaurantImagesUrl,
           'delivery': deliverytypechosen,
           'livetracking': livetrackingchosen,
           'deliverycharge': 0,
+          'address': addressController.text,
         });
       }
 
@@ -356,9 +360,9 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: UpdatePharmacyDetailsContainer(context, "mobile"),
-                      tab: UpdatePharmacyDetailsContainer(context, "tab"),
-                      desktop: UpdatePharmacyDetailsContainer(context, "desktop"),
+                      mobile: UpdateRestaurantDetailsContainer(context, "mobile"),
+                      tab: UpdateRestaurantDetailsContainer(context, "tab"),
+                      desktop: UpdateRestaurantDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -378,7 +382,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
     );
   }
 
-  Container UpdatePharmacyDetailsContainer(BuildContext context, String device) {
+  Container UpdateRestaurantDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -396,7 +400,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: pharmacyNameController,
+                        controller: restaurantNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -404,10 +408,10 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                pharmacyNameController..text = "";
+                                restaurantNameController..text = "";
                               }),
-                          hintText: "Enter pharmacy name",
-                          labelText: "Pharmacy Name",
+                          hintText: "Enter restaurant name",
+                          labelText: "Restaurant Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -422,11 +426,11 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Pharmacy name cannot be empty";
+                            return "Restaurant name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          pharmacyNameController.text = value!;
+                          restaurantNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
@@ -576,7 +580,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                           ],
                           controller: deliverychargeController,
                           style: TextStyle(color: Colors.white),
-                          // controller: pharmacyNameController,
+                          // controller: restaurantNameController,
                           decoration: InputDecoration(
                             suffixIcon: IconButton(
                                 icon: Icon(
@@ -659,7 +663,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                             hintText: "Select place in UAE",
                             hintStyle: TextStyle(
                                 color: Colors.white70),
-                            labelText: 'Pharmacy City',
+                            labelText: 'Restaurant City',
                             labelStyle: TextStyle(
                                 color: Colors.white70,
                                 height: 0.1),
@@ -693,7 +697,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                       TextFormField(
                         style: TextStyle(color: Colors.white),
                         maxLines: null,
-                        controller: descriptionController,
+                        controller: addressController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -701,10 +705,10 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                descriptionController..text = "";
+                                addressController..text = "";
                               }),
-                          hintText: "Enter pharmacy description",
-                          labelText: "Pharmacy Description",
+                          hintText: "Enter restaurant address",
+                          labelText: "Restaurant address",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -719,7 +723,47 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Pharmacy description cannot be empty";
+                            return "Restaurant address cannot be empty";
+                          }
+                        },
+                        onSaved: (value) {
+                          addressController.text = value!;
+                        },
+                        keyboardType: TextInputType.multiline,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        style: TextStyle(color: Colors.white),
+                        maxLines: null,
+                        controller: descriptionController,
+                        decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Color(0xFFdb9e1f),
+                              ),
+                              onPressed: () {
+                                descriptionController..text = "";
+                              }),
+                          hintText: "Enter restaurant description",
+                          labelText: "Restaurant Description",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          labelStyle:
+                          new TextStyle(color: Colors.white70, height: 0.1),
+                          enabled: true,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: new BorderSide(color: Colors.white70),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide:
+                            new BorderSide(color: Color(0xFFdb9e1f)),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value!.length == 0) {
+                            return "Restaurant description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -733,7 +777,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Pharmacy Cover Photo",
+                          "Restaurant Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -766,7 +810,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Pharmacy Cover Photo",
+                              "Restaurant Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -820,7 +864,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other pharmacy Photos",
+                          "Other restaurant Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -853,7 +897,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other pharmacy Photos",
+                              "Other restaurant Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -864,12 +908,12 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                           ),
                         ),
                       ),
-                      OtherpharmacyImagesUrl.length != 0
+                      OtherrestaurantImagesUrl.length != 0
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
                               height: 160,
                               child: GridView.builder(
-                                  itemCount: OtherpharmacyImagesUrl.length,
+                                  itemCount: OtherrestaurantImagesUrl.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 8),
@@ -885,7 +929,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                     image: NetworkImage(
-                                                        OtherpharmacyImagesUrl[index]),
+                                                        OtherrestaurantImagesUrl[index]),
                                                     fit: BoxFit.cover)),
                                           child:  Padding(
                                             padding: const EdgeInsets.all(4.0),
@@ -897,7 +941,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                                                 child: IconButton(
                                                   onPressed: (){
 
-                                                    _showMyDialogOtherImage(OtherpharmacyImagesUrl[index], index);
+                                                    _showMyDialogOtherImage(OtherrestaurantImagesUrl[index], index);
 
 
 
@@ -957,7 +1001,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          DeoManagePharmacy(widget.uid)));
+                                          DeoManageRestaurant(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',
@@ -981,7 +1025,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
 
     FirebaseFirestore.instance
         .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-        .collection('pharmacys').doc(widget.pharmacyid)
+        .collection('restaurants').doc(widget.restaurantid)
         .update({
       'coverimage': "",
     });
@@ -992,22 +1036,22 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
     });
   }
 
-  _removepharmacyOtherPhoto(url, theindex) async {
+  _removerestaurantOtherPhoto(url, theindex) async {
   //await FirebaseStorage.instance.refFromURL(url).delete();
 
     var list = [url];
     FirebaseFirestore.instance
         .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
-        .collection('pharmacys').doc(widget.pharmacyid)
+        .collection('restaurants').doc(widget.restaurantid)
         .update({
-      'otherpharmacyimages': FieldValue.arrayRemove(list),
+      'otherrestaurantimages': FieldValue.arrayRemove(list),
     });
-  print(OtherpharmacyImagesUrl.elementAt(theindex));
+  print(OtherrestaurantImagesUrl.elementAt(theindex));
   print(theindex);
- // var toremove = [OtherpharmacyImagesUrl.elementAt(theindex)];
+ // var toremove = [OtherrestaurantImagesUrl.elementAt(theindex)];
     setState(() {
 
-     OtherpharmacyImagesUrl.remove(OtherpharmacyImagesUrl.elementAt(theindex));
+     OtherrestaurantImagesUrl.remove(OtherrestaurantImagesUrl.elementAt(theindex));
       //FieldValue.arrayRemove(toremove);
     });
     //
@@ -1075,7 +1119,7 @@ class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
               child: Text('Confirm'),
               onPressed: () {
                 setState(() {
-                  _removepharmacyOtherPhoto(x, theindex);
+                  _removerestaurantOtherPhoto(x, theindex);
 
                 });
                 print('Confirmed');

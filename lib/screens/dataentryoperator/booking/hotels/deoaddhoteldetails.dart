@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:path/path.dart';
 
@@ -943,12 +944,17 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
       spaCategory
     ];*/
 
-    String newHotelId =
-        FirebaseFirestore.instance.collection('hotels').doc().id;
+    DateTime currentPhoneDate = DateTime.now(); //DateTime
+
+    Timestamp myTimeStamp = Timestamp.fromDate(currentPhoneDate);
+    DateTime dt = (myTimeStamp as Timestamp).toDate();
+    String formattedDate = DateFormat('yyyy/MM/dd').format(dt);
+    String newHotelId = FirebaseFirestore.instance
+        .collection('booking').doc("aGAm7T71ShOqGUhYphfc").collection('hotels').doc().id;
 
     try {
       await FirebaseFirestore.instance
-          .collection('hotels')
+          .collection('booking').doc("aGAm7T71ShOqGUhYphfc").collection('hotels')
           .doc(newHotelId)
           .set({
         'name': hotelNameController.text,
@@ -969,6 +975,7 @@ class _AddHotelDetailsState extends State<AddHotelDetails> {
         'stars': stars,
         'taxandcharges': null,
         'hotelid': newHotelId,
+        'date': formattedDate
       });
     } catch (e) {
       print(e);

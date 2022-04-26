@@ -8,57 +8,81 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:worldsgate/helper/responsive_helper.dart';
-import 'package:worldsgate/screens/dataentryoperator/booking/yacht/deomanageyachts.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/pharmacy/deomanagepharmacy.dart';
 import '../../../../widgets/deonavigationdrawer.dart';
 import '../../../../widgets/header.dart';
 
-class UpdateYachtDetails extends StatefulWidget {
+class UpdatePharmacyDetails extends StatefulWidget {
   String? uid;
-  String? yachtid;
+  String? pharmacyid;
 
-  //const UpdateYachtDetails({ Key? key }) : super(key: key);
-  UpdateYachtDetails(this.uid, this.yachtid);
+  //const UpdatePharmacyDetails({ Key? key }) : super(key: key);
+  UpdatePharmacyDetails(this.uid, this.pharmacyid);
 
   @override
-  State<UpdateYachtDetails> createState() => _UpdateYachtDetailsState();
+  State<UpdatePharmacyDetails> createState() => _UpdatePharmacyDetailsState();
 }
 
-class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
+class _UpdatePharmacyDetailsState extends State<UpdatePharmacyDetails> {
   final _formkey = GlobalKey<FormState>();
   var _scaffoldState = new GlobalKey<ScaffoldState>();
 
-  final TextEditingController yachtNameController = TextEditingController();
-  final TextEditingController perhourpriceController = TextEditingController();
-  final TextEditingController dailypriceController = TextEditingController();
+  final TextEditingController pharmacyNameController =
+  TextEditingController();
+  final TextEditingController preptimeController = TextEditingController();
+  final TextEditingController cityNameController = TextEditingController();
+  final TextEditingController minimumorderpriceController =
+  TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-  final TextEditingController yachtlengthController = TextEditingController();
-  final TextEditingController speedController = TextEditingController();
-  final TextEditingController capacityController = TextEditingController();
+  final TextEditingController deliverychargeController = TextEditingController();
 
 
+  String? city;
+  String? deliverytypechosen;
+  bool? livetrackingbool;
+  bool? deliverychargeavailable;
 
-  String? overNightGuestsvalue;
-  String? yachtBuildvalue;
 
-  final yachtBuild = [
-    "Von Dutch",
-    "Sunseeker",
-    "Azimut",
-    "Numarine",
-    "Rodriguez",
-    "Bennetti",
+  final places = [
+    'Deira',
+    'Bur Dubai',
+    'Beach & Coast',
+    'Garhoud',
+    'Palm Jumeirah',
+    'Barsha Heights (Tecom)',
+    'Sheikh Zayed Road',
+    'Al Barsha',
+    'Dubai Creek',
+    'Jumeirah Beach Residence',
+    'Dubai Marina',
+    'Trade Centre',
+    'Old Dubai',
+    'Downtown Dubai',
+    'Business Bay',
+    "Guests' favourite area",
+    'Jadaf',
+    'Al Qusais',
+    'Oud Metha',
+    'Dubai Investment Park',
+    'Dubai Festival City',
+    'Dubai World Central',
+    'Umm Suqeim',
+    'Discovery Gardens',
+    'Dubai Production City',
+    'Jumeirah Lakes Towers',
   ];
 
-
-  final overNightGuests = [
-    "2",
-    "4",
-    "6",
-    "8",
-    "10",
-    "12",
-    "N/A",
+  final deliveryType = [
+    "Free",
+    "Paid",
   ];
+
+  String? livetrackingchosen;
+  final livetracking = [
+    "Yes",
+    "No",
+  ];
+
 
 
 
@@ -103,7 +127,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
           String filename = basename(result!.files.single.name);
 
           //final fileName = basename(file!.path);
-          final destination = '/booking/yachtimages/yachtmain/$filename';
+          final destination = '/delivery/pharmacyimages/pharmacymain/$filename';
           print("The destination is $destination");
 
           final ref = FirebaseStorage.instance.ref(destination);
@@ -142,7 +166,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
   UploadTask? otherTask;
   var otherImageLink;
   List<Uint8List> otherImage = [];
-  List<String> OtherYachtImagesUrl = [];
+  List<String> OtherpharmacyImagesUrl = [];
 
   List<File>? files;
 
@@ -177,7 +201,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
             //otherImage.add(uploadfile);
             //});
             String filename = basename(otherResult!.files[i].name);
-            final destination = '/booking/yachtimages/yachtsub/$filename';
+            final destination = '/delivery/pharmacyimages/pharmacysub/$filename';
             print("The destination is $destination");
 
             final ref = FirebaseStorage.instance.ref(destination);
@@ -201,7 +225,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
             otherImageLink = urlDownload;
 
             setState(() => otherImageLink = urlDownload);
-            OtherYachtImagesUrl.add(otherImageLink);
+            OtherpharmacyImagesUrl.add(otherImageLink);
           }
 
           setState(() {
@@ -216,36 +240,31 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
     }
   }
 
-  String? builds;
-  String? overnightguests;
 
   getyoo() async {
         FirebaseFirestore.instance
-            .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
-            .collection('yachts').doc(widget.yachtid)
+            .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
+            .collection('pharmacys').doc(widget.pharmacyid)
             .get()
             .then((myDocuments) {
-              print(myDocuments.data()!['description'].toString());
           setState(() {
-            yachtNameController.text = myDocuments.data()!['name'].toString();
-            perhourpriceController.text = myDocuments.data()!['perhourprice'].toString();
-            dailypriceController.text = myDocuments.data()!['dailyprice'].toString();
-            capacityController.text = myDocuments.data()!['capacity'].toString();
-            yachtlengthController.text = myDocuments.data()!['length'].toString();
+            pharmacyNameController.text = myDocuments.data()!['name'].toString();
+            city = myDocuments.data()!['city'].toString();
+            minimumorderpriceController.text = myDocuments.data()!['minimumorderprice'].toString();
+            preptimeController.text = myDocuments.data()!['preparationtime'].toString();
+            deliverychargeController.text = myDocuments.data()!['deliverycharge'].toString();
             descriptionController.text = myDocuments.data()!['description'].toString();
-            speedController.text = myDocuments.data()!['speed'].toString();
-            coverImageLink = myDocuments.data()!['coverimage'];
+            coverImageLink = myDocuments.data()!['coverimage'].toString();
+            deliverytypechosen = myDocuments.data()!['delivery'].toString();
+            livetrackingchosen = myDocuments.data()!['livetracking'].toString();
             for (int i = 0;
-            i < myDocuments.data()!['otheryachtimages'].length;
+            i < myDocuments.data()!['otherpharmacyimages'].length;
             i++) {
-              print(OtherYachtImagesUrl.length);
-              OtherYachtImagesUrl.add(myDocuments.data()!['otheryachtimages'][i]);
+              print(OtherpharmacyImagesUrl.length);
+              OtherpharmacyImagesUrl.add(myDocuments.data()!['otherpharmacyimages'][i]);
             }
-            builds = myDocuments.data()!['build'].toString();
-            yachtBuildvalue = builds;
-            overnightguests = myDocuments.data()!['overnightguests'].toString();
-            overNightGuestsvalue = overnightguests;
           });
+
         });
 
 
@@ -254,21 +273,43 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
   _uploadHotelData() async {
 
     try {
-      await FirebaseFirestore.instance
-          .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
-          .collection('yachts').doc(widget.yachtid).update({
-        'name': yachtNameController.text,
-        'perhourprice': double.parse(perhourpriceController.text),
-        'dailyprice': double.parse(dailypriceController.text),
-        'capacity': double.parse(capacityController.text),
-        'description': descriptionController.text,
-        'length': double.parse(yachtlengthController.text),
-        'speed': double.parse(speedController.text),
-        'coverimage': coverImageLink,
-        'otheryachtimages': OtherYachtImagesUrl,
-        'build': yachtBuildvalue,
-        'overnightguests': overNightGuestsvalue,
-      });
+      if (deliverytypechosen == "Paid"){
+
+        await FirebaseFirestore.instance
+            .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
+            .collection('pharmacys').doc(widget.pharmacyid).update({
+          'name': pharmacyNameController.text,
+          'minimumorderprice':
+          double.parse(minimumorderpriceController.text),
+          'preparationtime': double.parse(preptimeController.text),
+          'description': descriptionController.text,
+          'city': city,
+          'coverimage': coverImageLink,
+          'otherpharmacyimages': OtherpharmacyImagesUrl,
+          'delivery': deliverytypechosen,
+          'livetracking': livetrackingchosen,
+          'deliverycharge': deliverychargeController.text,
+        });
+
+
+      }else{
+        await FirebaseFirestore.instance
+            .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
+            .collection('pharmacys').doc(widget.pharmacyid).update({
+          'name': pharmacyNameController.text,
+          'minimumorderprice':
+          double.parse(minimumorderpriceController.text),
+          'preparationtime': double.parse(preptimeController.text),
+          'description': descriptionController.text,
+          'city': city,
+          'coverimage': coverImageLink,
+          'otherpharmacyimages': OtherpharmacyImagesUrl,
+          'delivery': deliverytypechosen,
+          'livetracking': livetrackingchosen,
+          'deliverycharge': 0,
+        });
+      }
+
     } catch (e) {
       print(e);
     }
@@ -315,9 +356,9 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                   SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: ResponsiveWidget(
-                      mobile: UpdateYachtDetailsContainer(context, "mobile"),
-                      tab: UpdateYachtDetailsContainer(context, "tab"),
-                      desktop: UpdateYachtDetailsContainer(context, "desktop"),
+                      mobile: UpdatePharmacyDetailsContainer(context, "mobile"),
+                      tab: UpdatePharmacyDetailsContainer(context, "tab"),
+                      desktop: UpdatePharmacyDetailsContainer(context, "desktop"),
                     ),
                   ),
                   Positioned(
@@ -337,7 +378,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
     );
   }
 
-  Container UpdateYachtDetailsContainer(BuildContext context, String device) {
+  Container UpdatePharmacyDetailsContainer(BuildContext context, String device) {
     return Container(
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -355,7 +396,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                     children: [
                       TextFormField(
                         style: TextStyle(color: Colors.white),
-                        controller: yachtNameController,
+                        controller: pharmacyNameController,
                         decoration: InputDecoration(
                           suffixIcon: IconButton(
                               icon: Icon(
@@ -363,10 +404,10 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                yachtNameController..text = "";
+                                pharmacyNameController..text = "";
                               }),
-                          hintText: "Enter yacht name",
-                          labelText: "Yacht Name",
+                          hintText: "Enter pharmacy name",
+                          labelText: "Pharmacy Name",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -381,11 +422,11 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Yacht name cannot be empty";
+                            return "Pharmacy name cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          yachtNameController.text = value!;
+                          pharmacyNameController.text = value!;
                         },
                         keyboardType: TextInputType.text,
                       ),
@@ -399,7 +440,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                             Expanded(
                               child: TextFormField(
                                 style: TextStyle(color: Colors.white),
-                                controller: perhourpriceController,
+                                controller: minimumorderpriceController,
                                 inputFormatters: <TextInputFormatter>[
                                   FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                                 ],
@@ -410,10 +451,10 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                         color: Color(0xFFdb9e1f),
                                       ),
                                       onPressed: () {
-                                        perhourpriceController..text = "";
+                                        minimumorderpriceController..text = "";
                                       }),
-                                  hintText: "Enter per hour price",
-                                  labelText: "Per Hour Price",
+                                  hintText: "Minimum Order price",
+                                  labelText: "Minimum Order Price",
                                   hintStyle: TextStyle(color: Colors.white70),
                                   labelStyle: new TextStyle(
                                       color: Colors.white70, height: 0.1),
@@ -429,59 +470,13 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                 ),
                                 validator: (value) {
                                   if (value!.length == 0) {
-                                    return "Per hour price cannot be empty";
+                                    return "Minimum order price cannot be empty";
                                   }
                                 },
                                 onSaved: (value) {
-                                  perhourpriceController.text = value!;
+                                  minimumorderpriceController.text = value!;
                                 },
                                 keyboardType: TextInputType.number,
-                              ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(left: 8.0),
-                                child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
-                                  controller: dailypriceController,
-                                  inputFormatters: <TextInputFormatter>[
-                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                                  ],
-                                  decoration: InputDecoration(
-                                    suffixIcon: IconButton(
-                                        icon: Icon(
-                                          Icons.cancel,
-                                          color: Color(0xFFdb9e1f),
-                                        ),
-                                        onPressed: () {
-                                          dailypriceController..text = "";
-                                        }),
-                                    hintText: "Enter daily price",
-                                    labelText: "Daily Price",
-                                    hintStyle: TextStyle(color: Colors.white70),
-                                    labelStyle: new TextStyle(
-                                        color: Colors.white70, height: 0.1),
-                                    enabled: true,
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide:
-                                          new BorderSide(color: Colors.white70),
-                                    ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: new BorderSide(
-                                          color: Color(0xFFdb9e1f)),
-                                    ),
-                                  ),
-                                  validator: (value) {
-                                    if (value!.length == 0) {
-                                      return "Daily price cannot be empty";
-                                    }
-                                  },
-                                  onSaved: (value) {
-                                    dailypriceController.text = value!;
-                                  },
-                                  keyboardType: TextInputType.number,
-                                ),
                               ),
                             ),
                           ],
@@ -493,7 +488,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                       TextFormField(
                         style: TextStyle(color: Colors.white),
                         maxLines: null,
-                        controller: yachtlengthController,
+                        controller: preptimeController,
                         inputFormatters: <TextInputFormatter>[
                           FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                         ],
@@ -504,10 +499,10 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                 color: Color(0xFFdb9e1f),
                               ),
                               onPressed: () {
-                                yachtlengthController..text = "";
+                                preptimeController..text = "";
                               }),
-                          hintText: "Enter yacht length",
-                          labelText: "Yacht Length",
+                          hintText: "Enter deal time",
+                          labelText: "Deal Time",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                               new TextStyle(color: Colors.white70, height: 0.1),
@@ -522,99 +517,176 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Yacht length cannot be empty";
+                            return "Deal time cannot be empty";
                           }
                         },
                         onSaved: (value) {
-                          yachtlengthController.text = value!;
+                          preptimeController.text = value!;
                         },
                         keyboardType: TextInputType.multiline,
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        maxLines: null,
-                        controller: speedController,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
-                        ],
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Color(0xFFdb9e1f),
-                              ),
-                              onPressed: () {
-                                speedController..text = "";
-                              }),
-                          hintText: "Enter yacht speed",
-                          labelText: "Yacht Speed",
-                          hintStyle: TextStyle(color: Colors.white70),
-                          labelStyle:
-                          new TextStyle(color: Colors.white70, height: 0.1),
-                          enabled: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.white70),
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Delivery Type",
+                            hintStyle: TextStyle(color: Colors.white70),
+                            labelText: 'Delivery Type',
+                            labelStyle:
+                            TextStyle(color: Colors.white70, height: 0.1),
+                            enabled: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                              new BorderSide(color: Color(0xFFdb9e1f)),
+                            ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                            new BorderSide(color: Color(0xFFdb9e1f)),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value!.length == 0) {
-                            return "Yacht speed cannot be empty";
-                          }
-                        },
-                        onSaved: (value) {
-                          speedController.text = value!;
-                        },
-                        keyboardType: TextInputType.multiline,
-                      ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style: TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: deliverytypechosen,
+                          items: deliveryType.map(buildMenuItem).toList(),
+                          onChanged: (value) => setState(() {
+                            deliverytypechosen = value as String?;
+                            if (value == "Paid") {
+                              setState(() {
+                                deliverychargeavailable = true;
+                              });
+                            } else {
+                              setState(() {
+                                deliverychargeavailable = false;
+                              });
+                            }
+                          })),
                       SizedBox(
                         height: 20,
                       ),
-                      TextFormField(
-                        style: TextStyle(color: Colors.white),
-                        maxLines: null,
-                        controller: capacityController,
-                        inputFormatters:  [  FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                      (deliverytypechosen == "Paid")
+                          ? Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: TextFormField(
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'[0-9]')),
                           ],
-                        decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                Icons.cancel,
-                                color: Color(0xFFdb9e1f),
-                              ),
-                              onPressed: () {
-                                capacityController..text = "";
-                              }),
-                          hintText: "Enter capacity",
-                          labelText: "Capacity",
-                          hintStyle: TextStyle(color: Colors.white70),
-                          labelStyle:
-                          new TextStyle(color: Colors.white70, height: 0.1),
-                          enabled: true,
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: new BorderSide(color: Colors.white70),
+                          controller: deliverychargeController,
+                          style: TextStyle(color: Colors.white),
+                          // controller: pharmacyNameController,
+                          decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                                icon: Icon(
+                                  Icons.cancel,
+                                  color: Color(0xFFdb9e1f),
+                                ),
+                                onPressed: () {
+                                  deliverychargeController..text = "";
+                                }),
+                            hintText: "Delivery Charge",
+                            labelText: "Delivery Charge",
+                            hintStyle: TextStyle(color: Colors.white70),
+                            labelStyle: new TextStyle(
+                                color: Colors.white70, height: 0.1),
+                            enabled: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                              new BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
                           ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide:
-                            new BorderSide(color: Color(0xFFdb9e1f)),
-                          ),
+                          validator: (value) {
+                            if (value!.length == 0) {
+                              return "Delivery Charge cannot be empty";
+                            }
+                          },
+                          onSaved: (value) {
+                            deliverychargeController.text = value!;
+                          },
                         ),
-                        validator: (value) {
-                          if (value!.length == 0) {
-                            return "Capacity cannot be empty";
-                          }
-                        },
-                        onSaved: (value) {
-                          capacityController.text = value!;
-                        },
-                        keyboardType: TextInputType.multiline,
+                      )
+                          : Container(),
+
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Live Tracking",
+                            hintStyle: TextStyle(color: Colors.white70),
+                            labelText: 'Live Tracking',
+                            labelStyle:
+                            TextStyle(color: Colors.white70, height: 0.1),
+                            enabled: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: new BorderSide(color: Colors.white70),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide:
+                              new BorderSide(color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style: TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: livetrackingchosen,
+                          items: livetracking.map(buildMenuItem).toList(),
+                          onChanged: (value) => setState(() {
+                            livetrackingchosen = value as String?;
+                            if (value == "Yes") {
+                              setState(() {
+                                livetrackingbool = true;
+                              });
+                            } else {
+                              setState(() {
+                                livetrackingbool = false;
+                              });
+                            }
+                          })),
+
+                      SizedBox(
+                        height: 20,
                       ),
+
+
+
+                      DropdownButtonFormField(
+                          decoration: InputDecoration(
+                            hintText: "Select place in UAE",
+                            hintStyle: TextStyle(
+                                color: Colors.white70),
+                            labelText: 'Pharmacy City',
+                            labelStyle: TextStyle(
+                                color: Colors.white70,
+                                height: 0.1),
+                            enabled: true,
+                            enabledBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Colors.white70),
+                            ),
+                            focusedBorder:
+                            UnderlineInputBorder(
+                              borderSide: new BorderSide(
+                                  color: Color(0xFFdb9e1f)),
+                            ),
+                          ),
+                          dropdownColor: Color(0xFF000000),
+                          //focusColor: Color(0xFFdb9e1f),
+                          style:
+                          TextStyle(color: Colors.white),
+                          isExpanded: true,
+                          value: city,
+                          items: places
+                              .map(buildMenuItem)
+                              .toList(),
+                          onChanged: (value) => setState(() {
+                            this.city = value as String?;
+                          })),
                       SizedBox(
                         height: 20,
                       ),
@@ -631,8 +703,8 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                               onPressed: () {
                                 descriptionController..text = "";
                               }),
-                          hintText: "Enter yacht description",
-                          labelText: "Yacht Description",
+                          hintText: "Enter pharmacy description",
+                          labelText: "Pharmacy Description",
                           hintStyle: TextStyle(color: Colors.white70),
                           labelStyle:
                           new TextStyle(color: Colors.white70, height: 0.1),
@@ -647,7 +719,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                         ),
                         validator: (value) {
                           if (value!.length == 0) {
-                            return "Yacht description cannot be empty";
+                            return "Pharmacy description cannot be empty";
                           }
                         },
                         onSaved: (value) {
@@ -661,7 +733,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Yacht Cover Photo",
+                          "Pharmacy Cover Photo",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -694,7 +766,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Yacht Cover Photo",
+                              "Pharmacy Cover Photo",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -748,7 +820,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                       const Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Other Yacht Photos",
+                          "Other pharmacy Photos",
                           style: TextStyle(color: Colors.white70, fontSize: 16),
                         ),
                       ),
@@ -781,7 +853,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                               size: 20,
                             ), //icon data for elevated button
                             label: Text(
-                              "Other Yacht Photos",
+                              "Other pharmacy Photos",
                               style: TextStyle(color: Colors.white),
                             ),
                             /*child: const Text(
@@ -792,12 +864,12 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                           ),
                         ),
                       ),
-                      OtherYachtImagesUrl.length != 0
+                      OtherpharmacyImagesUrl.length != 0
                           ? Container(
                               width: MediaQuery.of(context).size.width / 1.6,
                               height: 160,
                               child: GridView.builder(
-                                  itemCount: OtherYachtImagesUrl.length,
+                                  itemCount: OtherpharmacyImagesUrl.length,
                                   gridDelegate:
                                       SliverGridDelegateWithFixedCrossAxisCount(
                                           crossAxisCount: 8),
@@ -813,7 +885,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                             decoration: BoxDecoration(
                                                 image: DecorationImage(
                                                     image: NetworkImage(
-                                                        OtherYachtImagesUrl[index]),
+                                                        OtherpharmacyImagesUrl[index]),
                                                     fit: BoxFit.cover)),
                                           child:  Padding(
                                             padding: const EdgeInsets.all(4.0),
@@ -825,7 +897,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                                 child: IconButton(
                                                   onPressed: (){
 
-                                                    _showMyDialogOtherImage(OtherYachtImagesUrl[index], index);
+                                                    _showMyDialogOtherImage(OtherpharmacyImagesUrl[index], index);
 
 
 
@@ -849,100 +921,9 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                               height: 10,
                             ),
                       SizedBox(
-                        height: 20,
+                        height: 30,
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          "Features",
-                          style: TextStyle(color: Colors.white70, fontSize: 16),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Container(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: DropdownButtonFormField(
-                                      decoration: InputDecoration(
-                                        hintText: "Build",
-                                        hintStyle: TextStyle(
-                                            color: Colors.white70),
-                                        labelText: 'Build',
-                                        labelStyle: TextStyle(
-                                            color: Colors.white70,
-                                            height: 0.1),
-                                        enabled: true,
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.white70),
-                                        ),
-                                        focusedBorder: UnderlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Color(0xFFdb9e1f)),
-                                        ),
-                                      ),
-                                      dropdownColor: Color(0xFF000000),
-                                      //focusColor: Color(0xFFdb9e1f),
-                                      style: TextStyle(color: Colors.white),
-                                      isExpanded: true,
-                                      value: builds,
-                                      items:
-                                      yachtBuild.map(buildMenuItem).toList(),
-                                      onChanged: (value) => setState(() {
-                                            this.yachtBuildvalue = value as String?;
-                                          })),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 8.0),
-                                      child: DropdownButtonFormField(
-                                          decoration: InputDecoration(
-                                            hintText: "Overnight Guests",
-                                            hintStyle: TextStyle(
-                                                color: Colors.white70),
-                                            labelText: 'Overnight Guests',
-                                            labelStyle: TextStyle(
-                                                color: Colors.white70,
-                                                height: 0.1),
-                                            enabled: true,
-                                            enabledBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Colors.white70),
-                                            ),
-                                            focusedBorder: UnderlineInputBorder(
-                                              borderSide: new BorderSide(
-                                                  color: Color(0xFFdb9e1f)),
-                                            ),
-                                          ),
-                                          dropdownColor: Color(0xFF000000),
-                                          //focusColor: Color(0xFFdb9e1f),
-                                          style: TextStyle(color: Colors.white),
-                                          isExpanded: true,
-                                          value: overnightguests,
-                                          items: overNightGuests
-                                              .map(buildMenuItem)
-                                              .toList(),
-                                          onChanged: (value) => setState(() {
-                                                this.overNightGuestsvalue = value as String?;
-                                              }))),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 40,
-                      ),
+
                       _isMainUploading || _isOtherUploading
                           ? Padding(
                               padding: const EdgeInsets.only(top: 16.0),
@@ -976,7 +957,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
                                   _uploadHotelData();
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) =>
-                                          DeoManageYachts(widget.uid)));
+                                          DeoManagePharmacy(widget.uid)));
                                 },
                                 child: const Text(
                                   'Save',
@@ -999,8 +980,8 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
 
 
     FirebaseFirestore.instance
-        .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
-        .collection('yachts').doc(widget.yachtid)
+        .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('pharmacys').doc(widget.pharmacyid)
         .update({
       'coverimage': "",
     });
@@ -1011,22 +992,22 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
     });
   }
 
-  _removeyachtOtherPhoto(url, theindex) async {
+  _removepharmacyOtherPhoto(url, theindex) async {
   //await FirebaseStorage.instance.refFromURL(url).delete();
 
     var list = [url];
     FirebaseFirestore.instance
-        .collection('booking').doc("aGAm7T71ShOqGUhYphfc")
-        .collection('yachts').doc(widget.yachtid)
+        .collection('delivery').doc("9WRNvPkoftSw4o2rHGUI")
+        .collection('pharmacys').doc(widget.pharmacyid)
         .update({
-      'otheryachtimages': FieldValue.arrayRemove(list),
+      'otherpharmacyimages': FieldValue.arrayRemove(list),
     });
-  print(OtherYachtImagesUrl.elementAt(theindex));
+  print(OtherpharmacyImagesUrl.elementAt(theindex));
   print(theindex);
- // var toremove = [OtherYachtImagesUrl.elementAt(theindex)];
+ // var toremove = [OtherpharmacyImagesUrl.elementAt(theindex)];
     setState(() {
 
-     OtherYachtImagesUrl.remove(OtherYachtImagesUrl.elementAt(theindex));
+     OtherpharmacyImagesUrl.remove(OtherpharmacyImagesUrl.elementAt(theindex));
       //FieldValue.arrayRemove(toremove);
     });
     //
@@ -1094,7 +1075,7 @@ class _UpdateYachtDetailsState extends State<UpdateYachtDetails> {
               child: Text('Confirm'),
               onPressed: () {
                 setState(() {
-                  _removeyachtOtherPhoto(x, theindex);
+                  _removepharmacyOtherPhoto(x, theindex);
 
                 });
                 print('Confirmed');
