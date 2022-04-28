@@ -2,9 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:universal_io/io.dart' as u;
 import 'package:worldsgate/screens/databaseupdatefile.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/deomanagerestaurant.dart';
+import 'package:worldsgate/screens/dataentryoperator/delivery/restaurants/food/deomanagefood.dart';
 import 'package:worldsgate/screens/loginpage.dart';
 import 'package:worldsgate/screens/user/userhomepage.dart';
-import 'package:worldsgate/screens/user/userorderfood.dart';
+import 'package:worldsgate/screens/user/userlocationconfirmation.dart';
+import 'package:worldsgate/screens/user/userpharmacyorder.dart';
+import 'package:worldsgate/screens/user/userrestaurantorder.dart';
+import 'package:worldsgate/screens/user/usersupermarketorder.dart';
 import 'package:worldsgate/screens/user/userviewrestaurentdetails.dart';
 
 Future main() async {
@@ -42,10 +47,16 @@ class MyApp extends StatelessWidget {
               onSurface: const Color(0xFFBA780F)),
           primarySwatch: Colors.blue,
         ),
-        home: /*UserHomePage("WpzPfHN360dyUtmpSo2a3yhXVak2",
-            "Palm Jumeirah")*/ UserViewRestaurantDetails("WpzPfHN360dyUtmpSo2a3yhXVak2",
-          "Palm Jumeirah", "4SCpLsKsXscwmSZpyvXf")
-            /*UpdateDatabase()*/ /*LoginPage()*/ /*UserOrderFood(
-                "WpzPfHN360dyUtmpSo2a3yhXVak2", "Deira")*/);
+        home: /*UserPharmacyOrder("WpzPfHN360dyUtmpSo2a3yhXVak2",
+            "Palm Jumeirah")*/ /*UserSupermarketOrder("WpzPfHN360dyUtmpSo2a3yhXVak2",
+            "Garhoud")*/ /*UserHomePage("WpzPfHN360dyUtmpSo2a3yhXVak2",
+            "Palm Jumeirah")*/
+        /*UserViewRestaurantDetails("WpzPfHN360dyUtmpSo2a3yhXVak2",
+                "Palm Jumeirah", "4SCpLsKsXscwmSZpyvXf")*/
+        /*UpdateDatabase()*/ LoginPage() /*UserOrderFood(
+                "WpzPfHN360dyUtmpSo2a3yhXVak2", "Deira")*/
+        /*DeoManageFood("WpzPfHN360dyUtmpSo2a3yhXVak2", "4SCpLsKsXscwmSZpyvXf")*/ /*LocationConfirmation(
+                "WpzPfHN360dyUtmpSo2a3yhXVak2")*/
+        );
   }
 }

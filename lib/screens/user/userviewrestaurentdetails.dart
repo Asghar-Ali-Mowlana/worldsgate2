@@ -75,7 +75,10 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
     'delivery': {'pharmacy': [], 'restaurants': [], 'supermarkets': []},
     'e-commerce': {}
   };
-  var subOrders = [];
+
+  num subTotal = 0;
+  num deliveryCharge = 0;
+  num totalAmount = 0;
 
   @override
   void initState() {
@@ -100,272 +103,331 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                   context: context,
                   builder: (context) {
                     return StatefulBuilder(builder: (context, setState) {
-                      return Container(
-                        height: 600,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          gradient: LinearGradient(colors: [
-                            Color(0xFFd7a827),
-                            Color(0xFFffe08c),
-                            Color(0xFFefc65f),
-                            Color(0xFFe7bd50),
-                            Color(0xFFffe9ae),
-                            Color(0xFFe2b13c),
-                            Color(0xFFbe8b0d),
-                          ]),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Container(
-                            height: 400,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10.0),
-                              color: Color(0xFF000000),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: <Widget>[
-                                Container(
-                                  width: width,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    gradient: LinearGradient(colors: [
-                                      Color(0xFFd7a827),
-                                      Color(0xFFffe08c),
-                                      Color(0xFFefc65f),
-                                      Color(0xFFe7bd50),
-                                      Color(0xFFffe9ae),
-                                      Color(0xFFe2b13c),
-                                      Color(0xFFbe8b0d),
-                                    ]),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 2.0),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                        color: Color(0xFF000000),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            "Your Cart",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
+                      return SingleChildScrollView(
+                        child: Container(
+                          //height: 600,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0),
+                            gradient: LinearGradient(colors: [
+                              Color(0xFFd7a827),
+                              Color(0xFFffe08c),
+                              Color(0xFFefc65f),
+                              Color(0xFFe7bd50),
+                              Color(0xFFffe9ae),
+                              Color(0xFFe2b13c),
+                              Color(0xFFbe8b0d),
+                            ]),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: Container(
+                              //height: 400,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                color: Color(0xFF000000),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Container(
+                                    width: width,
+                                    height: 50,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      gradient: LinearGradient(colors: [
+                                        Color(0xFFd7a827),
+                                        Color(0xFFffe08c),
+                                        Color(0xFFefc65f),
+                                        Color(0xFFe7bd50),
+                                        Color(0xFFffe9ae),
+                                        Color(0xFFe2b13c),
+                                        Color(0xFFbe8b0d),
+                                      ]),
+                                    ),
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 2.0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                          color: Color(0xFF000000),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              "Your Cart",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text("Delivery",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold)),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0),
-                                          child: Text("Restaurants"),
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${name} ",
+                                  Container(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Delivery",
                                               style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text("- ${city}, UAE")
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Container(
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10.0),
-                                              color: Color(0xFFdb9e1f),
-                                            ),
-                                            child: ListView.builder(
-                                                shrinkWrap: true,
-                                                physics:
-                                                    NeverScrollableScrollPhysics(),
-                                                itemCount: orders['delivery']
-                                                        ['pharmacy']
-                                                    .length,
-                                                itemBuilder:
-                                                    (BuildContext context,
-                                                        int index) {
-                                                  return ListTile(
-                                                    leading: CustomNumberPicker(
-                                                      initialValue: 1,
-                                                      maxValue: 100,
-                                                      minValue: 0,
-                                                      step: 1,
-                                                      onValue: (value) {
-                                                        print(value.toString());
-                                                      },
-                                                    ),
-                                                    title: Text(
-                                                        orders['delivery']
-                                                                    ['pharmacy']
-                                                                [index][1]
-                                                            .toString()),
-                                                    trailing: Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          vertical: 6.0),
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .spaceBetween,
-                                                        children: [
-                                                          Text(
-                                                              "AED ${orders['delivery']['pharmacy'][index][2]}.00"),
-                                                          InkWell(
-                                                            onTap: () {
-                                                              setState(() {
-                                                                orders['delivery']
-                                                                        [
-                                                                        'pharmacy']
-                                                                    .removeAt(
-                                                                        index);
-                                                              });
-                                                              print(subOrders);
-                                                            },
-                                                            child: Icon(Icons
-                                                                .remove_circle),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  );
-                                                }) /*ListTile(
-                                          leading: CustomNumberPicker(
-                                            initialValue: 1,
-                                            maxValue: 100,
-                                            minValue: 0,
-                                            step: 1,
-                                            onValue: (value) {
-                                              print(value.toString());
-                                            },
-                                          ),
-                                          title: Text(
-                                              "Almond Milk Overnight Oats"),
-                                          trailing: Padding(
+                                                  fontWeight: FontWeight.bold)),
+                                          Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                vertical: 6.0),
-                                            child: Column(
+                                                vertical: 5.0),
+                                            child: Text("Restaurants"),
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "${name} ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text("- ${city}, UAE")
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10.0),
+                                                color: Colors.white
+                                                    .withOpacity(0.7),
+                                              ),
+                                              child: ListView.builder(
+                                                  shrinkWrap: true,
+                                                  physics:
+                                                      NeverScrollableScrollPhysics(),
+                                                  itemCount: orders['delivery']
+                                                          ['restaurants']
+                                                      .length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return ListTile(
+                                                      leading:
+                                                          CustomNumberPicker(
+                                                        initialValue: 1,
+                                                        maxValue: 100,
+                                                        minValue: 1,
+                                                        step: 1,
+                                                        onValue: (value) {
+                                                          print(
+                                                              value.toString());
+                                                          setState(() {
+                                                            orders['delivery'][
+                                                                    'restaurants']
+                                                                [
+                                                                index][0] = value;
+                                                            subTotal = 0;
+                                                            for (int i = 0;
+                                                                i <
+                                                                    orders['delivery']
+                                                                            [
+                                                                            'restaurants']
+                                                                        .length;
+                                                                i++) {
+                                                              print(
+                                                                  "The length of order array is ${orders['delivery']['restaurants'].length}");
+                                                              subTotal = subTotal +
+                                                                  (orders['delivery']['restaurants']
+                                                                              [
+                                                                              i]
+                                                                          [0] *
+                                                                      orders['delivery']
+                                                                              [
+                                                                              'restaurants']
+                                                                          [
+                                                                          i][2]);
+                                                            }
+                                                            subTotal;
+                                                            totalAmount =
+                                                                subTotal +
+                                                                    deliveryCharge;
+                                                          });
+                                                          print(orders);
+                                                        },
+                                                      ),
+                                                      title: Text(orders[
+                                                                      'delivery']
+                                                                  [
+                                                                  'restaurants']
+                                                              [index][1]
+                                                          .toString()),
+                                                      trailing: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                vertical: 6.0),
+                                                        child: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                                "AED ${orders['delivery']['restaurants'][index][0] * orders['delivery']['restaurants'][index][2]}.00"),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  orders['delivery']
+                                                                          [
+                                                                          'restaurants']
+                                                                      .removeAt(
+                                                                          index);
+                                                                  subTotal = 0;
+                                                                  for (int i =
+                                                                          0;
+                                                                      i <
+                                                                          orders['delivery']['restaurants']
+                                                                              .length;
+                                                                      i++) {
+                                                                    print(
+                                                                        "The length of order array is ${orders['delivery']['restaurants'].length}");
+                                                                    subTotal = subTotal +
+                                                                        (orders['delivery']['restaurants'][i][0] *
+                                                                            orders['delivery']['restaurants'][i][2]);
+                                                                  }
+                                                                  subTotal;
+                                                                  totalAmount =
+                                                                      subTotal +
+                                                                          deliveryCharge;
+                                                                });
+                                                                print(orders);
+                                                              },
+                                                              child: Icon(Icons
+                                                                  .remove_circle),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }) /*ListTile(
+                                            leading: CustomNumberPicker(
+                                              initialValue: 1,
+                                              maxValue: 100,
+                                              minValue: 0,
+                                              step: 1,
+                                              onValue: (value) {
+                                                print(value.toString());
+                                              },
+                                            ),
+                                            title: Text(
+                                                "Almond Milk Overnight Oats"),
+                                            trailing: Padding(
+                                              padding: const EdgeInsets.symmetric(
+                                                  vertical: 6.0),
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text("AED 36.00"),
+                                                  Icon(Icons.remove_circle),
+                                                ],
+                                              ),
+                                            ),
+                                          ),*/
+                                              ),
+                                          //Expanded(child: SizedBox()),
+                                          SizedBox(height: 8.0),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text("Subtotal"),
+                                              Text("AED ${subTotal}.00"),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 8.0),
+                                            child: Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
                                                       .spaceBetween,
                                               children: [
-                                                Text("AED 36.00"),
-                                                Icon(Icons.remove_circle),
+                                                Text("Delivery Fee"),
+                                                Text("Free"),
                                               ],
                                             ),
                                           ),
-                                        ),*/
-                                            ),
-                                        Expanded(child: SizedBox()),
-                                        SizedBox(height: 8.0),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Subtotal"),
-                                            Text("AED 36.00"),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0),
-                                          child: Row(
+                                          Row(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text("Delivery Fee"),
-                                              Text("Free"),
+                                              Text("Total Amount"),
+                                              Text("AED ${totalAmount}.00"),
                                             ],
                                           ),
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text("Total Amount"),
-                                            Text("AED 36.00"),
-                                          ],
-                                        ),
-                                        SizedBox(height: 20.0),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: Container(
-                                            width: 250.0,
-                                            height: 40.0,
-                                            child: ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                  primary: Color(0xFF000000),
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius.circular(
-                                                                  20.0)),
-                                                      side: BorderSide(
-                                                          color: Color(
-                                                              0xFFdb9e1f))),
-                                                  side: BorderSide(
-                                                    width: 2.5,
-                                                    color: Color(0xFFdb9e1f),
-                                                  ),
-                                                  textStyle: const TextStyle(
-                                                      fontSize: 16)),
-                                              onPressed: () {
-                                                //uploadMainFunction(_selectedFile);
-                                                //uploadFile();
-                                                /*_uploadHotelData();
-                                              Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          DeoManageHotels(
-                                                              widget.uid)));*/
-                                              },
-                                              child: const Text(
-                                                'PROCEED TO CHECKOUT',
-                                                style: TextStyle(
-                                                    color: Colors.white),
+                                          SizedBox(height: 20.0),
+                                          Align(
+                                            alignment: Alignment.center,
+                                            child: Container(
+                                              width: 250.0,
+                                              height: 40.0,
+                                              child: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                    primary: Color(0xFF000000),
+                                                    shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    20.0)),
+                                                        side: BorderSide(
+                                                            color: Color(
+                                                                0xFFdb9e1f))),
+                                                    side: BorderSide(
+                                                      width: 2.5,
+                                                      color: Color(0xFFdb9e1f),
+                                                    ),
+                                                    textStyle: const TextStyle(
+                                                        fontSize: 16)),
+                                                onPressed: () {
+                                                  //uploadMainFunction(_selectedFile);
+                                                  //uploadFile();
+                                                  /*_uploadHotelData();
+                                                Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            DeoManageHotels(
+                                                                widget.uid)));*/
+                                                },
+                                                child: const Text(
+                                                  'PROCEED TO CHECKOUT',
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
                                               ),
                                             ),
                                           ),
+                                          /*Icon(
+                                          Icons.shopping_bag,
+                                          size: width * 0.5,
                                         ),
-                                        /*Icon(
-                                        Icons.shopping_bag,
-                                        size: width * 0.5,
+                                        Text(
+                                          "There are no items in your cart",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        )*/
+                                        ],
                                       ),
-                                      Text(
-                                        "There are no items in your cart",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      )*/
-                                      ],
                                     ),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -377,11 +439,6 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
               child: Container(
                 width: 60,
                 height: 60,
-                child: Icon(
-                  Icons.shopping_cart,
-                  size: 25,
-                  color: Colors.white,
-                ),
                 decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     gradient: LinearGradient(colors: [
@@ -393,9 +450,23 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                       Color(0xFFe2b13c),
                       Color(0xFFbe8b0d),
                     ])),
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Color(0xFF000000),
+                      borderRadius: BorderRadius.circular(30.0),
+                    ),
+                    child: Icon(
+                      Icons.shopping_cart,
+                      size: 25,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
               ),
               /*Icon(Icons.shopping_cart),*/
-              backgroundColor: Color(0xFFdb9e1f),
+              //backgroundColor: Color(0xFFdb9e1f),
               //mini: true,
             ),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -710,17 +781,36 @@ class _UserViewRestaurantDetailsState extends State<UserViewRestaurantDetails> {
                                                                     onTap: () {
                                                                       setState(
                                                                           () {
-                                                                        orders['delivery']['pharmacy']
+                                                                        orders['delivery']['restaurants']
                                                                             .add([
                                                                           1,
                                                                           food[
                                                                               'name'],
                                                                           food[
-                                                                              'price']
+                                                                              'price'],
+                                                                          food[
+                                                                              'foodid']
                                                                         ]);
+                                                                        subTotal =
+                                                                            0;
+                                                                        for (int i =
+                                                                                0;
+                                                                            i < orders['delivery']['restaurants'].length;
+                                                                            i++) {
+                                                                          print(
+                                                                              "The length of order array is ${orders['delivery']['restaurants'].length}");
+                                                                          subTotal =
+                                                                              subTotal + (orders['delivery']['restaurants'][i][0] * orders['delivery']['restaurants'][i][2]);
+                                                                        }
+                                                                        subTotal;
+                                                                        totalAmount =
+                                                                            subTotal +
+                                                                                deliveryCharge;
                                                                       });
-                                                                      print(
-                                                                          orders);
+                                                                      print(orders[
+                                                                              'delivery']
+                                                                          [
+                                                                          'restaurants']);
                                                                     },
                                                                     child: Icon(
                                                                         Icons

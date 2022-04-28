@@ -78,7 +78,7 @@ class _LocationConfirmationState extends State<LocationConfirmation> {
   }
 
   void getSuggestion(String input) async {
-    String kPLACES_API_KEY = "AIzaSyAeHBTXB2FAQyamm02kA9KHtDcKvCHaljU";
+    String kPLACES_API_KEY = "AIzaSyCwfekAPDMawdtFb80Ji2Z8xpgcPzXMgNg";
     String type = '(regions)';
     String baseURL =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json';
